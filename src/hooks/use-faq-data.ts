@@ -78,7 +78,7 @@ export function useFAQData() {
         setFaqData(mockData);
         setIsLoading(false);
       } catch (error) {
-        console.error("Error fetching FAQ data:", error);
+        console.error("Erreur lors de la récupération des données :", error);
         setIsLoading(false);
       }
     };
