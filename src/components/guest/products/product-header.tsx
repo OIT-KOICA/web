@@ -6,11 +6,15 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProductDTO } from "@/lib/type";
 
-export default function ProductHeader({ product }: { product: ProductDTO }) {
+export default function ProductHeader({
+  product,
+}: {
+  product: ProductDTO | null;
+}) {
   return (
     <div className="flex flex-col items-start space-y-4 md:flex-row md:items-center md:space-x-8 md:space-y-0">
       <div className="relative h-64 w-full overflow-hidden rounded-lg md:h-96 md:w-1/2">
-        {product.file && (
+        {product && product.file && (
           <Image
             src={`${process.env.NEXT_PUBLIC_API_PATH_URL}/image/${product.file}`}
             alt={product.name ?? "Nom du produit"}
@@ -20,7 +24,7 @@ export default function ProductHeader({ product }: { product: ProductDTO }) {
         )}
       </div>
       <div className="flex flex-col space-y-4">
-        <h1 className="text-3xl font-bold">{product?.name}</h1>
+        <h1 className="text-3xl font-bold">{product ? product.name : ""}</h1>
         <Link href="/products">
           <Button
             variant="outline"

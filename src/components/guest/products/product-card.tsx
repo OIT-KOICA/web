@@ -56,7 +56,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           </span>
         </div>
         <p className="mb-2 text-sm">
-          Stock: {product.quantity} {product.unit}
+          Quantité en stock: {product.quantity} {product.unit}
         </p>
         <p className="mb-2 line-clamp-2 text-sm">{product.description}</p>
         <div className="mt-2 flex items-center space-x-2">

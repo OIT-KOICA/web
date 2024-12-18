@@ -25,7 +25,6 @@ import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { useDeleteProduct } from "@/lib/query/product-query";
-import { useSession } from "next-auth/react";
 
 interface ProductTableProps {
   products: ProductDTO[];
@@ -47,7 +46,6 @@ export default function ProductTable({
   const [productToDelete, setProductToDelete] = useState<ProductDTO | null>(
     null
   );
-  const { data: session } = useSession();
   const { setActiveProduct, setEdit } = useProductStore();
   const { toast } = useToast();
   const router = useRouter();
@@ -58,7 +56,6 @@ export default function ProductTable({
       try {
         deleteProduct.mutate({
           slug: productToDelete.slug,
-          token: session?.accessToken,
         });
 
         toast({
@@ -117,19 +114,7 @@ export default function ProductTable({
             products.map((product) => (
               <TableRow key={product.slug}>
                 <TableCell className="font-medium">{product.name}</TableCell>
-                <TableCell>
-                  {product.category === "CASSAVA"
-                    ? "Manioc"
-                    : product.category === "CORN"
-                    ? "Maïs"
-                    : product.category === "CHICKEN"
-                    ? "Poulet"
-                    : product.category === "HIRE"
-                    ? "Location"
-                    : product.category === "TRANSPORT"
-                    ? "Transport"
-                    : "Autre"}
-                </TableCell>
+                <TableCell>{product.category}</TableCell>
                 <TableCell>{product.quantity}</TableCell>
                 <TableCell>{formatCurrency(product.basePrice)}</TableCell>
                 <TableCell>{product.unit}</TableCell>

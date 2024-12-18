@@ -36,11 +36,10 @@ export const useGetUnits = () => {
  * Hook pour récupérer une compagnie en fonction de son user.
  * @param {string} token - Le token d'authentification.
  */
-export const useGetCompany = (token: string) => {
+export const useGetCompany = () => {
   const { data, refetch } = useQuery({
     queryKey: ["company"],
-    queryFn: () => getCompany(token),
-    enabled: !!token,
+    queryFn: getCompany,
   });
 
   return { company: data, refetch };
@@ -52,7 +51,7 @@ export const useGetCompany = (token: string) => {
 export const useGetAdds = () => {
   const { data, refetch } = useQuery({
     queryKey: ["adds"],
-    queryFn: () => getAdds(),
+    queryFn: getAdds,
   });
 
   return { adds: data, refetch };
@@ -82,7 +81,7 @@ export const useCreateAdd = () => {
  */
 export const useCreateCompany = () => {
   return useMutation({
-    mutationFn: ({ formData, token }: { formData: FormData; token: string }) =>
-      createCompany(formData, token),
+    mutationFn: ({ formData }: { formData: FormData }) =>
+      createCompany(formData),
   });
 };

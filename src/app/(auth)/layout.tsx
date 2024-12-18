@@ -1,4 +1,5 @@
 import { AppSidebar } from "@/components/auth/app-sidebar";
+import AuthGuard from "@/components/auth/auth-guard-wrapper";
 import { SidebarProvider } from "@/components/ui/sidebar";
 
 export default function DashboardLayout({
@@ -9,10 +10,12 @@ export default function DashboardLayout({
   modal: React.ReactNode;
 }) {
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      {children}
-      {modal}
-    </SidebarProvider>
+    <AuthGuard>
+      <SidebarProvider>
+        <AppSidebar />
+        {children}
+        {modal}
+      </SidebarProvider>
+    </AuthGuard>
   );
 }

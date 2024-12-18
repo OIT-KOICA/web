@@ -39,21 +39,23 @@ export default function MessageInput() {
     setIsSubmitting(true);
 
     try {
-      createMessage.mutate(
-        {
-          messageData: {
-            id: discussion?.id,
-            senderType: "SELLER",
-            content: data.content,
+      if (discussion) {
+        createMessage.mutate(
+          {
+            messageData: {
+              id: discussion?.id,
+              senderType: "SELLER",
+              content: data.content,
+            },
           },
-        },
-        {
-          onSuccess: (rep) => {
-            setActiveDiscussion(rep);
-          },
-        }
-      );
-      form.reset()
+          {
+            onSuccess: (rep) => {
+              setActiveDiscussion(rep);
+            },
+          }
+        );
+        form.reset();
+      }
     } catch (error) {
       console.error("Erreur lors de l'envoi du message :", error);
     } finally {
@@ -63,7 +65,7 @@ export default function MessageInput() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="my-4 space-y-2">
         <FormField
           control={form.control}
           name="content"

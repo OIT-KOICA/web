@@ -7,6 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { formatCurrency } from "@/lib/utils";
 
 type PriceVariation = {
   id: string;
@@ -16,7 +17,7 @@ type PriceVariation = {
 };
 
 type PriceVariationsTableProps = {
-  variations: PriceVariation[];
+  variations: PriceVariation[] | undefined;
 };
 
 export default function PriceVariationsTable({
@@ -25,15 +26,15 @@ export default function PriceVariationsTable({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Price Variations</CardTitle>
+        <CardTitle>Variation des prix</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Description</TableHead>
-              <TableHead>Parameter</TableHead>
-              <TableHead className="text-right">Price</TableHead>
+              <TableHead>Paramètre de variation</TableHead>
+              <TableHead className="text-right">Prix</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -43,7 +44,7 @@ export default function PriceVariationsTable({
                   <TableCell>{variation.description}</TableCell>
                   <TableCell>{variation.parameterType}</TableCell>
                   <TableCell className="text-right">
-                    {variation.price.toFixed(2)}
+                    {formatCurrency(variation.price)}
                   </TableCell>
                 </TableRow>
               ))

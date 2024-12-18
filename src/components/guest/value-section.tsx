@@ -1,18 +1,18 @@
 import { CheckCircle } from "lucide-react";
 
 const values = [
-  "Connect supply and demand efficiently",
-  "Provide educational tools for stakeholders",
-  "Offer training and legal advice",
-  "Facilitate financial connections",
-  "Support sustainable agricultural practices",
+  "Connecter efficacement l'offre et la demande",
+  "Fournir des outils éducatifs aux parties prenantes",
+  "Offrir des formations et des conseils juridiques",
+  "Faciliter les connexions financières",
+  "Soutenir les pratiques agricoles durables",
 ];
 
 export default function ValueSection() {
   return (
     <section className="container mx-auto px-4">
       <h2 className="mb-8 text-center text-3xl font-bold">
-        Our Platform&apos;s Value
+        La valeur de notre plateforme
       </h2>
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         <div className="space-y-4">
@@ -23,19 +23,22 @@ export default function ValueSection() {
             </div>
           ))}
         </div>
-        <div className="rounded-lg bg-gradient-to-r from-primary to-primary-foreground p-8 text-white">
+        <div className="rounded-lg bg-primary p-8 text-white dark:text-black">
           <h3 className="mb-4 text-2xl font-bold">
-            Empowering Agricultural Entrepreneurs
+            Renforcer les entrepreneurs agricoles
           </h3>
           <p className="mb-4">
-            Our platform is designed to bridge gaps in the agricultural value
-            chain, providing tools and connections that empower local
-            entrepreneurs to thrive in the cassava, maize, and poultry markets.
+            Notre plateforme est conçue pour combler les lacunes de la chaîne de
+            valeur agricole. de valeur agricole, en fournissant des outils et
+            des connexions de prospérer sur les marchés du manioc, du maïs et de
+            la volaille.
           </p>
           <p>
-            By facilitating connections, offering educational resources, and
-            supporting sustainable practices, we&apos;re building a stronger,
-            more resilient agricultural ecosystem.
+            En facilitant les connexions, en offrant des ressources éducatives
+            et en soutenant des pratiques durables, nous construisons un monde
+            plus fort. et en soutenant les pratiques durables, nous construisons
+            un écosystème agricole plus fort et plus résilient, un écosystème
+            agricole plus fort et plus résilient.
           </p>
         </div>
       </div>

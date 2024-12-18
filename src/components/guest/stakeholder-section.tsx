@@ -11,33 +11,33 @@ import React from "react";
 
 const stakeholders = [
   {
-    title: "Producers",
-    description: "Farmers and primary agricultural producers",
+    title: "Producteurs",
+    description: "Agriculteurs et producteurs agricoles primaires",
     icon: Users,
   },
   {
-    title: "Processors",
-    description: "Value-adding businesses in the agricultural chain",
+    title: "Transformateurs",
+    description: "Entreprises à valeur ajoutée dans la chaîne agricole",
     icon: Factory,
   },
   {
-    title: "Collectors",
-    description: "Aggregators of agricultural products",
+    title: "Collecteurs",
+    description: "Agrégateurs de produits agricoles",
     icon: Truck,
   },
   {
-    title: "Wholesalers",
-    description: "Bulk buyers and distributors",
+    title: "Grossistes",
+    description: "Acheteurs et distributeurs en gros",
     icon: Building2,
   },
   {
-    title: "Retailers",
-    description: "Final point of sale to consumers",
+    title: "Détaillants",
+    description: "Point de vente final aux consommateurs",
     icon: Store,
   },
   {
-    title: "External Actors",
-    description: "Financial institutions, government bodies, and NGOs",
+    title: "Acteurs externes",
+    description: "Institutions financières, organismes gouvernementaux et ONG",
     icon: Landmark,
   },
 ];
@@ -45,7 +45,9 @@ const stakeholders = [
 export default function StakeholderSection() {
   return (
     <section className="container mx-auto px-6">
-      <h2 className="mb-8 text-center text-3xl font-bold">Key Stakeholders</h2>
+      <h2 className="mb-8 text-center text-3xl font-bold">
+        Principaux acteurs
+      </h2>
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
         {stakeholders.map((stakeholder, index) => (
           <Card key={index} className="flex flex-col items-center text-center">

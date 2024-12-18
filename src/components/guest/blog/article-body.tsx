@@ -24,7 +24,7 @@ export default function ArticleBody({ content }: ArticleBodyProps) {
             return <p key={index}>{section.content}</p>;
           case "subheading":
             return (
-              <h2 key={index} className="text-2xl font-semibold mt-8 mb-4">
+              <h2 key={index} className="mb-4 mt-8 text-2xl font-semibold">
                 {section.content}
               </h2>
             );
@@ -36,19 +36,20 @@ export default function ArticleBody({ content }: ArticleBodyProps) {
                   alt="Article image"
                   width={800}
                   height={450}
-                  className="rounded-lg cursor-pointer"
+                  className="cursor-pointer rounded-lg"
                   onClick={() => setCurrentImage(section.content)}
                 />
               </div>
             );
           case "video":
             return (
-              <div key={index} className="my-8 aspect-w-16 aspect-h-9">
+              // eslint-disable-next-line tailwindcss/no-custom-classname
+              <div key={index} className="aspect-w-16 aspect-h-9 my-8">
                 <iframe
                   src={section.content}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
-                  className="w-full h-full rounded-lg"
+                  className="size-full rounded-lg"
                 ></iframe>
               </div>
             );
@@ -61,7 +62,8 @@ export default function ArticleBody({ content }: ArticleBodyProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
+          // eslint-disable-next-line tailwindcss/migration-from-tailwind-2
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75"
           onClick={closeModal}
         >
           <Image
@@ -69,7 +71,7 @@ export default function ArticleBody({ content }: ArticleBodyProps) {
             alt="Full size image"
             width={1200}
             height={675}
-            className="max-w-full max-h-full object-contain"
+            className="max-h-full max-w-full object-contain"
           />
         </motion.div>
       )}

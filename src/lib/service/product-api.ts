@@ -1,3 +1,4 @@
+import { fetchClient } from "../api/fetch-client";
 import { ProductDTO } from "../type";
 
 /**
@@ -5,15 +6,13 @@ import { ProductDTO } from "../type";
  * @returns {Promise<ProductDTO[]>} Les produits.
  */
 export const getProducts = async (): Promise<ProductDTO[]> => {
-  const res: Response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_PATH_URL}/guest/products`
-  );
-
-  if (res) {
-    return await res.json();
+  try {
+    const data = await fetchClient(`/guest/products`, { requiresAuth: false });
+    return data;
+  } catch (error) {
+    console.error("Erreur lors du chargement des produits :", error);
+    throw error;
   }
-
-  throw new Error("Erreur lors du chargement des produits");
 };
 
 /**
@@ -22,40 +21,31 @@ export const getProducts = async (): Promise<ProductDTO[]> => {
  * @returns {Promise<ProductDTO> } Le produit correspondant.
  */
 export const getProduct = async (slug: string): Promise<ProductDTO> => {
-  const res: Response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_PATH_URL}/guest/product/${slug}`
-  );
-
-  if (res) {
-    return await res.json();
+  try {
+    const data = await fetchClient(`/guest/product/${slug}`, {
+      requiresAuth: false,
+    });
+    return data;
+  } catch (error) {
+    console.error("Erreur lors de la récupération du produit :", error);
+    throw error;
   }
-
-  throw new Error("Erreur lors de la récupération du produit");
 };
 
 /**
  * Récupère une liste de produits par le nom d'utlisateur.
- * @param {string} token - Le token d'authentification.
  * @returns {Promise<ProductDTO[]> } Le produit correspondant.
  */
-export const getProductByUserId = async (
-  token: string
-): Promise<ProductDTO[]> => {
-  const res: Response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_PATH_URL}/product/products`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
-  if (res) {
-    return await res.json();
+export const getProductByUserId = async (): Promise<ProductDTO[]> => {
+  try {
+    const data = await fetchClient(`/product/products`, {
+      requiresAuth: true,
+    });
+    return data;
+  } catch (error) {
+    console.error("Erreur lors de la récupération des produits :", error);
+    throw error;
   }
-
-  throw new Error("Erreur lors de la récupération des produits");
 };
 
 /**
@@ -65,55 +55,44 @@ export const getProductByUserId = async (
  * @returns {Promise<ProductDTO>} Le produit créé.
  */
 export const createProduct = async (
-  productData: FormData,
-  token: string
+  productData: FormData
 ): Promise<ProductDTO> => {
-  const res: Response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_PATH_URL}/product/create`,
-    {
+  try {
+    const response = await fetchClient("/product/create", {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
       body: productData,
-    }
-  );
+      requiresAuth: true, // Requête nécessitant une authentification
+    });
 
-  if (res) {
-    return res.json();
+    return response;
+  } catch (error) {
+    console.error("Echec lors de la création du produit :", error);
+    throw error;
   }
-
-  throw new Error("Echec lors de la création du produit");
 };
 
 /**
  * Met à jour un produit existant.
- * @param {string} productId - L'ID du produit à mettre à jour.
+ * @param {string} slug - Le slug du produit à mettre à jour.
  * @param {object} productData - Les nouvelles données du produit.
- * @param {string} token - Le token d'authentification.
  * @returns {Promise<ProductDTO>} Le produit mis à jour.
  */
 export const updateProduct = async (
   slug: string,
-  productData: FormData,
-  token: string
+  productData: FormData
 ): Promise<ProductDTO> => {
-  const res: Response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_PATH_URL}/product/edit/${slug}`,
-    {
+  try {
+    const response = await fetchClient(`/product/edit/${slug}`, {
       method: "PUT",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
       body: productData,
-    }
-  );
+      requiresAuth: true, // Requête nécessitant une authentification
+    });
 
-  if (res) {
-    return await res.json();
+    return response;
+  } catch (error) {
+    console.error("Echec lors de la modification du produit :", error);
+    throw error;
   }
-
-  throw new Error("Echec lors de la modification du produit");
 };
 
 /**
@@ -122,23 +101,16 @@ export const updateProduct = async (
  * @param {string} token - Le token d'authentification.
  * @returns {Promise<string>} Le message de confirmation du produit supprimé.
  */
-export const deleteProduct = async (
-  slug: string,
-  token: string
-): Promise<string> => {
-  const res: Response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_PATH_URL}/product/delete/${slug}`,
-    {
+export const deleteProduct = async (slug: string): Promise<string> => {
+  try {
+    const response = await fetchClient(`/product/delete/${slug}`, {
       method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+      requiresAuth: true, // Requête nécessitant une authentification
+    });
 
-  if (res) {
-    return await res.json();
+    return response;
+  } catch (error) {
+    console.error("Echec lors de la suppression du produit :", error);
+    throw error;
   }
-
-  throw new Error("Echec lors de la suppression du produit");
 };

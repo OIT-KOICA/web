@@ -26,55 +26,50 @@ export function useFAQData() {
         const mockData: FAQCategory[] = [
           {
             id: "general",
-            title: "General Questions",
+            title: "Questions générales",
             questions: [
               {
                 id: "what-is-cassava-marketplace",
-                question: "What is Cassava Marketplace?",
+                question: "Qu'est-ce que Cassava Marketplace ?",
                 answer:
-                  "Cassava Marketplace is a platform that connects local entrepreneurs in cassava, maize, and poultry value chains with markets and suppliers. It aims to address the specific needs of local populations, taking into account technological constraints and usage habits.",
+                  "Cassava Marketplace est une plateforme qui relie les entrepreneurs locaux des chaînes de valeur du manioc, du maïs et de la volaille aux marchés et aux fournisseurs. Elle vise à répondre aux besoins spécifiques des populations locales, en tenant compte des contraintes technologiques et des habitudes d'utilisation.",
               },
               {
                 id: "how-to-register",
-                question: "How do I register on Cassava Marketplace?",
+                question: "Comment s'inscrire sur Cassava Marketplace ?",
                 answer:
-                  'To register on Cassava Marketplace, click on the "Sign Up" button in the top right corner of the homepage. Fill out the registration form with your details, including your name, email address, and password. Once submitted, you\'ll receive a confirmation email to activate your account.',
+                  "Pour s'inscrire sur Cassava Marketplace, Cliquez sur le bouton « S'inscrire » dans le coin supérieur droit de la page d'accueil. Remplissez le formulaire d'inscription avec vos coordonnées, notamment votre nom, votre adresse électronique et votre mot de passe. Une fois le formulaire envoyé, vous recevrez un courriel de confirmation pour activer votre compte.",
               },
             ],
           },
           {
             id: "products",
-            title: "Product Questions",
+            title: "Questions sur les produits",
             questions: [
               {
                 id: "product-listing",
-                question: "How can I list my products on Cassava Marketplace?",
+                question:
+                  "Comment puis-je faire figurer mes produits sur Cassava Marketplace ?",
                 answer:
-                  'After logging into your account, navigate to your dashboard and click on "Add New Product". Fill out the product details form, including name, description, price, and quantity. You can also add images of your product. Once submitted, your product will be reviewed and listed on the marketplace.',
+                  "Après vous être connecté à votre compte, accédez à votre tableau de bord et cliquez sur « Ajouter un nouveau produit ». Remplissez le formulaire des détails du produit, y compris le nom, la description, le prix et la quantité. Vous pouvez également ajouter des images de votre produit. Une fois soumis, votre produit sera examiné et inscrit sur la place de marché.",
               },
               {
                 id: "product-pricing",
-                question: "How do I set prices for my products?",
+                question: "Comment fixer les prix de mes produits ?",
                 answer:
-                  "When listing your product, you can set a base price. Additionally, you can add price variations based on quantity, urgency, or distance. This flexible pricing system allows you to cater to different customer needs and market conditions.",
+                  "Lors de l'inscription de votre produit, vous pouvez fixer un prix de base. En outre, vous pouvez ajouter des variations de prix en fonction de la quantité, de l'urgence ou de la distance. Ce système de tarification flexible vous permet de répondre aux différents besoins des clients et aux conditions du marché.",
               },
             ],
           },
           {
             id: "orders",
-            title: "Order Questions",
+            title: "Questions relatives à la commande",
             questions: [
               {
                 id: "place-order",
-                question: "How do I place an order?",
+                question: "Comment passer une commande ?",
                 answer:
-                  'To place an order, browse the products and click on the one you\'re interested in. Select the quantity and any applicable options, then click "Add to Cart". When you\'re ready to checkout, review your cart and click "Proceed to Checkout". Follow the prompts to complete your purchase.',
-              },
-              {
-                id: "track-order",
-                question: "Can I track my order?",
-                answer:
-                  "Yes, you can track your order. Once your order is confirmed, you'll receive an order number. Log into your account and go to \"My Orders\" to see the status of your order. You'll be able to see when the order is processed, shipped, and delivered.",
+                  "Pour passer une commande, parcourez les produits et cliquez sur celui qui vous intéresse. Sélectionnez la quantité et les options applicables, puis cliquez sur « Consulter ». Lorsque vous êtes prêt à passer à la caisse, vérifiez votre panier et cliquez sur « Passer à la caisse ». Suivez les instructions pour terminer votre achat.",
               },
             ],
           },

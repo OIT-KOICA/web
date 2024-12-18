@@ -12,63 +12,65 @@ interface ProductInfoProps {
     unit: string;
     isPerishable: boolean;
     isDerivedProduct: boolean;
-  };
+  } | null;
 }
 
 export default function ProductInfo({ product }: ProductInfoProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Product Information</CardTitle>
+        <CardTitle>Information sur le produit</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
           <h3 className="font-semibold">Description</h3>
-          <p>{product.description}</p>
+          <p>{product ? product.description : ""}</p>
         </div>
         <div className="flex justify-between">
           <div>
-            <h3 className="font-semibold">Category</h3>
-            <p>{product.category}</p>
+            <h3 className="font-semibold">Catégorie</h3>
+            <p>{product ? product.category : ""}</p>
           </div>
           <div>
-            <h3 className="font-semibold">Location</h3>
+            <h3 className="font-semibold">Zone de localisation</h3>
             <p className="flex items-center">
               <MapPin className="mr-1 size-4" />
-              {product.localisation}
+              {product ? product.localisation : ""}
             </p>
           </div>
         </div>
         <div className="flex justify-between">
           <div>
-            <h3 className="font-semibold">Stock</h3>
+            <h3 className="font-semibold">Quantité en stock</h3>
             <p>
-              {product.quantity} {product.unit}
+              {product ? product.quantity : ""} {product ? product.unit : ""}
             </p>
           </div>
           <div>
-            <h3 className="font-semibold">Perishability</h3>
-            {product.isPerishable ? (
+            <h3 className="font-semibold">Le produit est-il périmable ?</h3>
+            {product && product.isPerishable ? (
               <Badge variant="destructive" className="flex items-center">
                 <Leaf className="mr-1 size-4" />
-                Perishable
+                Périmable
               </Badge>
             ) : (
               <Badge variant="secondary" className="flex items-center">
-                Non-perishable
+                Non-périmable
               </Badge>
             )}
           </div>
           <div>
-            <h3 className="font-semibold">isDerivedProduct</h3>
-            {product.isDerivedProduct ? (
+            <h3 className="font-semibold">
+              Le produit est-il un produit dérivé ?
+            </h3>
+            {product && product.isDerivedProduct ? (
               <Badge variant="destructive" className="flex items-center">
                 <Leaf className="mr-1 size-4" />
-                isDerivedProduct
+                N&apos;est pas un produit dérivé
               </Badge>
             ) : (
               <Badge variant="secondary" className="flex items-center">
-                Non-isDerivedProduct
+                Est un produit dérivé
               </Badge>
             )}
           </div>

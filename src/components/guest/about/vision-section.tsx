@@ -6,39 +6,39 @@ import { Lightbulb, Link, Sprout } from "lucide-react";
 const visionItems = [
   {
     icon: Lightbulb,
-    title: "Enhance Value Chains",
+    title: "Améliorer les chaînes de valeur",
     description:
-      "Improve the efficiency and profitability of cassava, maize, and poultry value chains.",
+      "Améliorer l'efficacité et la rentabilité des chaînes de valeur du manioc, du maïs et de la volaille.",
   },
   {
     icon: Link,
-    title: "Connect Stakeholders",
+    title: "Connecter les parties prenantes",
     description:
-      "Bridge the gap between producers, processors, and consumers in the agricultural sector.",
+      "Combler le fossé entre les producteurs, les transformateurs et les consommateurs dans le secteur agricole.",
   },
   {
     icon: Sprout,
-    title: "Promote Sustainability",
+    title: "Promouvoir la durabilité",
     description:
-      "Foster sustainable development practices in agriculture and related industries.",
+      "Favoriser les pratiques de développement durable dans l'agriculture et les industries connexes.",
   },
 ];
 
 export default function VisionSection() {
   return (
     <section className="text-center">
-      <h2 className="text-3xl font-semibold mb-8">Our Vision</h2>
-      <div className="grid md:grid-cols-3 gap-8">
+      <h2 className="mb-8 text-3xl font-semibold">Notre vision</h2>
+      <div className="grid gap-8 md:grid-cols-3">
         {visionItems.map((item, index) => (
           <motion.div
             key={index}
-            className="bg-white p-6 rounded-lg shadow-md"
+            className="rounded-lg bg-white p-6 shadow-md"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.2 }}
           >
-            <item.icon className="w-12 h-12 mx-auto mb-4 text-primary" />
-            <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
+            <item.icon className="mx-auto mb-4 size-12 text-primary dark:text-black" />
+            <h3 className="mb-2 text-xl font-semibold dark:text-black">{item.title}</h3>
             <p className="text-gray-600">{item.description}</p>
           </motion.div>
         ))}

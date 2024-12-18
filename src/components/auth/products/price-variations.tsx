@@ -35,7 +35,7 @@ const parameters = [
 export default function PriceVariations({ control }: PriceVariationsProps) {
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "priceVariations",
+    name: "pricings",
   });
 
   return (

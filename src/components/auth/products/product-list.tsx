@@ -8,7 +8,6 @@ import { ProductDTO } from "@/lib/type";
 import SearchBar from "./search-bar";
 import FilterDropdown from "./filter-dropdown";
 import ProductTable from "./product-table";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 const ITEMS_PER_PAGE = 10;
@@ -32,19 +31,7 @@ export default function ProductList() {
           product.description.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCategory = !categoryFilter
           ? product
-          : categoryFilter === "Manioc"
-          ? product.category === "CASSAVA"
-          : categoryFilter === "Maïs"
-          ? product.category === "CORN"
-          : categoryFilter === "Poulet"
-          ? product.category === "CHICKEN"
-          : categoryFilter === "Location"
-          ? product.category === "HIRE"
-          : categoryFilter === "Transport"
-          ? product.category === "TRANSPORT"
-          : categoryFilter === "Autre"
-          ? product.category === "OTHER"
-          : product;
+          : product.category === categoryFilter;
 
         return matchesSearch && matchesCategory;
       })

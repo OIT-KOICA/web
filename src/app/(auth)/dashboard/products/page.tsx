@@ -5,7 +5,6 @@ import ProductList from "@/components/auth/products/product-list";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetProductsByUserID } from "@/lib/query/product-query";
 import useProductStore from "@/lib/stores/product-store";
-import { useSession } from "next-auth/react";
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -18,9 +17,7 @@ import {
 } from "@/components/ui/breadcrumb";
 
 export default function ProductsPage() {
-  const { data: session } = useSession();
-
-  const { products } = useGetProductsByUserID(session?.accessToken);
+  const { products } = useGetProductsByUserID();
   const { setProducts } = useProductStore();
 
   useEffect(() => {

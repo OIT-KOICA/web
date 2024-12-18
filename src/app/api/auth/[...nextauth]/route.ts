@@ -1,12 +1,11 @@
-import { clearNextAuthCookies } from "@/lib/utils";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import KeycloakProvider from "next-auth/providers/keycloak";
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
   providers: [
     KeycloakProvider({
-      clientId: `${process.env.KEYCLOAK_CLIENT_ID}`,
-      clientSecret: `${process.env.KEYCLOAK_CLIENT_SECRET}`,
+      clientId: `${process.env.KEYCLOAK_CLIENT_ID}` || "",
+      clientSecret: `${process.env.KEYCLOAK_CLIENT_SECRET}` || "",
       issuer: `${process.env.KEYCLOAK_URL}/realms/${process.env.KEYCLOAK_REALM}`,
     }),
   ],
@@ -24,19 +23,14 @@ export const authOptions: NextAuthOptions = {
         token.userId = account.providerAccountId;
         token.accessToken = account.access_token;
         token.refreshToken = account.refresh_token;
-        token.expiresAt = currentTime + account.expires_at; // Timestamp d'expiration
+        if (account.expires_at)
+          token.expiresAt = currentTime + account.expires_at; // Timestamp d'expiration
       }
 
       return token;
     },
 
     async session({ session, token }) {
-      if (!token) {
-        console.log("Token expiré, suppression de la session.");
-        clearNextAuthCookies();
-        return { ...session, error: "TokenExpired" }; // Toujours retourner un objet valide
-      }
-
       // Ajoute les tokens à la session utilisateur
       session.user.id = token.userId;
       session.accessToken = token.accessToken;
@@ -48,6 +42,7 @@ export const authOptions: NextAuthOptions = {
   secret: `${process.env.NEXTAUTH_SECRET}`,
 };
 
-const handler = NextAuth(authOptions);
+const handler = NextAuth(authOptions) as never;
 
+// Exportation standard pour les handlers API avec Next.js 15
 export { handler as GET, handler as POST };

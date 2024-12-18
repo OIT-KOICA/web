@@ -1,4 +1,3 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import ProductCreationForm from "@/components/auth/products/product-creation-form";
 import {
   Breadcrumb,
@@ -10,16 +9,8 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
 
 export default async function CreateProductPage() {
-  const session = await getServerSession(authOptions);
-
-  if (!session) {
-    redirect("/");
-  }
-
   return (
     <SidebarInset>
       <header className="flex h-16 shrink-0 items-center gap-2">

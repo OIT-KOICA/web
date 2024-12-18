@@ -48,17 +48,11 @@ export const useGetDiscussion = ({
  * @param {string} id - L'ID de la discussion.
  * @param {string} token - Le token d'authentification.
  */
-export const useGetDiscussionById = ({
-  id,
-  token,
-}: {
-  id: string;
-  token: string;
-}) => {
+export const useGetDiscussionById = ({ id }: { id: string }) => {
   const { data, refetch, error } = useQuery({
-    queryKey: ["discussion", { id, token }],
-    queryFn: () => getDiscussionById({ id, token }),
-    enabled: !!id && !!token, // Ne fait rien si l'ID | token est null ou undefined
+    queryKey: ["discussion", { id }],
+    queryFn: () => getDiscussionById({ id }),
+    enabled: !!id, // Ne fait rien si l'ID | token est null ou undefined
   });
 
   return { discussion: data, refetch, error };
@@ -69,17 +63,11 @@ export const useGetDiscussionById = ({
  * @param {string} slug - Le slug de la discussion.
  * @param {string} token - Le token d'authentification.
  */
-export const useGetDiscussionsBySlug = ({
-  slug,
-  token,
-}: {
-  slug: string;
-  token: string;
-}) => {
+export const useGetDiscussionsBySlug = ({ slug }: { slug: string }) => {
   const { data, refetch, error } = useQuery({
-    queryKey: ["discussions", { slug, token }],
-    queryFn: () => getDiscussionsBySlug({ slug, token }),
-    enabled: !!slug && !!token, // Ne fait rien si l'ID est null ou undefined
+    queryKey: ["discussions", { slug }],
+    queryFn: () => getDiscussionsBySlug({ slug }),
+    enabled: !!slug, // Ne fait rien si l'ID est null ou undefined
   });
 
   return { discussions: data, refetch, error };

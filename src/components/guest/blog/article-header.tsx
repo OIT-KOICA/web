@@ -2,14 +2,27 @@ import Image from "next/image";
 import { CalendarDays, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
+interface Article {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  date: string;
+  category: string;
+  author: string;
+}
 
-export default function ArticleHeader({ article }) {
+interface ArticleCardProps {
+  article: Article;
+}
+
+export default function ArticleHeader({ article }: ArticleCardProps) {
   return (
     <header className="mb-8">
-      <h1 className="text-4xl font-bold mb-4">{article.title}</h1>
-      <div className="relative w-full h-[400px] mb-6">
+      <h1 className="mb-4 text-4xl font-bold">{article.title}</h1>
+      <div className="relative mb-6 h-[400px] w-full">
         <Image
-          src={article.featuredImage}
+          src={article.image}
           alt={article.title}
           layout="fill"
           objectFit="cover"
@@ -18,12 +31,12 @@ export default function ArticleHeader({ article }) {
       </div>
       <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
         <div className="flex items-center">
-          <User className="w-4 h-4 mr-2" />
+          <User className="mr-2 size-4" />
           {article.author}
         </div>
         <div className="flex items-center">
-          <CalendarDays className="w-4 h-4 mr-2" />
-          {new Date(article.publishDate).toLocaleDateString()}
+          <CalendarDays className="mr-2 size-4" />
+          {new Date(article.date).toLocaleDateString()}
         </div>
         <Badge variant="secondary">{article.category}</Badge>
       </div>

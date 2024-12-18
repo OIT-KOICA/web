@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useForm, useFieldArray, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Dialog,
@@ -28,30 +28,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import {
   useCreateCompany,
   useGetCities,
 } from "@/lib/query/configuration-query";
-import { useSession } from "next-auth/react";
 import { CompanyFormValues, companySchema } from "@/schemas/company-schema";
 import Image from "next/image";
 import useUserStore from "@/lib/stores/user-store";
+import Phones from "../products/phones";
 
 const services = [
   { value: "PRODUCTION", label: "Production" },
@@ -63,7 +48,6 @@ const services = [
 
 export default function CreateCompanyModal() {
   const router = useRouter();
-  const { data: session } = useSession();
   const { toast } = useToast();
 
   const { cities } = useGetCities();
@@ -86,17 +70,12 @@ export default function CreateCompanyModal() {
     defaultValues: {
       name: "",
       email: "",
-      phones: [""],
+      phones: [],
       chainValueFunctions: [],
       localisation: "",
       serviceType: "",
       file: undefined,
     },
-  });
-
-  const { fields, append, remove } = useFieldArray({
-    control: form.control,
-    name: "phones",
   });
 
   const onSubmit: SubmitHandler<CompanyFormValues> = async (
@@ -127,7 +106,6 @@ export default function CreateCompanyModal() {
     try {
       createCompany.mutate({
         formData: formData,
-        token: session?.accessToken,
       });
 
       toast({
@@ -198,48 +176,7 @@ export default function CreateCompanyModal() {
             />
 
             {/* Téléphones */}
-            <div>
-              <FormLabel className="mr-4">Numéros de téléphone</FormLabel>
-              {fields.map((field, index) => (
-                <FormField
-                  control={form.control}
-                  key={field.id}
-                  name={`phones.${index}`}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <div className="mt-2 flex items-center space-x-2">
-                          <Input
-                            {...field}
-                            placeholder="Entrer le numéro de téléphone"
-                          />
-                          {index > 0 && (
-                            <Button
-                              type="button"
-                              variant="destructive"
-                              size="icon"
-                              onClick={() => remove(index)}
-                            >
-                              X
-                            </Button>
-                          )}
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              ))}
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="mt-2"
-                onClick={() => append("")}
-              >
-                Ajouter un numéro de téléphone
-              </Button>
-            </div>
+            <Phones control={form.control} />
 
             {/* Chaînes de valeur */}
             <FormField
@@ -360,6 +297,7 @@ export default function CreateCompanyModal() {
             <FormField
               control={form.control}
               name="file"
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Image de profil</FormLabel>

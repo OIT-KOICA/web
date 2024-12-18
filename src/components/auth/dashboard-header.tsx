@@ -8,13 +8,15 @@ export default function DashboardHeader() {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="text-center mb-12"
+      className="mb-12 text-center"
     >
-      <h1 className="text-4xl font-bold mb-4">Welcome to Your Dashboard</h1>
-      <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-        Explore the features of Cassava Marketplace to manage your products,
-        discover useful articles, post announcements, and get support when you
-        need it.
+      <h1 className="mb-4 text-4xl font-bold">
+        Bienvenue dans votre tableau de bord
+      </h1>
+      <p className="mx-auto max-w-2xl text-xl text-muted-foreground">
+        Explorez les fonctionnalités de Cassava Marketplace pour gérer vos
+        produits, découvrir des articles utiles, publier des annonces et obtenir
+        de l&apos;aide lorsque vous en avez besoin. quand vous en avez besoin.
       </p>
     </motion.div>
   );

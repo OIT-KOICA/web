@@ -24,7 +24,7 @@ export function clearNextAuthCookies() {
     // Si le cookie commence par "next.auth"
     if (key.startsWith("next.auth")) {
       // Supprimer le cookie en réglant sa date d'expiration dans le passé
-      document.cookie = `${key}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+      document.cookie = `${key}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; Path=/`;
     }
   });
 }

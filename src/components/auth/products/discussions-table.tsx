@@ -16,7 +16,7 @@ import useProductStore from "@/lib/stores/product-store";
 import { useRouter } from "next/navigation";
 import { Discussion } from "@/lib/type";
 
-export default function DiscussionsTable({ slug }: { slug: string }) {
+export default function DiscussionsTable({ slug }: { slug?: string }) {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const discussions = useProductStore((state) => state.discussions);
@@ -33,14 +33,14 @@ export default function DiscussionsTable({ slug }: { slug: string }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Discussions</CardTitle>
+        <CardTitle>Discussions avec des clients</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Client Name</TableHead>
-              <TableHead>Last Interaction</TableHead>
+              <TableHead>Nom du client</TableHead>
+              <TableHead>Dernière interaction</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="text-right">Action</TableHead>
             </TableRow>
@@ -62,17 +62,19 @@ export default function DiscussionsTable({ slug }: { slug: string }) {
                   </Badge>
                 </TableCell>
                 <TableCell className="text-right">
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      setActiveDiscussion(discussion);
-                      router.push(
-                        `/dashboard/products/${slug}/discussions/${discussion.id}`
-                      );
-                    }}
-                  >
-                    Consulter
-                  </Button>
+                  {slug && (
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setActiveDiscussion(discussion);
+                        router.push(
+                          `/dashboard/products/${slug}/discussions/${discussion.id}`
+                        );
+                      }}
+                    >
+                      Consulter
+                    </Button>
+                  )}
                 </TableCell>
               </TableRow>
             ))}
@@ -83,7 +85,7 @@ export default function DiscussionsTable({ slug }: { slug: string }) {
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
           >
-            Précedent
+            Précédent
           </Button>
           <span>
             Page {currentPage} of {totalPages}

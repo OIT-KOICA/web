@@ -7,12 +7,12 @@ import { Card, CardContent } from "@/components/ui/card";
 const contactInfo = [
   {
     icon: MapPin,
-    title: "Address",
+    title: "Adresse",
     content: "123 Cassava Street, Yaounde, Cameroon",
   },
   {
     icon: Phone,
-    title: "Phone",
+    title: "Numéro de téléphone",
     content: "+237 123 456 789",
     subContent: "Mon-Fri: 9 AM - 6 PM",
   },
@@ -40,7 +40,7 @@ export default function ContactInfo() {
         >
           <Card>
             <CardContent className="flex items-center p-6">
-              <item.icon className="w-6 h-6 text-primary mr-4" />
+              <item.icon className="mr-4 size-6 text-primary" />
               <div>
                 <h3 className="font-semibold">{item.title}</h3>
                 <p>{item.content}</p>
@@ -54,18 +54,18 @@ export default function ContactInfo() {
           </Card>
         </motion.div>
       ))}
-      <div className="flex justify-center space-x-4 mt-8">
+      <div className="mt-8 flex justify-center space-x-4">
         {socialMedia.map((item, index) => (
           <motion.a
             key={index}
             href={item.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-primary hover:text-primary/80 transition-colors"
+            className="text-primary transition-colors hover:text-primary/80"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
           >
-            <item.icon className="w-6 h-6" />
+            <item.icon className="size-6" />
           </motion.a>
         ))}
       </div>

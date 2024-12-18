@@ -6,32 +6,32 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const valueChains = [
   {
-    name: "Cassava",
+    name: "Manioc",
     description:
-      "A versatile root crop with various industrial and food applications.",
-    image: "/cassava.jpg",
+      "Une plante-racine polyvalente avec diverses applications industrielles et alimentaires.",
+    image: "/images/cassava.jpg",
   },
   {
-    name: "Maize",
+    name: "Maïs",
     description:
-      "A staple grain crop used for both human consumption and animal feed.",
-    image: "/maize.jpg",
+      "C'est une culture céréalière de base utilisée à la fois pour la consommation humaine et l'alimentation animale.",
+    image: "/images/maize.jpg",
   },
   {
-    name: "Poultry",
+    name: "Volaille",
     description:
-      "Including chickens and eggs, a vital protein source in many diets.",
-    image: "/poultry.jpg",
+      "Y compris les poulets et les œufs, qui constituent une source de protéines essentielle dans de nombreux régimes alimentaires.",
+    image: "/images/poultry.jpg",
   },
 ];
 
 export default function ValueChainsSection() {
   return (
     <section>
-      <h2 className="text-3xl font-semibold mb-8 text-center">
-        Our Value Chains
+      <h2 className="mb-8 text-center text-3xl font-semibold">
+        Nos chaînes de valeur
       </h2>
-      <div className="grid md:grid-cols-3 gap-8">
+      <div className="grid gap-8 md:grid-cols-3">
         {valueChains.map((chain, index) => (
           <motion.div
             key={index}

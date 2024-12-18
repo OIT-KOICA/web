@@ -26,7 +26,7 @@ export default function ProductDiscussion({
   discussion,
   setDiscussion,
 }: {
-  slug: string;
+  slug?: string;
   discussion: Discussion | null;
   setDiscussion: Dispatch<SetStateAction<Discussion | null>>;
 }) {
@@ -38,10 +38,11 @@ export default function ProductDiscussion({
 
   /* State local */
   const [loading, setLoading] = useState(false);
+  const [localSlug, setLocalSlug] = useState("");
   const [formDataDiscussion, setFormDataDiscussion] = useState({
     name: "",
     phone: "",
-    slug: slug, // slug du produit passé en prop
+    slug: localSlug, // slug du produit passé en prop
   });
   const [formDataMessage, setFormDataMessage] = useState({
     content: "",
@@ -58,6 +59,12 @@ export default function ProductDiscussion({
       }));
     }
   }, [discussion]);
+
+  useEffect(() => {
+    if (slug) {
+      setLocalSlug(slug);
+    }
+  }, [slug]);
 
   /**
    * Schéma de validation
@@ -95,7 +102,12 @@ export default function ProductDiscussion({
       discussionSchema.parse(data);
       return { isValid: true, errors: null };
     } catch (e) {
-      return { isValid: false, errors: e.errors };
+      if (e instanceof z.ZodError) return { isValid: false, errors: e.errors };
+      // Si ce n'est pas une erreur Zod, retourner une erreur générique
+      return {
+        isValid: false,
+        errors: [{ message: "Une erreur inconnue est survenue" }],
+      };
     }
   };
 
@@ -108,7 +120,13 @@ export default function ProductDiscussion({
       messageSchema.parse(data);
       return { isValid: true, errors: null };
     } catch (e) {
-      return { isValid: false, errors: e.errors };
+      if (e instanceof z.ZodError) {
+        return { isValid: false, errors: e.errors };
+      }
+      return {
+        isValid: false,
+        errors: [{ message: "Une erreur inconnue est survenue" }],
+      };
     }
   };
 
@@ -150,13 +168,13 @@ export default function ProductDiscussion({
 
     const validation = validateDiscussionData(formDataDiscussion);
 
-    if (!validation.isValid) {
+    if (!validation.isValid && validation.errors) {
       toast({
         variant: "destructive",
         title: "Uh oh! Un problème est survenu.",
-        description: validation.errors.map(
-          (error: { message: unknown }) => error.message
-        ),
+        description: validation.errors
+          .map((error: { message: string }) => error.message)
+          .join(", "),
       });
 
       setLoading(false);
@@ -190,13 +208,13 @@ export default function ProductDiscussion({
 
     const validation = validateMessageData(formDataMessage);
 
-    if (!validation.isValid) {
+    if (!validation.isValid && validation.errors) {
       toast({
         variant: "destructive",
         title: "Uh oh! Un problème est survenu.",
-        description: validation.errors.map(
-          (error: { message: unknown }) => error.message
-        ),
+        description: validation.errors
+          .map((error: { message: string }) => error.message)
+          .join(", "),
       });
 
       setLoading(false);
@@ -228,7 +246,7 @@ export default function ProductDiscussion({
       <CardHeader>
         <CardTitle className="flex items-center text-2xl font-bold text-[#2C5F2D]">
           <MessageCircle className="mr-2 size-6" />
-          Discussion
+          Discussions avec le vendeur
         </CardTitle>
       </CardHeader>
 

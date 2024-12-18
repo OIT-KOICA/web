@@ -1,3 +1,4 @@
+import { fetchClient } from "../api/fetch-client";
 import { CompanyDTO } from "../type";
 
 export const getCities = async (): Promise<
@@ -7,15 +8,15 @@ export const getCities = async (): Promise<
     region: string;
   }>
 > => {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_PATH_URL}/guest/cities`,
-    {
-      method: "GET",
-    }
-  );
-  if (!res.ok) throw new Error("Erreur lors de la récupération des villes");
-
-  return res.json();
+  try {
+    const data = await fetchClient(`/guest/cities`, {
+      requiresAuth: false,
+    });
+    return data;
+  } catch (error) {
+    console.error("Erreur lors de la récupération des villes :", error);
+    throw error;
+  }
 };
 
 export const getUnits = async (): Promise<
@@ -24,32 +25,30 @@ export const getUnits = async (): Promise<
     name: string;
   }>
 > => {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_PATH_URL}/guest/units`,
-    {
-      method: "GET",
-    }
-  );
-  if (!res.ok)
-    throw new Error("Erreur lors de la récupération des unités de mesure");
-
-  return res.json();
+  try {
+    const data = await fetchClient(`/guest/units`, {
+      requiresAuth: false,
+    });
+    return data;
+  } catch (error) {
+    console.error(
+      "Erreur lors de la récupération des unités de mesure :",
+      error
+    );
+    throw error;
+  }
 };
 
-export const getCompany = async (token: string): Promise<CompanyDTO> => {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_PATH_URL}/user/company`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-  if (!res.ok)
-    throw new Error("Erreur lors de la récupération de la compagnie");
-
-  return res.json();
+export const getCompany = async (): Promise<CompanyDTO> => {
+  try {
+    const data = await fetchClient(`/user/company`, {
+      requiresAuth: true,
+    });
+    return data;
+  } catch (error) {
+    console.error("Erreur lors de la récupération de la compagnie :", error);
+    throw error;
+  }
 };
 
 export const getAdds = async (): Promise<
@@ -57,20 +56,20 @@ export const getAdds = async (): Promise<
     id: string;
     name: string;
     phone: string;
-    title: string;
+    location: string;
     description: string;
     createdAt: string;
   }>
 > => {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_PATH_URL}/guest/adds`,
-    {
-      method: "GET",
-    }
-  );
-  if (!res.ok) throw new Error("Erreur lors de la récupération des annonces");
-
-  return res.json();
+  try {
+    const data = await fetchClient(`/guest/adds`, {
+      requiresAuth: false,
+    });
+    return data;
+  } catch (error) {
+    console.error("Erreur lors de la récupération des annonces :", error);
+    throw error;
+  }
 };
 
 export const createAdd = async (formData: {
@@ -86,17 +85,19 @@ export const createAdd = async (formData: {
   description: string;
   createdAt: string;
 }> => {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_PATH_URL}/guest/add/create`,
-    {
+  try {
+    const response = await fetchClient("/guest/add/create", {
       method: "POST",
       headers: {
         "Content-Type": `application/json`,
       },
       body: JSON.stringify(formData),
-    }
-  );
-  if (!res.ok) throw new Error("Erreur lors de la création de l'annonce");
+      requiresAuth: false, // Requête nécessitant une authentification
+    });
 
-  return res.json();
+    return response;
+  } catch (error) {
+    console.error("Erreur lors de la création de l'annonce :", error);
+    throw error;
+  }
 };

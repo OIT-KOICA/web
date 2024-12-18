@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect } from "react";
+import { Suspense, use, useEffect } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import useProductStore from "@/lib/stores/product-store";
 import ProductHeader from "@/components/auth/products/product-header";
@@ -8,21 +8,22 @@ import ProductInfo from "@/components/auth/products/product-info";
 import PriceVariationsTable from "@/components/auth/products/price-variations-table";
 import DiscussionsTable from "@/components/auth/products/discussions-table";
 import { SidebarInset } from "@/components/ui/sidebar";
-import { useSession } from "next-auth/react";
 import { useGetDiscussionsBySlug } from "@/lib/query/discussion-query";
 
-export default function ProductDetailsPage({ slug }: { slug: string }) {
-  const { data: session } = useSession();
+export default function ProductDetailsPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = use(params);
   const product = useProductStore((state) => state.activeProduct);
   const { setDiscussions } = useProductStore();
   const { discussions } = useGetDiscussionsBySlug({
     slug: slug,
-    token: session?.accessToken,
   });
 
   useEffect(() => {
     if (discussions) setDiscussions(discussions);
-    console.log(discussions);
   }, [discussions, setDiscussions]);
 
   return (
@@ -37,7 +38,7 @@ export default function ProductDetailsPage({ slug }: { slug: string }) {
               <ProductInfo product={product} />
             </Suspense>
             <Suspense fallback={<Skeleton className="h-96 w-full" />}>
-              <PriceVariationsTable variations={product?.priceVariations} />
+              <PriceVariationsTable variations={product?.pricings} />
             </Suspense>
           </div>
           <Suspense fallback={<Skeleton className="h-96 w-full" />}>

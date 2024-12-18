@@ -1,24 +1,22 @@
 import { create } from "zustand";
 import { checkUser } from "@/lib/service/user-api";
-import { clearNextAuthCookies } from "../utils";
 
 interface UserState {
   isNewUser: boolean | null; // `null` signifie que l'état n'a pas encore été chargé
-  setUserStatus: (token: string) => Promise<void>; // Définit l'état utilisateur
+  setUserStatus: () => Promise<void>; // Définit l'état utilisateur
   setStatus: () => Promise<void>; // Définit l'état utilisateur à false
 }
 
 const useUserStore = create<UserState>((set) => ({
   isNewUser: null, // État initial : non défini
 
-  setUserStatus: async (token: string) => {
+  setUserStatus: async () => {
     try {
-      const { isNewUser } = await checkUser(token);
+      const { isNewUser } = await checkUser();
       set({ isNewUser });
     } catch (error) {
-      clearNextAuthCookies();
       console.error("Erreur lors de la vérification de l'utilisateur :", error);
-      throw error; // Vous pouvez rediriger vers une page d'erreur ici
+      set({ isNewUser: false }); // Par défaut, considère qu'il a une compagnie
     }
   },
   setStatus: async () => {

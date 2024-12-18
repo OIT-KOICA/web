@@ -6,17 +6,17 @@ export const productSchema = z.object({
   description: z.string().min(1, "La description est requise"),
   category: z.string().min(1, "Catégorie requise"),
   unit: z.string().min(1, "Unité de mesure requise"),
-  type: z.string().min(1, "Type requis"),
+  type: z.literal("PRODUCT"),
   isPerishable: z.boolean().default(false).optional(),
   isDerivedProduct: z.boolean().default(false).optional(),
-  basePrice: z.number().min(0, "Prix de base requis"),
-  quantity: z.number().min(0, "Quantité requise"),
-  file: z.instanceof(File).optional(),
+  basePrice: z.number().positive("Le prix doit être supérieur à 0"),
+  quantity: z.number().int().nonnegative("La quantité doit être un entier positif"),
+  file: z.union([z.instanceof(File), z.string(), z.null()]).optional(),
   pricings: z
     .array(
       z.object({
         description: z.string().optional(),
-        price: z.number().optional(),
+        price: z.number().positive("Le prix doit être supérieur à 0").optional(),
         parameterType: z.string().optional(),
       })
     )

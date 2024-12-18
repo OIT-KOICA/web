@@ -1,25 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
 
 interface SearchBarProps {
   className?: string;
+  onTermChange: (searchItems: string) => void;
 }
 
-export default function SearchBar({ className }: SearchBarProps) {
+export default function SearchBar({
+  className,
+  onTermChange,
+}: SearchBarProps) {
   const [query, setQuery] = useState("");
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Implement search logic here
-    console.log("Searching for:", query);
-  };
+  useEffect(() => {
+    onTermChange(query);
+  }, [onTermChange, query]);
 
   return (
-    <form onSubmit={handleSearch} className={`flex gap-2 ${className}`}>
+    <div className={`flex gap-2 ${className}`}>
       <Input
         type="text"
         placeholder="Rechercher des produits..."
@@ -27,9 +27,6 @@ export default function SearchBar({ className }: SearchBarProps) {
         onChange={(e) => setQuery(e.target.value)}
         className="grow"
       />
-      <Button type="submit">
-        <Search className="mr-2 size-4" /> Rechercher
-      </Button>
-    </form>
+    </div>
   );
 }

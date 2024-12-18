@@ -1,6 +1,5 @@
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { redirect } from "next/navigation";
+"use client";
+
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -12,25 +11,21 @@ import {
 import useUserStore from "@/lib/stores/user-store";
 import DashboardHeader from "@/components/auth/dashboard-header";
 import DashboardCards from "@/components/auth/dashboard-cards";
+import { useEffect } from "react";
+import CreateCompanyModal from "@/components/auth/company/create-company-modal";
 
-export default async function DashboardPage() {
-  const session = await getServerSession(authOptions);
+export default function DashboardPage() {
+  const { isNewUser, setUserStatus } = useUserStore();
 
-  if (!session) {
-    redirect("/");
-  }
-
-  const userStore = useUserStore.getState();
-
-  if (userStore.isNewUser === null) {
-    // Charge l'état utilisateur si ce n'est pas déjà fait
-    await userStore.setUserStatus(session.accessToken);
-  }
-
-  const { isNewUser } = userStore;
+  useEffect(() => {
+    if (isNewUser === null) {
+      // Charger le statut utilisateur si nécessaire
+      setUserStatus();
+    }
+  }, [isNewUser, setUserStatus]);
 
   if (isNewUser) {
-    redirect("/company");
+    return <CreateCompanyModal />;
   }
 
   return (
@@ -48,7 +43,7 @@ export default async function DashboardPage() {
           </Breadcrumb>
         </div>
       </header>
-      
+
       <div className="container mx-auto px-4 py-8">
         <DashboardHeader />
         <DashboardCards />

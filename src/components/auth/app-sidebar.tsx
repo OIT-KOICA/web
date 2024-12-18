@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Command, LibraryBig, Package } from "lucide-react";
+import { LibraryBig, Package } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -14,7 +14,6 @@ import {
 import Link from "next/link";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
-import { useSession } from "next-auth/react";
 import { useGetCompany } from "@/lib/query/configuration-query";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
@@ -38,8 +37,7 @@ const dashboardMenuLink = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { data: session } = useSession();
-  const { company } = useGetCompany(session?.accessToken);
+  const { company } = useGetCompany();
 
   return (
     <Sidebar variant="inset" {...props}>

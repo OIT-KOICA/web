@@ -7,7 +7,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { ChevronDown } from "lucide-react";
 import { useFAQData } from "@/hooks/use-faq-data";
 
 export default function FAQAccordion() {
@@ -19,27 +18,27 @@ export default function FAQAccordion() {
   };
 
   if (isLoading) {
-    return <div className="text-center">Loading FAQ...</div>;
+    return <div className="text-center">Chargement des FAQ...</div>;
   }
 
   return (
     <Accordion type="single" collapsible className="w-full space-y-4">
       {faqData.map((category) => (
         <div key={category.id} className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">{category.title}</h2>
+          <h2 className="mb-4 text-2xl font-semibold">{category.title}</h2>
           {category.questions.map((item) => (
             <AccordionItem
               key={item.id}
               value={item.id}
-              className="border rounded-lg overflow-hidden mb-4"
+              className="mb-4 overflow-hidden rounded-lg border"
             >
               <AccordionTrigger
                 onClick={() => handleItemClick(item.id)}
-                className="flex justify-between items-center w-full p-4 text-left bg-gray-50 hover:bg-gray-100 transition-colors"
+                className="flex w-full items-center justify-between bg-gray-50 p-4 text-left transition-colors hover:bg-gray-100"
               >
                 <span className="font-medium">{item.question}</span>
               </AccordionTrigger>
-              <AccordionContent className="p-4 bg-white">
+              <AccordionContent className="bg-white p-4">
                 {item.answer}
               </AccordionContent>
             </AccordionItem>

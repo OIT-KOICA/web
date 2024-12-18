@@ -1,18 +1,18 @@
-import ProjectValueSection from '@/components/guest/about/stakeholders-section'
+import ProjectValueSection from '@/components/guest/about/project-value-section'
 import StakeholdersSection from '@/components/guest/about/stakeholders-section'
 import ValueChainsSection from '@/components/guest/about/value-chains-section'
 import VisionSection from '@/components/guest/about/vision-section'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'About Cassava Marketplace',
-  description: 'Learn about our vision, stakeholders, and the value we bring to the agricultural sector.',
+  title: 'À propos de Cassava Marketplace',
+  description: 'Découvrez notre vision, nos parties prenantes et la valeur que nous apportons au secteur agricole.',
 }
 
 export default function AboutPage() {
   return (
-    <div className="container mx-auto px-4 py-16 space-y-24">
-      <h1 className="text-4xl font-bold text-center mb-12">About Cassava Marketplace</h1>
+    <div className="container mx-auto space-y-24 px-4 py-16">
+      <h1 className="mb-12 text-center text-4xl font-bold">À propos de Cassava Marketplace</h1>
       <VisionSection />
       <StakeholdersSection />
       <ProjectValueSection />

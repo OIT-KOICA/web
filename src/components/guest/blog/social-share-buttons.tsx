@@ -38,17 +38,17 @@ export default function SocialShareButtons({
   };
 
   return (
-    <div className="flex space-x-4 my-8">
+    <div className="my-8 flex space-x-4">
       <Button variant="outline" onClick={shareOnFacebook}>
-        <Facebook className="w-5 h-5 mr-2" />
+        <Facebook className="mr-2 size-5" />
         Share
       </Button>
       <Button variant="outline" onClick={shareOnTwitter}>
-        <Twitter className="w-5 h-5 mr-2" />
+        <Twitter className="mr-2 size-5" />
         Tweet
       </Button>
       <Button variant="outline" onClick={shareOnLinkedIn}>
-        <Linkedin className="w-5 h-5 mr-2" />
+        <Linkedin className="mr-2 size-5" />
         Share
       </Button>
     </div>

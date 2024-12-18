@@ -6,42 +6,42 @@ import DashboardCard from "./dashboard-card";
 
 const cards = [
   {
-    title: "Manage Your Products",
+    title: "Gérer vos produits",
     description:
-      "View the list of products you have created, add new ones, or update existing ones.",
+      "Consultez la liste des produits que vous avez créés, ajoutez-en de nouveaux ou mettez à jour les produits existants.",
     icon: Package,
-    cta: "Go to My Products",
+    cta: "Aller à Mes produits",
     href: "/dashboard/products",
   },
   {
-    title: "Discover Useful Articles",
+    title: "Découvrez des articles utiles",
     description:
-      "Read informative articles on value chains, funding opportunities, and tips for growing your business.",
+      "Lisez des articles informatifs sur les chaînes de valeur, les possibilités de financement et des conseils pour développer votre entreprise.",
     icon: BookOpen,
-    cta: "Visit Blog",
+    cta: "Visiter le blog",
     href: "/blog",
   },
   {
-    title: "Post Your Needs",
+    title: "Affichez vos besoins",
     description:
-      "Post announcements to find specific products or services tailored to your needs.",
+      "Publier des annonces pour trouver des produits ou des services spécifiques adaptés à vos besoins.",
     icon: Megaphone,
-    cta: "Post an Announcement",
+    cta: "Publier une annonce",
     href: "/dashboard/announcements",
   },
   {
-    title: "Need Help?",
+    title: "Besoin d'aide ?",
     description:
-      "Check our FAQ or contact our team to get answers to your questions.",
+      "Consultez notre FAQ ou contactez notre équipe pour obtenir des réponses à vos questions.",
     icon: HelpCircle,
-    cta: "Get Help",
+    cta: "Obtenir de l'aide",
     href: "/faq",
   },
 ];
 
 export default function DashboardCards() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
       {cards.map((card, index) => (
         <motion.div
           key={card.title}

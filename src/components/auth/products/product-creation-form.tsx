@@ -27,15 +27,12 @@ import LocationSelect from "./location-select";
 import UnitOfMeasureSelect from "./unit-of-measure-select";
 import Image from "next/image";
 import { useCreateProduct, useUpdateProduct } from "@/lib/query/product-query";
-import { useSession } from "next-auth/react";
 import useProductStore from "@/lib/stores/product-store";
-import { ProductDTO } from "@/lib/type";
 
 export default function ProductCreationForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
-  const { data: session } = useSession();
   const createProduct = useCreateProduct();
   const editProduct = useUpdateProduct();
   const product = useProductStore((state) => state.activeProduct);
@@ -47,7 +44,11 @@ export default function ProductCreationForm() {
     resolver: zodResolver(productSchema),
     defaultValues:
       edit && product
-        ? (product as ProductDTO)
+        ? {
+            ...product, // Récupère toutes les valeurs de `ProductDTO`
+            type: "PRODUCT", // Forcer le type à "PRODUCT" pour respecter `ProductFormValues`
+            file: product.file || undefined, // Assurez-vous que `file` est correct
+          }
         : {
             name: "",
             code: "",
@@ -91,7 +92,10 @@ export default function ProductCreationForm() {
     formData.append("quantity", data.quantity.toString());
     formData.append("localisation", data.localisation);
 
-    if (data.file) formData.append("file", data.file);
+    // Champs conditionnels pour l'image
+    if (data.file instanceof File) {
+      formData.append("file", data.file);
+    }
 
     if (data.pricings && data.pricings?.length > 0)
       formData.append("pricings", JSON.stringify(data.pricings));
@@ -101,12 +105,10 @@ export default function ProductCreationForm() {
         editProduct.mutate({
           slug: product.slug,
           productData: formData,
-          token: session?.accessToken,
         });
       else
         createProduct.mutate({
           productData: formData,
-          token: session?.accessToken,
         });
 
       toast({
@@ -274,6 +276,7 @@ export default function ProductCreationForm() {
             <FormField
               control={form.control}
               name="file"
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
               render={({ field: { value, onChange, ...field } }) => (
                 <FormItem>
                   <FormLabel>Image du produit</FormLabel>
@@ -286,7 +289,8 @@ export default function ProductCreationForm() {
                     />
                   </FormControl>
 
-                  {previewImage && (
+                  {/* Afficher un aperçu de l'image existante ou nouvelle */}
+                  {previewImage ? (
                     <div className="mt-2">
                       <FormLabel>Aperçu de l&apos;image :</FormLabel>
                       <Image
@@ -298,7 +302,19 @@ export default function ProductCreationForm() {
                         style={{ objectFit: "contain" }}
                       />
                     </div>
-                  )}
+                  ) : product?.file && edit ? (
+                    <div className="mt-2">
+                      <FormLabel>Aperçu existant :</FormLabel>
+                      <Image
+                        src={`${process.env.NEXT_PUBLIC_API_PATH_URL}/image/${product.file}`} // Chemin vers l'image existante
+                        alt="Aperçu de l'image existante"
+                        width={100}
+                        height={100}
+                        className="rounded-md border object-cover"
+                        style={{ objectFit: "contain" }}
+                      />
+                    </div>
+                  ) : null}
                   <FormMessage />
                 </FormItem>
               )}
@@ -373,7 +389,7 @@ export default function ProductCreationForm() {
 
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting && <Loader2 className="mr-2 size-4 animate-spin" />}
-              Créer le produit
+              {edit && product ? "Modifier le produit" : "Créer le produit"}
             </Button>
           </form>
         </Form>

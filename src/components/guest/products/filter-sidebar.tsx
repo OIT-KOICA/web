@@ -31,14 +31,14 @@ interface FilterState {
   localisation: string;
 }
 
-const categories = ["CASSAVA", "CORN", "CHICKEN", "TRANSPORT", "HIRE", "OTHER"];
+const categories = ["MANIOC", "MAIS", "VOLAILLE", "TRANSPORT", "LOCATION", "AUTRE"];
 
 export default function FilterSidebar({
   className,
   onFilterChange,
 }: FilterSidebarProps) {
   const [filters, setFilters] = useState<FilterState>({
-    categories: [],
+    categories: [] as string[],
     localisation: "",
   });
   const [open, setOpen] = useState(false);

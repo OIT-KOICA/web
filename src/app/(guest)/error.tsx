@@ -16,12 +16,14 @@ export default function GuestError({
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center px-4 text-center">
-      <h1 className="mb-4 text-4xl font-bold">Oops! Something went wrong</h1>
+      <h1 className="mb-4 text-4xl font-bold">
+        Oups ! Une erreur s&apos;est produite
+      </h1>
       <p className="mb-8 text-xl text-muted-foreground">
-        We&apos;re sorry, but there was an error loading this page. Please try
-        again later.
+        Nous sommes désolés, mais il y a eu une erreur de chargement de cette
+        page. Veuillez réessayer plus tard.
       </p>
-      <Button onClick={() => reset()}>Try again</Button>
+      <Button onClick={() => reset()}>Réessayer</Button>
     </div>
   );
 }

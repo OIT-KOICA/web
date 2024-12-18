@@ -17,8 +17,8 @@ interface RelatedArticlesProps {
 export default function RelatedArticles({ articles }: RelatedArticlesProps) {
   return (
     <section className="mt-16">
-      <h2 className="text-2xl font-bold mb-6">Related Articles</h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <h2 className="mb-6 text-2xl font-bold">Related Articles</h2>
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
         {articles.map((article) => (
           <Card key={article.id} className="overflow-hidden">
             <div className="relative h-48">
@@ -30,10 +30,10 @@ export default function RelatedArticles({ articles }: RelatedArticlesProps) {
               />
             </div>
             <CardContent className="p-4">
-              <h3 className="font-semibold mb-2 line-clamp-2">
+              <h3 className="mb-2 line-clamp-2 font-semibold">
                 {article.title}
               </h3>
-              <p className="text-sm text-muted-foreground line-clamp-3">
+              <p className="line-clamp-3 text-sm text-muted-foreground">
                 {article.excerpt}
               </p>
             </CardContent>

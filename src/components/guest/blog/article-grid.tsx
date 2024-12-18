@@ -45,14 +45,14 @@ export default function ArticleGrid() {
 
   return (
     <div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
         {mockArticles.slice(0, visibleArticles).map((article) => (
           <ArticleCard key={article.id} article={article} />
         ))}
       </div>
       {visibleArticles < mockArticles.length && (
-        <div className="text-center mt-8">
-          <Button onClick={loadMore}>Load More</Button>
+        <div className="mt-8 text-center">
+          <Button onClick={loadMore}>Charger plus...</Button>
         </div>
       )}
     </div>

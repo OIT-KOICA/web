@@ -4,24 +4,26 @@ import { motion } from "framer-motion";
 import { CheckCircle } from "lucide-react";
 
 const valuePoints = [
-  "Increased revenue for producers through direct market access",
-  "Improved efficiency in the supply chain",
-  "Enhanced transparency in pricing and transactions",
-  "Access to a wider range of products for consumers",
-  "Promotion of sustainable agricultural practices",
-  "Facilitation of knowledge sharing and capacity building",
+  "Augmentation des revenus des producteurs grâce à un accès direct au marché",
+  "Amélioration de l'efficacité de la chaîne d'approvisionnement",
+  "Amélioration de la transparence des prix et des transactions",
+  "Accès à une plus large gamme de produits pour les consommateurs",
+  "Promotion de pratiques agricoles durables",
+  "Facilitation du partage des connaissances et du renforcement des capacités",
 ];
 
 export default function ProjectValueSection() {
   return (
-    <section className="bg-gray-50 p-8 rounded-lg">
-      <h2 className="text-3xl font-semibold mb-8 text-center">Project Value</h2>
-      <div className="grid md:grid-cols-2 gap-8">
+    <section className="rounded-lg bg-gray-50 p-8">
+      <h2 className="mb-8 text-center text-3xl font-semibold dark:text-black">
+        Valeur du projet
+      </h2>
+      <div className="grid gap-8 md:grid-cols-2">
         <div>
-          <p className="text-lg mb-6">
-            Cassava Marketplace is essential for the agricultural value chains
-            we support. Our platform brings numerous benefits to all
-            stakeholders involved:
+          <p className="mb-6 text-lg dark:text-black">
+            Cassava Marketplace est essentielle pour les chaînes de valeur
+            agricoles que nous soutenons. Notre plateforme apporte de nombreux
+            avantages à tous les parties prenantes impliquées :
           </p>
           <ul className="space-y-4">
             {valuePoints.map((point, index) => (
@@ -32,23 +34,26 @@ export default function ProjectValueSection() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                <CheckCircle className="w-6 h-6 text-green-500 mr-2 flex-shrink-0 mt-1" />
-                <span>{point}</span>
+                <CheckCircle className="mr-2 mt-1 size-6 shrink-0 text-green-500" />
+                <span className="dark:text-black">{point}</span>
               </motion.li>
             ))}
           </ul>
         </div>
-        <div className="bg-primary text-white p-8 rounded-lg">
-          <h3 className="text-2xl font-semibold mb-4">Our Impact</h3>
+        <div className="rounded-lg bg-primary p-8 text-white dark:text-black">
+          <h3 className="mb-4 text-2xl font-semibold">Notre impact</h3>
           <p className="mb-4">
-            By connecting producers directly with consumers and other
-            stakeholders, revolutionizing the agricultural sector in
-            our region.
+            En mettant les producteurs en relation directe avec les
+            consommateurs et les autres parties prenantes, en révolutionnant le
+            secteur agricole de notre région. révolutionner le secteur agricole
+            dans notre région.
           </p>
           <p>
-            Our platform not only increases profitability for farmers and
-            businesses but also contributes to food security and sustainable
-            development in the communities we serve.
+            Notre plateforme ne se contente pas d&apos;accroître la rentabilité
+            des agriculteurs et des entreprises, elle contribue également à la
+            sécurité alimentaire et au développement durable. entreprises, mais
+            elle contribue également à la sécurité alimentaire et au
+            développement durable dans les communautés que nous servons.
           </p>
         </div>
       </div>

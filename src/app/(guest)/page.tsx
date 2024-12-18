@@ -9,16 +9,6 @@ const DynamicHero = dynamic(() => import("@/components/guest/hero"), {
     </div>
   ),
 });
-const DynamicBlogSection = dynamic(
-  () => import("@/components/guest/blog-section"),
-  {
-    loading: () => (
-      <div className="flex h-[400px] items-center justify-center">
-        <Loader2 className="animate-spin" />
-      </div>
-    ),
-  }
-);
 const DynamicStakeholderSection = dynamic(
   () => import("@/components/guest/stakeholder-section"),
   {
@@ -79,15 +69,6 @@ export default function Home() {
         }
       >
         <DynamicStakeholderSection />
-      </Suspense>
-      <Suspense
-        fallback={
-          <div className="flex h-[400px] items-center justify-center">
-            <Loader2 className="animate-spin" />
-          </div>
-        }
-      >
-        <DynamicBlogSection />
       </Suspense>
       <Suspense
         fallback={

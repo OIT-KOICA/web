@@ -7,8 +7,8 @@ export default function ProductHeader({
   name,
   file,
 }: {
-  name: string;
-  file: string | null;
+  name?: string;
+  file?: string | null;
 }) {
   return (
     <div className="relative h-64 overflow-hidden rounded-lg">
@@ -32,7 +32,7 @@ export default function ProductHeader({
             Retour aux produits
           </Button>
         </Link>
-        <h1 className="text-3xl font-bold text-white">{name}</h1>
+        <h1 className="text-3xl font-bold text-white">{name ?? ""}</h1>
       </div>
     </div>
   );

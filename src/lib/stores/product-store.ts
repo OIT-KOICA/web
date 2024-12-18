@@ -2,7 +2,21 @@ import { persist } from "zustand/middleware";
 import { create } from "zustand";
 import { Discussion, ProductDTO } from "../type";
 
-const useProductStore = create(
+// Définir le type pour l'état et les actions du store
+interface ProductStoreState {
+  products: Array<ProductDTO>;
+  discussions: Array<Discussion>;
+  activeProduct: ProductDTO | null;
+  activeDiscussion: Discussion | null;
+  edit: boolean;
+  setProducts: (products: Array<ProductDTO>) => void;
+  setActiveProduct: (product: ProductDTO) => void;
+  setDiscussions: (discussions: Array<Discussion>) => void;
+  setActiveDiscussion: (discussion: Discussion) => void;
+  setEdit: (edit: boolean) => void;
+}
+
+const useProductStore = create<ProductStoreState>()(
   persist(
     (set) => ({
       products: [],

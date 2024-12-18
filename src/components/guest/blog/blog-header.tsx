@@ -1,11 +1,11 @@
 export default function BlogHeader() {
   return (
-    <div className="text-center mb-12">
-      <h1 className="text-4xl font-bold mb-4">Resources and Articles</h1>
-      <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-        Discover valuable insights and information to grow your agricultural and
-        entrepreneurial activities in the cassava, maize, and poultry value
-        chains.
+    <div className="mb-12 text-center">
+      <h1 className="mb-4 text-4xl font-bold">Ressources et articles</h1>
+      <p className="mx-auto max-w-2xl text-xl text-muted-foreground">
+        Découvrez des informations précieuses pour développer vos activités
+        agricoles et entrepreneuriales dans les secteurs du manioc, du maïs et
+        de la volaille.
       </p>
     </div>
   );

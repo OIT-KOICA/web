@@ -6,9 +6,7 @@ export const companySchema = z.object({
     .string()
     .email("Veuillez entrer une adresse e-mail valide.")
     .optional(),
-  phones: z
-    .array(z.string())
-    .min(1, "Vous devez entrer au moins un numéro de téléphone."),
+  phones: z.array(z.string()),
   chainValueFunctions: z
     .array(z.string())
     .min(1, "Vous devez sélectionner au moins une chaîne de valeur."),

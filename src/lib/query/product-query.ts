@@ -11,16 +11,14 @@ import {
 /**
  * Hook pour récupérer tous les produits.
  */
-export const useGetProductsByUserID = (token: string) => {
+export const useGetProductsByUserID = () => {
   const { data, refetch } = useQuery({
     queryKey: ["products"],
-    queryFn: () => getProductByUserId(token),
-    enabled: !!token
+    queryFn: getProductByUserId,
   });
 
   return { products: data, refetch };
 };
-
 
 /**
  * Hook pour récupérer tous les produits d'un utilisateur.
@@ -55,13 +53,8 @@ export const useCreateProduct = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({
-      productData,
-      token,
-    }: {
-      productData: FormData;
-      token: string;
-    }) => createProduct(productData, token),
+    mutationFn: ({ productData }: { productData: FormData }) =>
+      createProduct(productData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] }); // Rafraîchit la liste des produits
     },
@@ -78,12 +71,10 @@ export const useUpdateProduct = () => {
     mutationFn: ({
       slug,
       productData,
-      token,
     }: {
       slug: string;
       productData: FormData;
-      token: string;
-    }) => updateProduct(slug, productData, token),
+    }) => updateProduct(slug, productData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] }); // Rafraîchit la liste des produits
     },
@@ -97,8 +88,7 @@ export const useDeleteProduct = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ slug, token }: { slug: string; token: string }) =>
-      deleteProduct(slug, token),
+    mutationFn: ({ slug }: { slug: string }) => deleteProduct(slug),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] }); // Rafraîchit la liste des produits
     },

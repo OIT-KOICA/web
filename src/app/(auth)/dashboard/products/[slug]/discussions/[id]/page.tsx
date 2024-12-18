@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, use } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,22 +14,23 @@ import { SidebarInset } from "@/components/ui/sidebar";
 export default function DiscussionView({
   params,
 }: {
-  params: { productSlug: string; discussionId: string };
+  params: Promise<{ productSlug: string; discussionId: string }>;
 }) {
   const discussion = useProductStore((state) => state.activeDiscussion);
+  const { productSlug } = use(params);
 
   return (
     <SidebarInset>
       <div className="flex h-screen">
         <div className="flex-1 space-y-12 p-8">
           <div className="flex items-center justify-between">
-            <Link href={`/dashboard/products/${params.productSlug}`}>
+            <Link href={`/dashboard/products/${productSlug}`}>
               <Button variant="ghost">
                 <ArrowLeft className="mr-2 size-4" />
                 Retour aux produits
               </Button>
             </Link>
-            <h1 className="text-3xl font-bold">
+            <h1 className="text-xl font-bold">
               Discussion avec {discussion?.user.name}
             </h1>
           </div>

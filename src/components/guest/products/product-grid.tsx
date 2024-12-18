@@ -12,13 +12,17 @@ const PRODUCTS_PER_PAGE = 20;
 const PRODUCTS_PER_LOAD = 6;
 
 interface ProductGridProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  filters: any; // Replace 'any' with your actual filter type
+  filters: {
+    categories: string[];
+    localisation: string;
+  };
+  searchTerm: string;
 }
 
-export default function ProductGrid({ filters }: ProductGridProps) {
+export default function ProductGrid({ filters, searchTerm }: ProductGridProps) {
   const { products } = useGetProducts();
   const [allProducts, setAllProducts] = useState<ProductDTO[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<ProductDTO[]>([]);
   const [displayedProducts, setDisplayedProducts] = useState<ProductDTO[]>([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -32,6 +36,32 @@ export default function ProductGrid({ filters }: ProductGridProps) {
     if (products) setAllProducts(products);
   }, [products]);
 
+  // Filtrer les produits en fonction des filtres et du terme de recherche
+  useEffect(() => {
+    const applyFilters = () => {
+      const filtered = allProducts.filter((product) => {
+        return (
+          (filters.categories.length === 0 ||
+            filters.categories.includes(product.category)) &&
+          (filters.localisation === "" ||
+            product.localisation === filters.localisation) &&
+          (searchTerm === "" ||
+            product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            product.description
+              .toLowerCase()
+              .includes(searchTerm.toLowerCase()) ||
+            product.company.toLowerCase().includes(searchTerm.toLowerCase()))
+        );
+      });
+      setFilteredProducts(filtered);
+      setDisplayedProducts(filtered.slice(0, PRODUCTS_PER_LOAD));
+      setCurrentPage(1);
+      setLoadedAllForPage(false);
+    };
+
+    applyFilters();
+  }, [filters, searchTerm, allProducts]);
+
   const loadMoreProducts = useCallback(async () => {
     if (loading || loadedAllForPage) return;
 
@@ -44,12 +74,12 @@ export default function ProductGrid({ filters }: ProductGridProps) {
 
     setDisplayedProducts((prev) => [
       ...prev,
-      ...allProducts.slice(startIndex, endIndex),
+      ...filteredProducts.slice(startIndex, endIndex),
     ]);
 
     setLoading(false);
 
-    if (endIndex >= currentPage * PRODUCTS_PER_PAGE) {
+    if (endIndex >= filteredProducts.length) {
       setLoadedAllForPage(true);
     }
   }, [
@@ -57,7 +87,7 @@ export default function ProductGrid({ filters }: ProductGridProps) {
     loadedAllForPage,
     displayedProducts.length,
     currentPage,
-    allProducts,
+    filteredProducts,
   ]);
 
   useEffect(() => {
@@ -67,22 +97,17 @@ export default function ProductGrid({ filters }: ProductGridProps) {
   }, [inView, loadMoreProducts]);
 
   const handlePageChange = (newPage: number) => {
+    const startIndex = (newPage - 1) * PRODUCTS_PER_PAGE;
+    const endIndex = Math.min(
+      newPage * PRODUCTS_PER_PAGE,
+      filteredProducts.length
+    );
+
     setCurrentPage(newPage);
-    setDisplayedProducts([]);
+    setDisplayedProducts(filteredProducts.slice(startIndex, endIndex));
     setLoadedAllForPage(false);
     window.scrollTo(0, 0);
   };
-
-  // Apply filters
-  const filteredProducts = allProducts.filter((product) => {
-    return (
-      ((filters.categories.length === 0 ||
-        filters.categories.includes(product.category)) &&
-        (filters.localisation === "" ||
-          product.localisation === filters.localisation)) ||
-      product
-    );
-  });
 
   const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
   /*const paginatedProducts = filteredProducts.slice(
@@ -93,7 +118,7 @@ export default function ProductGrid({ filters }: ProductGridProps) {
   return (
     <div>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {filteredProducts.map((product) => (
+        {displayedProducts.map((product) => (
           <ProductCard key={product.slug} product={product} />
         ))}
       </div>
@@ -102,7 +127,7 @@ export default function ProductGrid({ filters }: ProductGridProps) {
           {loading ? (
             <Loader2 className="animate-spin" />
           ) : (
-            <Button onClick={loadMoreProducts}>Load More</Button>
+            <Button onClick={loadMoreProducts}>Charger plus...</Button>
           )}
         </div>
       )}
@@ -112,7 +137,7 @@ export default function ProductGrid({ filters }: ProductGridProps) {
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
           >
-            Precedent
+            Précédent
           </Button>
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
             <Button

@@ -78,7 +78,7 @@ export default function Header() {
               size="sm"
               onClick={() => signIn("keycloak")}
             >
-              Login
+              Se connecter
             </Button>
           )}
           <ModeToggle />

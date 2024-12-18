@@ -42,7 +42,7 @@ export default function DashboardCard({
             animate={{ rotate: isHovered ? 360 : 0 }}
             transition={{ duration: 0.5 }}
           >
-            <Icon className="w-8 h-8 mr-2 text-primary" />
+            <Icon className="mr-2 size-8 text-primary" />
           </motion.div>
           {title}
         </CardTitle>

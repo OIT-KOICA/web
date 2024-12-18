@@ -18,19 +18,19 @@ export default function Footer() {
             <div>
               <h3 className="text-lg font-bold">Cassava Marketplace</h3>
               <p className="text-sm text-muted-foreground">
-                Connecting local entrepreneurs
+                Mettre en relation les entrepreneurs locaux
               </p>
             </div>
           </div>
           <div>
-            <h3 className="mb-4 font-bold">Quick Links</h3>
+            <h3 className="mb-4 font-bold">Liens rapides</h3>
             <ul className="space-y-2">
               <li>
                 <Link
                   href="/products"
                   className="text-sm text-muted-foreground hover:text-primary"
                 >
-                  Products
+                  Produits
                 </Link>
               </li>
               <li>
@@ -52,14 +52,14 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="mb-4 font-bold">Legal</h3>
+            <h3 className="mb-4 font-bold">Juridique</h3>
             <ul className="space-y-2">
               <li>
                 <Link
                   href="/terms"
                   className="text-sm text-muted-foreground hover:text-primary"
                 >
-                  Terms of Service
+                  Conditions d&apos;utilisation
                 </Link>
               </li>
               <li>
@@ -67,13 +67,13 @@ export default function Footer() {
                   href="/privacy"
                   className="text-sm text-muted-foreground hover:text-primary"
                 >
-                  Privacy Policy
+                  Politique de confidentialité
                 </Link>
               </li>
             </ul>
           </div>
           <div>
-            <h3 className="mb-4 font-bold">Follow Us</h3>
+            <h3 className="mb-4 font-bold">Suivez-nous</h3>
             <div className="flex space-x-4">
               <a href="#" className="text-muted-foreground hover:text-primary">
                 <Facebook size={20} />
@@ -88,7 +88,8 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-8 border-t pt-8 text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Cassava Marketplace. All rights reserved.
+          © {new Date().getFullYear()} Cassava Marketplace. Tous droits
+          réservés.
         </div>
       </div>
     </footer>

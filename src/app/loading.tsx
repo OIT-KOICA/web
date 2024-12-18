@@ -5,9 +5,9 @@ export default function Loading() {
     <div className="flex min-h-screen items-center justify-center">
       <div className="text-center">
         <Loader2 className="mx-auto mb-4 size-16 animate-spin text-primary" />
-        <h2 className="text-2xl font-semibold">Loading...</h2>
+        <h2 className="text-2xl font-semibold">Chargement...</h2>
         <p className="text-muted-foreground">
-          Please wait while we fetch the content for you.
+          Veuillez patienter pendant que nous récupérons le contenu pour vous.
         </p>
       </div>
     </div>

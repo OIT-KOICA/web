@@ -58,7 +58,7 @@ export default function ContactForm() {
             name="fullName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Full Name</FormLabel>
+                <FormLabel>Nom complet</FormLabel>
                 <FormControl>
                   <Input placeholder="John Doe" {...field} />
                 </FormControl>
@@ -84,9 +84,9 @@ export default function ContactForm() {
             name="subject"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Subject</FormLabel>
+                <FormLabel>Objet</FormLabel>
                 <FormControl>
-                  <Input placeholder="Your inquiry subject" {...field} />
+                  <Input placeholder="Entrer l'objet du mail ici" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -100,7 +100,7 @@ export default function ContactForm() {
                 <FormLabel>Message</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="Type your message here"
+                    placeholder="Entrer votre message ici"
                     className="resize-none"
                     {...field}
                   />
@@ -110,7 +110,7 @@ export default function ContactForm() {
             )}
           />
           <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Sending..." : "Send Message"}
+            {isSubmitting ? "Envoyer..." : "Envoyer le message"}
           </Button>
         </form>
       </Form>

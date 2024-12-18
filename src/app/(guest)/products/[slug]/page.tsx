@@ -7,6 +7,7 @@ import ProductInfo from "@/components/guest/products/product-info";
 import SkeletonLoader from "@/components/guest/products/skeleton-loader";
 import { getDiscussion } from "@/lib/service/discussion-api";
 import useProductStore from "@/lib/stores/product-store";
+import { Discussion } from "@/lib/type";
 import { getPhoneFromCookie } from "@/lib/utils";
 import { Suspense, useEffect, useState } from "react";
 
@@ -21,11 +22,11 @@ export default function ProductDetailPage() {
    * Sinon retourne une discussion vide
    */
   useEffect(() => {
-    if (phone)
-      getDiscussion({ slug: product?.slug, phone }).then((data) =>
+    if (phone && product)
+      getDiscussion({ slug: product.slug, phone }).then((data) =>
         setDiscussion(data)
       );
-  }, [phone, product?.slug, setDiscussion]);
+  }, [phone, product, setDiscussion]);
 
   return (
     <div className="container mx-auto px-4 py-8">

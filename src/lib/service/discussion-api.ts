@@ -1,3 +1,4 @@
+import { fetchClient } from "../api/fetch-client";
 import { Discussion, DiscussionRequest, MessageRequest } from "../type";
 
 /**
@@ -5,15 +6,15 @@ import { Discussion, DiscussionRequest, MessageRequest } from "../type";
  * @returns {Promise<Discussion[]>} Les produits.
  */
 export const getDiscussions = async (): Promise<Discussion[]> => {
-  const res: Response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_PATH_URL}/guest/discussions`
-  );
-
-  if (res) {
-    return await res.json();
+  try {
+    const data = await fetchClient(`/guest/discussions`, {
+      requiresAuth: false,
+    });
+    return data;
+  } catch (error) {
+    console.error("Erreur lors du chargement des discussions :", error);
+    throw error;
   }
-
-  throw new Error("Erreur lors du chargement des discussions");
 };
 
 /**
@@ -29,63 +30,47 @@ export const getDiscussion = async ({
   slug: string;
   phone: string;
 }): Promise<Discussion> => {
-  const res: Response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_PATH_URL}/guest/discussion/${phone}/${slug}`
-  );
-
-  if (res) {
-    return await res.json();
+  try {
+    const data = await fetchClient(`/guest/discussion/${phone}/${slug}`, {
+      requiresAuth: false,
+    });
+    return data;
+  } catch (error) {
+    console.error("Erreur lors de la récupération de la discussion :", error);
+    throw error;
   }
-
-  throw new Error("Erreur lors de la récupération de la discussion");
 };
 
 export const getDiscussionsBySlug = async ({
   slug,
-  token,
 }: {
   slug: string;
-  token: string;
 }): Promise<Array<Discussion>> => {
-  const res: Response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_PATH_URL}/product/${slug}/discussion`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
-  if (res) {
-    return await res.json();
+  try {
+    const data = await fetchClient(`/product/${slug}/discussion`, {
+      requiresAuth: true,
+    });
+    return data;
+  } catch (error) {
+    console.error("Erreur lors de la récupération de la discussion :", error);
+    throw error;
   }
-
-  throw new Error("Erreur lors de la récupération de la discussion");
 };
 
 export const getDiscussionById = async ({
   id,
-  token,
 }: {
   id: string;
-  token: string;
 }): Promise<Discussion> => {
-  const res: Response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_PATH_URL}/product/discussion/${id}`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
-  if (res) {
-    return await res.json();
+  try {
+    const data = await fetchClient(`/product/discussion/${id}`, {
+      requiresAuth: true,
+    });
+    return data;
+  } catch (error) {
+    console.error("Erreur lors de la récupération de la discussion :", error);
+    throw error;
   }
-
-  throw new Error("Erreur lors de la récupération de la discussion");
 };
 
 /**
@@ -96,22 +81,20 @@ export const getDiscussionById = async ({
 export const createDiscussion = async (
   discussionData: DiscussionRequest
 ): Promise<Discussion> => {
-  const res: Response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_PATH_URL}/guest/discussion/create`,
-    {
+  try {
+    const data = await fetchClient(`/guest/discussion/create`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(discussionData),
-    }
-  );
-
-  if (res) {
-    return res.json();
+      requiresAuth: false,
+    });
+    return data;
+  } catch (error) {
+    console.error("Echec lors de la création de la discussion :", error);
+    throw error;
   }
-
-  throw new Error("Echec lors de la création de la discussion");
 };
 
 /**
@@ -122,22 +105,20 @@ export const createDiscussion = async (
 export const createMessage = async (
   messageData: MessageRequest
 ): Promise<Discussion> => {
-  const res: Response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_PATH_URL}/guest/discussion/create/message`,
-    {
+  try {
+    const data = await fetchClient(`/guest/discussion/create/message`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(messageData),
-    }
-  );
-
-  if (res) {
-    return res.json();
+      requiresAuth: false,
+    });
+    return data;
+  } catch (error) {
+    console.error("Echec lors de la création du message :", error);
+    throw error;
   }
-
-  throw new Error("Echec lors de la création du message");
 };
 
 /**
@@ -146,16 +127,14 @@ export const createMessage = async (
  * @returns {Promise<string>} Le message de confirmation de la discussion supprimée.
  */
 export const deleteDiscussion = async (id: string): Promise<string> => {
-  const res: Response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_PATH_URL}/guest/discussion/${id}`,
-    {
+  try {
+    const data = await fetchClient(`/guest/discussion/${id}`, {
       method: "DELETE",
-    }
-  );
-
-  if (res) {
-    return await res.json();
+      requiresAuth: false,
+    });
+    return data;
+  } catch (error) {
+    console.error("Echec lors de la suppression de la discussion :", error);
+    throw error;
   }
-
-  throw new Error("Echec lors de la suppression de la discussion");
 };

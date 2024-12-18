@@ -25,7 +25,7 @@ export default function MessageScroller() {
       const endIndex = discussion.messages.length;
       setDisplayedMessages(discussion.messages.slice(startIndex, endIndex));
     }
-  }, [discussion.messages, currentPage, discussion]);
+  }, [currentPage, discussion]);
 
   useEffect(() => {
     if (
@@ -36,7 +36,7 @@ export default function MessageScroller() {
     ) {
       setCurrentPage((prevPage) => prevPage + 1);
     }
-  }, [inView, displayedMessages, discussion.messages, discussion]);
+  }, [inView, displayedMessages, discussion]);
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
@@ -48,7 +48,7 @@ export default function MessageScroller() {
 
   return (
     <ScrollArea className="grow" ref={scrollAreaRef}>
-      {displayedMessages.length < (discussion.messages?.length ?? 0) && (
+      {discussion && displayedMessages.length < (discussion.messages.length ?? 0) && (
         <div ref={ref} className="flex justify-center p-2">
           Charger plus
         </div>
@@ -70,7 +70,7 @@ export default function MessageScroller() {
             >
               <Avatar>
                 <AvatarFallback>
-                  {message.senderType === "SELLER" ? "S" : "C"}
+                  {message.senderType === "SELLER" ? "V" : "C"}
                 </AvatarFallback>
               </Avatar>
               <div
