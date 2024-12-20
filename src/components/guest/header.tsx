@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ModeToggle } from "./mode-toggle";
 import { signIn, useSession } from "next-auth/react";
+import { Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const menuItems = [
   { name: "Accueil", href: "/" },
@@ -20,6 +22,7 @@ const menuItems = [
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const { data: session } = useSession();
 
@@ -30,6 +33,10 @@ export default function Header() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
 
   return (
     <header
@@ -49,8 +56,11 @@ export default function Header() {
             height={40}
             className="rounded-full"
           />
-          <span className="text-gradient text-2xl font-bold">Cassava Marketplace</span>
+          <span className="text-gradient text-2xl font-bold">
+            Cassava Marketplace
+          </span>
         </Link>
+
         <nav className="hidden space-x-6 md:flex">
           {menuItems.map((item) => (
             <Link
@@ -67,7 +77,7 @@ export default function Header() {
             </Link>
           ))}
         </nav>
-        <div className="flex items-center space-x-6">
+        <div className="hidden items-center space-x-4 md:flex">
           {session ? (
             <Link href="/dashboard">
               <Button size="sm">Tableau de bord</Button>
@@ -84,7 +94,66 @@ export default function Header() {
           )}
           <ModeToggle />
         </div>
+
+        {/* Mobile Menu Button */}
+        <button
+          className="text-foreground md:hidden"
+          onClick={toggleMobileMenu}
+          aria-label="Toggle mobile menu"
+        >
+          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
       </div>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.2 }}
+            className="border-t bg-background md:hidden"
+          >
+            <nav className="container mx-auto flex flex-col space-y-4 px-6 py-4">
+              {menuItems.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={cn(
+                    "text-sm font-medium transition-colors hover:text-primary",
+                    pathname === item.href
+                      ? "text-primary"
+                      : "text-muted-foreground"
+                  )}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {item.name}
+                </Link>
+              ))}
+              <div className="flex flex-col space-y-2">
+                {session ? (
+                  <Link href="/dashboard">
+                    <Button size="sm">Tableau de bord</Button>
+                  </Link>
+                ) : (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => signIn("keycloak")}
+                    className="bg-soil-100 hover:bg-soil-200 dark:bg-soil-900 dark:hover:bg-soil-800"
+                  >
+                    Se connecter
+                  </Button>
+                )}
+              </div>
+              <div className="flex justify-center">
+                <ModeToggle />
+              </div>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
