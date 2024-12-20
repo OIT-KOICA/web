@@ -10,7 +10,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata = {
   title: "Cassava Marketplace",
   description:
-    "Connecting local entrepreneurs in cassava, maize, and poultry value chains.",
+    "Mise en relation des entrepreneurs locaux dans les chaînes de valeur du manioc, du maïs et de la volaille.",
 };
 
 export default function RootLayout({

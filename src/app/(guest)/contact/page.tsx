@@ -11,8 +11,8 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <div className="container mx-auto px-4 py-16">
-      <h1 className="mb-8 text-center text-4xl font-bold">Nous contacter</h1>
-      <p className="mx-auto mb-12 max-w-2xl text-center text-lg">
+      <h1 className="text-gradient mb-8 text-center text-4xl font-bold">Nous contacter</h1>
+      <p className="mx-auto mb-12 max-w-2xl text-center text-lg text-muted-foreground">
         Vous avez des questions ou besoin d&apos;aide ? Contactez-nous en
         utilisant les ci-dessous ou en remplissant le formulaire, et nous vous
         répondrons dès que possible. dans les plus brefs délais.

@@ -32,7 +32,7 @@ export default function DashboardCard({
 
   return (
     <Card
-      className="overflow-hidden transition-shadow duration-300 hover:shadow-lg"
+      className="overflow-hidden bg-gradient-to-br from-cassava-50 to-maize-50 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg dark:from-cassava-900 dark:to-maize-900"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -51,7 +51,7 @@ export default function DashboardCard({
         <p className="text-muted-foreground">{description}</p>
       </CardContent>
       <CardFooter>
-        <Button asChild className="w-full">
+        <Button asChild className="w-full bg-gradient-to-r from-cassava-500 to-maize-500 text-white hover:from-cassava-600 hover:to-maize-600">
           <Link href={href}>{cta}</Link>
         </Button>
       </CardFooter>

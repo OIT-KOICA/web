@@ -7,6 +7,7 @@ import ProductGrid from "@/components/guest/products/product-grid";
 import SearchBar from "@/components/guest/products/search-bar";
 import { useState } from "react";
 import { Suspense } from "react";
+import { motion } from 'framer-motion'
 
 export default function ProductsPage() {
   const [filters, setFilters] = useState({
@@ -27,8 +28,16 @@ export default function ProductsPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="mb-8 text-3xl font-bold">Produits</h1>
+    // eslint-disable-next-line tailwindcss/no-custom-classname
+    <div className="dark:from-cassava-950 dark:to-maize-950 container mx-auto min-h-screen px-4 py-8">
+      <motion.h1
+        className="text-gradient mb-8 text-center text-4xl font-bold"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        Produits
+      </motion.h1>
       <div className="flex flex-col gap-8 md:flex-row">
         <FilterSidebar
           className="w-full md:w-64"

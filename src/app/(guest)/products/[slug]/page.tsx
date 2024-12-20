@@ -10,6 +10,7 @@ import useProductStore from "@/lib/stores/product-store";
 import { Discussion } from "@/lib/type";
 import { getPhoneFromCookie } from "@/lib/utils";
 import { Suspense, useEffect, useState } from "react";
+import { motion } from 'framer-motion'
 
 export default function ProductDetailPage() {
   const product = useProductStore((state) => state.activeProduct);
@@ -31,18 +32,24 @@ export default function ProductDetailPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <Suspense fallback={<SkeletonLoader />}>
-        <ProductHeader product={product} />
-        <div className="mt-8 grid gap-8 md:grid-cols-2">
-          <div>
-            <ProductInfo product={product} />
-            <PriceVariationsTable product={product} />
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <ProductHeader product={product} />
+          <div className="mt-8 grid gap-8 md:grid-cols-2">
+            <div>
+              <ProductInfo product={product} />
+              <PriceVariationsTable product={product} />
+            </div>
+            <ProductDiscussion
+              slug={product?.slug}
+              discussion={discussion}
+              setDiscussion={setDiscussion}
+            />
           </div>
-          <ProductDiscussion
-            slug={product?.slug}
-            discussion={discussion}
-            setDiscussion={setDiscussion}
-          />
-        </div>
+        </motion.div>
       </Suspense>
     </div>
   );

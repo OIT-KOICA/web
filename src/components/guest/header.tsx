@@ -40,7 +40,7 @@ export default function Header() {
           : "bg-transparent"
       )}
     >
-      <div className="container mx-auto flex items-center justify-between p-6">
+      <div className="container mx-auto flex items-center justify-between px-6 py-4">
         <Link href="/" className="flex items-center space-x-2">
           <Image
             src="/images/logo.png"
@@ -49,7 +49,7 @@ export default function Header() {
             height={40}
             className="rounded-full"
           />
-          <span className="text-2xl font-bold">Cassava Marketplace</span>
+          <span className="text-gradient text-2xl font-bold">Cassava Marketplace</span>
         </Link>
         <nav className="hidden space-x-6 md:flex">
           {menuItems.map((item) => (
@@ -77,6 +77,7 @@ export default function Header() {
               variant="outline"
               size="sm"
               onClick={() => signIn("keycloak")}
+              className="bg-soil-100 hover:bg-soil-200 dark:bg-soil-900 dark:hover:bg-soil-800"
             >
               Se connecter
             </Button>

@@ -10,7 +10,7 @@ export default function DashboardHeader() {
       transition={{ duration: 0.5 }}
       className="mb-12 text-center"
     >
-      <h1 className="mb-4 text-4xl font-bold">
+      <h1 className="text-gradient mb-4 text-4xl font-bold">
         Bienvenue dans votre tableau de bord
       </h1>
       <p className="mx-auto max-w-2xl text-xl text-muted-foreground">

@@ -31,7 +31,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const router = useRouter();
 
   return (
-    <Card className="flex h-full flex-col overflow-hidden">
+    <Card className="flex h-full flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
       <div className={`relative h-48 ${getProductColor(product.category)}`}>
         {product.file && (
           <Image
@@ -73,7 +73,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       </CardContent>
       <CardFooter className="p-4 pt-0">
         <Button
-          className="w-full"
+          className="w-full bg-gradient-to-r from-cassava-500 to-maize-500 text-white hover:from-cassava-600 hover:to-maize-600"
           onClick={() => {
             setActiveProduct(product);
             router.push(`/products/${product.slug}`);
