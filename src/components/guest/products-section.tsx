@@ -56,7 +56,7 @@ export default function ProductsSection() {
 
   return (
     // eslint-disable-next-line tailwindcss/no-custom-classname
-    <section className="dark:from-cassava-950 dark:to-maize-950 bg-gradient-to-br from-cassava-50 to-maize-50 py-16">
+    <section>
       <div className="container mx-auto px-4">
         <h2 className="text-gradient mb-8 text-center text-3xl font-bold">
           Découvrez nos chaînes de valeur

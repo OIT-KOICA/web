@@ -10,14 +10,26 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import { User, Phone, MapPin } from "lucide-react";
 import { useGetAdds } from "@/lib/query/configuration-query";
+import { User, Phone, MapPin } from "lucide-react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import FullScreenOffer from "./full-screen-offer";
 
 interface OffersCarouselProps {
   className?: string;
 }
 
 export default function OffersCarousel({ className }: OffersCarouselProps) {
+  const [selectedOffer, setSelectedOffer] = React.useState<{
+    id: string;
+    name: string;
+    phone: string;
+    location: string;
+    description: string;
+    createdAt: string;
+  } | null>(null);
+
   const plugin = React.useRef(
     Autoplay({ delay: 3000, stopOnInteraction: true })
   );
@@ -36,28 +48,43 @@ export default function OffersCarousel({ className }: OffersCarouselProps) {
           {adds && adds.length > 0 ? (
             adds.map((offer) => (
               <CarouselItem key={offer.id}>
-                <Card>
-                  <CardContent className="p-4">
-                    <h3 className="mb-2 font-bold">J&apos;ai besoin de</h3>
-                    <p className="mb-4 text-sm text-muted-foreground">
-                      {offer.description}
-                    </p>
-                    <div className="space-y-2">
-                      <div className="flex items-center">
-                        <User className="mr-2 size-4 text-primary" />
-                        <span className="text-sm">{offer.name}</span>
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setSelectedOffer(offer)}
+                >
+                  <Card className="bg-gradient-to-br from-cassava-100 to-maize-100 transition-shadow duration-300 hover:shadow-lg dark:from-cassava-800 dark:to-maize-800">
+                    <CardContent className="p-4">
+                      <h3 className="mb-2 text-lg font-bold text-primary dark:text-primary-foreground">
+                        J&apos;ai besoin de
+                      </h3>
+                      <p className="mb-4 text-sm text-muted-foreground">
+                        {offer.description}
+                      </p>
+                      <div className="space-y-2">
+                        <div className="flex items-center">
+                          <User className="mr-2 size-4 text-primary dark:text-primary-foreground" />
+                          <span className="text-sm">{offer.name}</span>
+                        </div>
+                        <div className="flex items-center">
+                          <Phone className="mr-2 size-4 text-primary dark:text-primary-foreground" />
+                          <span className="text-sm">{offer.phone}</span>
+                        </div>
+                        <div className="flex items-center">
+                          <MapPin className="mr-2 size-4 text-primary dark:text-primary-foreground" />
+                          <span className="text-sm">{offer.location}</span>
+                        </div>
                       </div>
-                      <div className="flex items-center">
-                        <Phone className="mr-2 size-4 text-primary" />
-                        <span className="text-sm">{offer.phone}</span>
-                      </div>
-                      <div className="flex items-center">
-                        <MapPin className="mr-2 size-4 text-primary" />
-                        <span className="text-sm">{offer.location}</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="mt-4 w-full bg-primary/10 text-primary hover:bg-primary/20 dark:text-primary-foreground"
+                      >
+                        Voir les Details
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               </CarouselItem>
             ))
           ) : (
@@ -67,6 +94,12 @@ export default function OffersCarousel({ className }: OffersCarouselProps) {
         <CarouselPrevious />
         <CarouselNext />
       </Carousel>
+      {selectedOffer && (
+        <FullScreenOffer
+          offer={selectedOffer}
+          onClose={() => setSelectedOffer(null)}
+        />
+      )}
     </div>
   );
 }
