@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Cassava Market Place - Interface Web
 
-## Getting Started
+## Description
 
-First, run the development server:
+L'interface web de la plateforme **Cassava Market Place** vise à connecter les entrepreneurs locaux, notamment dans les chaînes de valeur du manioc, du maïs et du poulet, avec des marchés et fournisseurs. Cette plateforme est conçue pour répondre aux contraintes locales tout en offrant une expérience utilisateur fluide et intuitive.
 
+---
+
+## Technologies utilisées
+
+### Frameworks et bibliothèques principales
+- **Next.js** : Framework React moderne ([Next.js](https://nextjs.org)).
+- **React Query** : Gestion efficace des requêtes API ([React Query](https://tanstack.com/query)).
+- **Zod** : Validation des données des formulaires ([Zod](https://github.com/colinhacks/zod)).
+- **TailwindCSS** : Framework CSS utilitaire ([TailwindCSS](https://tailwindcss.com)).
+- **Radix UI** : Composants accessibles et stylisables ([Radix UI](https://www.radix-ui.com)).
+
+### Outils supplémentaires
+- **TypeScript** : Typage statique pour JavaScript ([TypeScript](https://www.typescriptlang.org)).
+- **Lucide Icons** : Icônes modernes pour les interfaces ([Lucide](https://lucide.dev)).
+- **NextAuth.js** : Gestion de l'authentification avec Keycloak ([NextAuth.js](https://next-auth.js.org)).
+
+---
+
+## Installation et utilisation
+
+1. **Cloner le dépôt :**
+```bash
+git clone https://github.com/OIT-KOICA/web.git
+```
+2. **Naviguer dans le projet :**
+```bash
+cd web
+```
+3. **Installer les dépendances :**
+```bash
+npm install
+```
+4. **Lancer l'application en mode développement :**
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+5. **Construire l'application pour la production :**
+```bash
+npm run build
+```
+6. **Démarrer le serveur en production :**
+```bash
+npm run start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Auteur
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Ghomsi Ghomsi Emmanuel**
+- Email : emmanuelghomsi21@gmail.com
+- Téléphone : (+237) 696 030 085 / (+237) 670 034 086
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Site internet
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**https://cassavamarketplace.com**
