@@ -21,8 +21,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  reactStrictMode: false,
-  productionBrowserSourceMaps: false,
 };
 
 export default nextConfig;
