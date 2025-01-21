@@ -13,12 +13,8 @@ RUN npm ci
 # Copier tout le code source dans l'image
 COPY . .
 
-# Définir le fichier d'environnement pour le build
-ENV NODE_ENV=uat
-ENV DOTENV_CONFIG_PATH=.env.uat
-
-# Construire l'application
-RUN npx dotenv -e .env.uat -- next build
+# Construire l'application Next.js
+RUN npm run build
 
 # Étape 2 : Application en production
 FROM node:18-alpine
@@ -27,7 +23,8 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Copier les fichiers nécessaires pour exécuter l'application
-COPY package.json package-lock.json ./
+COPY package*.json ./
+
 RUN npm ci --omit=dev
 
 # Copier les fichiers construits de l'étape précédente
