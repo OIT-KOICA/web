@@ -1,5 +1,5 @@
 # Étape 1 : Construction
-FROM node:18-alpine AS builder
+FROM node:23-alpine AS builder
 
 # Définir le répertoire de travail
 WORKDIR /app
@@ -17,7 +17,7 @@ COPY . .
 RUN npm run build
 
 # Étape 2 : Application en production
-FROM node:18-alpine
+FROM node:23-alpine
 
 # Définir le répertoire de travail
 WORKDIR /app
