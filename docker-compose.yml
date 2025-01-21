@@ -1,0 +1,29 @@
+services:
+  cassavamarketplace:
+    container_name: cassavamarketplace
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env.local
+    environment:
+      # Ajouter vos variables d'environnement
+      - NEXT_PUBLIC_API_PATH_URL=${NEXT_PUBLIC_API_PATH_URL}
+      - KEYCLOAK_CLIENT_ID=${KEYCLOAK_CLIENT_ID}
+      - KEYCLOAK_CLIENT_SECRET=${KEYCLOAK_CLIENT_SECRET}
+      - KEYCLOAK_URL=${KEYCLOAK_URL}
+      - KEYCLOAK_REALM=${KEYCLOAK_REALM}
+      - NEXTAUTH_URL=${NEXTAUTH_URL}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NODE_ENV=production
+    ports:
+      - "3500:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules # Empêche la perte des dépendances
+    networks:
+      - web-network
+
+networks:
+  web-network:
+    driver: bridge

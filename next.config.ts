@@ -14,8 +14,15 @@ const nextConfig: NextConfig = {
         hostname: "api.cassavamarketplace.com",
         pathname: "/api/v1/image/**", // Autorise tous les chemins sous /api/v1/image
       },
+      {
+        protocol: "https",
+        hostname: "api-uat.cassavamarketplace.com",
+        pathname: "/api/v1/image/**", // Autorise tous les chemins sous /api/v1/image
+      },
     ],
   },
+  reactStrictMode: false,
+  productionBrowserSourceMaps: false,
 };
 
 export default nextConfig;
