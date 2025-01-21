@@ -14,7 +14,7 @@ RUN npm ci
 COPY . .
 
 # Construire l'application Next.js
-RUN npm run build
+RUN npm run build:uat
 
 # Étape 2 : Application en production
 FROM node:18-alpine

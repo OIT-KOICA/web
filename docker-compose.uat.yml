@@ -6,16 +6,6 @@ services:
       dockerfile: Dockerfile.uat
     env_file:
       - .env.uat
-    environment:
-      # Ajouter vos variables d'environnement
-      - NEXT_PUBLIC_API_PATH_URL=${NEXT_PUBLIC_API_PATH_URL}
-      - KEYCLOAK_CLIENT_ID=${KEYCLOAK_CLIENT_ID}
-      - KEYCLOAK_CLIENT_SECRET=${KEYCLOAK_CLIENT_SECRET}
-      - KEYCLOAK_URL=${KEYCLOAK_URL}
-      - KEYCLOAK_REALM=${KEYCLOAK_REALM}
-      - NEXTAUTH_URL=${NEXTAUTH_URL}
-      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
-      - NODE_ENV=uat
     ports:
       - "3501:3000"
     volumes:
