@@ -11,18 +11,25 @@ import {
 import useUserStore from "@/lib/stores/user-store";
 import DashboardHeader from "@/components/auth/dashboard-header";
 import DashboardCards from "@/components/auth/dashboard-cards";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import CreateCompanyModal from "@/components/auth/company/create-company-modal";
 
 export default function DashboardPage() {
   const { isNewUser, setUserStatus } = useUserStore();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (isNewUser === null) {
-      // Charger le statut utilisateur si nécessaire
-      setUserStatus();
-    }
-  }, [isNewUser, setUserStatus]);
+    const fetchStatus = async () => {
+      await setUserStatus();
+      setLoading(false);
+    };
+
+    fetchStatus();
+  }, [setUserStatus]);
+
+  if (loading) {
+    return <div>Chargement...</div>;
+  }
 
   if (isNewUser) {
     return <CreateCompanyModal />;

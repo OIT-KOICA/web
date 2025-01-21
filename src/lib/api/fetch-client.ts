@@ -23,7 +23,7 @@ export async function fetchClient(
       ...(options.requiresAuth !== false &&
         session?.accessToken && {
           Authorization: `Bearer ${session.accessToken}`,
-        }), // Ajout conditionnel du token
+        }),
     },
   };
 
