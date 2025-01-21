@@ -13,6 +13,9 @@ RUN npm ci
 # Copier tout le code source dans l'image
 COPY . .
 
+# Construire le fichier de configuration en JavaScript
+RUN npm run build:config
+
 # Construire l'application Next.js
 RUN npm run build
 
@@ -30,6 +33,7 @@ RUN npm ci --omit=dev
 # Copier les fichiers construits de l'étape précédente
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
+COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/next.config.js ./next.config.js
 
 # Exposer le port par défaut de Next.js
