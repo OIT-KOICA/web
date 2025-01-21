@@ -23,7 +23,8 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Copier les fichiers nécessaires pour exécuter l'application
-COPY package.json package-lock.json ./
+COPY package*.json ./
+
 RUN npm ci --omit=dev
 
 # Copier les fichiers construits de l'étape précédente
