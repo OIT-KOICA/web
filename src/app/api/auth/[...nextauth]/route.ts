@@ -13,6 +13,35 @@ const authOptions: NextAuthOptions = {
     strategy: "jwt", // Utilisation des tokens JWT pour la session
     maxAge: 60 * 60 * 24, // Durée de la session en secondes (1j ici)
   },
+  cookies: {
+    sessionToken: {
+      name: `__Secure-next-auth.session-token`,
+      options: {
+        httpOnly: true, // Empêche l'accès côté client
+        secure: process.env.NODE_ENV === "production", // Nécessite HTTPS en production
+        sameSite: "lax", // Recommandé pour l'authentification OAuth
+        path: "/",
+      },
+    },
+    callbackUrl: {
+      name: `__Secure-next-auth.callback-url`,
+      options: {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+      },
+    },
+    csrfToken: {
+      name: `__Host-next-auth.csrf-token`,
+      options: {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+      },
+    },
+  },
   callbacks: {
     async jwt({ token, account }) {
       const currentTime = Math.floor(Date.now() / 1000); // Temps actuel en secondes
