@@ -18,11 +18,6 @@ RUN \
   else echo "Warning: Lockfile not found. It is recommended to commit lockfiles to version control." && yarn install; \
   fi
 
-COPY src ./src
-COPY public ./public
-COPY next.config.js .
-COPY tsconfig.json .
-
 # Environment variables must be present at build time
 # https://github.com/vercel/next.js/discussions/14030
 ARG ENV_VARIABLE
@@ -43,6 +38,11 @@ RUN \
   fi
 
 # Note: It is not necessary to add an intermediate step that does a full copy of `node_modules` here
+
+COPY src ./src
+COPY public ./public
+COPY next.config.js .
+COPY tsconfig.json .
 
 # Step 2. Production image, copy all the files and run next
 FROM base AS runner
