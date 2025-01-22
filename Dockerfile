@@ -22,13 +22,10 @@ FROM base AS runner
 WORKDIR /app
 
 COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-# Copie supplémentaire pour persistances des fichiers statiques
-RUN mkdir -p /persisted-static && cp -R ./.next/static/* /persisted-static/
+# Préparation du répertoire pour le volume
+RUN mkdir -p /mnt/static && cp -R ./.next/static/* /mnt/static/
 
 CMD ["node", "server.js"]

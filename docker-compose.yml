@@ -10,7 +10,7 @@ services:
     ports:
       - "3500:3000"
     volumes:
-      - ./static:/persisted-static
+      - ./static:/mnt/static
     networks:
       - shared-network
 
