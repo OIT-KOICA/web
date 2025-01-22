@@ -10,7 +10,7 @@ services:
     ports:
       - "3500:3000"
     volumes:
-      - ./static:/app/.next/static
+      - ./static:/persisted-static
     networks:
       - shared-network
 

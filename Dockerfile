@@ -28,4 +28,7 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
+# Copie supplémentaire pour persistances des fichiers statiques
+RUN mkdir -p /persisted-static && cp -R ./.next/static/* /persisted-static/
+
 CMD ["node", "server.js"]
