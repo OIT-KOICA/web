@@ -24,8 +24,5 @@ WORKDIR /app
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
-
-# Préparation du répertoire pour le volume
-RUN mkdir -p /mnt/static && cp -R ./.next/static/* /mnt/static/
-
-CMD ["node", "server.js"]
+# Ajout d'un script pour synchroniser les fichiers dans le volume
+CMD ["sh", "-c", "cp -R ./.next/static/* /mnt/static/ || true && node server.js"]
