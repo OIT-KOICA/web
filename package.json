@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build:config": "ts-node -e \"require('fs').writeFileSync('./next.config.js', require('typescript').transpile(require('fs').readFileSync('./next.config.ts', 'utf8')));\"",
+    "build:config": "ts-node -e \"const ts=require('typescript'); const fs=require('fs'); fs.writeFileSync('./next.config.js', ts.transpile(fs.readFileSync('./next.config.ts', 'utf8')).replace('exports.default =', 'module.exports ='))\"",
     "build": "npm run build:config && next build",
     "build:uat": "npm run build:config && env-cmd -f .env.uat next build",
     "start": "next start",
@@ -46,6 +46,7 @@
     "react-dom": "^18",
     "react-hook-form": "^7.53.2",
     "react-intersection-observer": "^9.13.1",
+    "sharp": "^0.33.5",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.23.8",
