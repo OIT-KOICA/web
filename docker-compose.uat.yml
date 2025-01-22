@@ -10,7 +10,7 @@ services:
     ports:
       - "3501:3000"
     volumes:
-      - ./static_uat:/mnt/static
+      - /var/www/cassavamarketplace//static_uat:/mnt/static
     networks:
       - shared-network
 
