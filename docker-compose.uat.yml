@@ -3,17 +3,18 @@ services:
     container_name: cassavamarketplace_uat
     build:
       context: .
-      dockerfile: Dockerfile.uat
+      dockerfile: Dockerfile
+      args:
+        ENV_VARIABLE: ${ENV_VARIABLE}
+        NEXT_PUBLIC_ENV_VARIABLE: ${NEXT_PUBLIC_ENV_VARIABLE}
+    restart: always
     env_file:
       - .env.uat
     ports:
       - "3501:3000"
-    volumes:
-      - .:/app
-      - /app/node_modules # Empêche la perte des dépendances
     networks:
-      - web-network
+      - shared-network
 
 networks:
-  web-network:
-    driver: bridge
+  shared-network:
+    external: true  # Utiliser le réseau partagé existant
