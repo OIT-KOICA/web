@@ -9,6 +9,8 @@ services:
       - .env.uat
     ports:
       - "3501:3000"
+    volumes:
+      - ./static_uat:/app/.next/static
     networks:
       - shared-network
 

@@ -9,6 +9,8 @@ services:
       - .env.local
     ports:
       - "3500:3000"
+    volumes:
+      - ./static:/app/.next/static
     networks:
       - shared-network
 

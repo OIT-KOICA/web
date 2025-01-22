@@ -19,6 +19,8 @@
 
 # production
 /build
+/static
+/static_uat
 
 # misc
 .DS_Store
