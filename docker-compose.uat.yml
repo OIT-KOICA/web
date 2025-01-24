@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
     restart: always
     env_file:
-      - .env.uat
+      - .env.test
     ports:
       - "3501:3000"
     volumes:

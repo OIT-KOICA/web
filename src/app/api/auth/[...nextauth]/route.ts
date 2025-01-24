@@ -2,6 +2,7 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import KeycloakProvider from "next-auth/providers/keycloak";
 
 const authOptions: NextAuthOptions = {
+  debug: process.env.NODE_ENV === "development",
   providers: [
     KeycloakProvider({
       clientId: `${process.env.KEYCLOAK_CLIENT_ID}` || "",

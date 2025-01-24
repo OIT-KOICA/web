@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
     restart: always
     env_file:
-      - .env.local
+      - .env.production
     ports:
       - "3500:3000"
     volumes:
