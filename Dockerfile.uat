@@ -25,8 +25,8 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
-# Définit NODE_ENV
-ENV NODE_ENV=production
+# Définit NODE_ENV à "test" par défaut
+ENV NODE_ENV=test
 
 # Ajout d'un script pour synchroniser les fichiers dans le volume
 CMD ["sh", "-c", "cp -R ./.next/static/* /mnt/static/ || true && node server.js"]

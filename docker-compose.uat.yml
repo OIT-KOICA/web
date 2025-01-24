@@ -3,10 +3,12 @@ services:
     container_name: cassavamarketplace_uat
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.uat
     restart: always
     env_file:
       - .env.test
+    environment:
+      - NODE_ENV=test
     ports:
       - "3501:3000"
     volumes:
