@@ -13,6 +13,9 @@ RUN npm ci
 
 COPY . .
 
+# Définit NODE_ENV
+ENV NODE_ENV=production
+
 # Build Next.js based on the preferred package manager
 RUN npm run build
 
@@ -24,9 +27,6 @@ WORKDIR /app
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
-
-# Définit NODE_ENV
-ENV NODE_ENV=production
 
 # Ajout d'un script pour synchroniser les fichiers dans le volume
 CMD ["sh", "-c", "cp -R ./.next/static/* /mnt/static/ || true && node server.js"]
