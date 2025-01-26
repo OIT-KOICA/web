@@ -64,13 +64,13 @@ export default function ProductInfo({ product }: ProductInfoProps) {
               Le produit est-il un produit dérivé ?
             </h3>
             {product && product.isDerivedProduct ? (
-              <Badge variant="destructive" className="flex items-center">
+              <Badge variant="outline" className="flex items-center">
                 <Leaf className="mr-1 size-4" />
-                N&apos;est pas un produit dérivé
+                Est un produit dérivé
               </Badge>
             ) : (
-              <Badge variant="secondary" className="flex items-center">
-                Est un produit dérivé
+              <Badge variant="default" className="flex items-center">
+                N&apos;est pas un produit dérivé
               </Badge>
             )}
           </div>
