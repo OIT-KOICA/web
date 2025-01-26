@@ -104,7 +104,7 @@ export default function CreateCompanyModal() {
     );
 
     try {
-      createCompany.mutate({
+      await createCompany.mutateAsync({
         formData: formData,
       });
 

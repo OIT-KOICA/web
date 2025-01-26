@@ -80,8 +80,13 @@ export const useCreateAdd = () => {
  * Hook pour créer une compgnie.
  */
 export const useCreateCompany = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: ({ formData }: { formData: FormData }) =>
       createCompany(formData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["company"] }); // Rafraîchit la liste des annonces
+    },
   });
 };

@@ -19,12 +19,12 @@ import {
 } from "@/components/ui/popover";
 
 const categories = [
-  { value: "CASSAVA", label: "Manioc" },
-  { value: "CORN", label: "Maïs" },
-  { value: "CHICKEN", label: "Poulet" },
-  { value: "HIRE", label: "Location" },
+  { value: "MANIOC", label: "Manioc" },
+  { value: "MAIS", label: "Maïs" },
+  { value: "VOLAILLE", label: "Poulet" },
+  { value: "LOCATION", label: "Location" },
   { value: "TRANSPORT", label: "Transport" },
-  { value: "OTHER", label: "Autre" },
+  { value: "AUTRE", label: "Autre" },
 ];
 
 interface CategorySelectProps {
