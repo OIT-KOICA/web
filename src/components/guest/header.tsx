@@ -7,13 +7,14 @@ import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ModeToggle } from "./mode-toggle";
-import { signIn, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const menuItems = [
   { name: "Accueil", href: "/" },
   { name: "Produits", href: "/products" },
+  { name: "Annonces", href: "/adds" },
   { name: "FAQ", href: "/faq" },
   { name: "A propos", href: "/about" },
   { name: "Contact", href: "/contact" },
@@ -54,6 +55,7 @@ export default function Header() {
             alt="Cassava Marketplace Logo"
             width={40}
             height={40}
+            style={{ maxWidth: "100%", height: "auto" }}
             className="rounded-full"
           />
           <span className="text-gradient text-2xl font-bold">
@@ -83,14 +85,15 @@ export default function Header() {
               <Button size="sm">Tableau de bord</Button>
             </Link>
           ) : (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => signIn("keycloak")}
-              className="bg-soil-100 hover:bg-soil-200 dark:bg-soil-900 dark:hover:bg-soil-800"
-            >
-              Se connecter
-            </Button>
+            <Link href="/auth/login">
+              <Button
+                variant="outline"
+                size="sm"
+                className="bg-soil-100 hover:bg-soil-200 dark:bg-soil-900 dark:hover:bg-soil-800"
+              >
+                Se connecter
+              </Button>
+            </Link>
           )}
           <ModeToggle />
         </div>
@@ -137,14 +140,15 @@ export default function Header() {
                     <Button size="sm">Tableau de bord</Button>
                   </Link>
                 ) : (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => signIn("keycloak")}
-                    className="bg-soil-100 hover:bg-soil-200 dark:bg-soil-900 dark:hover:bg-soil-800"
-                  >
-                    Se connecter
-                  </Button>
+                  <Link href="/auth/login">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="bg-soil-100 hover:bg-soil-200 dark:bg-soil-900 dark:hover:bg-soil-800"
+                    >
+                      Se connecter
+                    </Button>
+                  </Link>
                 )}
               </div>
               <div className="flex justify-center">

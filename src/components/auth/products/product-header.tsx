@@ -21,6 +21,7 @@ export default function ProductHeader({
           className="z-0"
         />
       )}
+      {/* eslint-disable-next-line tailwindcss/migration-from-tailwind-2*/}
       <div className="absolute inset-0 z-10 bg-black bg-opacity-50" />
       <div className="absolute inset-0 z-20 flex flex-col justify-between p-6">
         <Link href="/dashboard/products">

@@ -96,3 +96,43 @@ export type CompanyDTO = {
   createdAt: string;
   updatedAt: string;
 };
+
+export interface TagDTO {
+  name: string;
+  description: string;
+}
+
+export interface ArticleCategoryDTO {
+  name: string;
+}
+
+export interface ArticleDTO {
+  title: string;
+  slug: string;
+  code: string;
+  description: string;
+  category: string;
+  company: string;
+  file: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ArticleRequest {
+  title: string;
+  code: string;
+  description: string;
+  category: string;
+  file?: File | null;
+}
+
+export interface Offer {
+  id: string;
+  name: string;
+  phone: string;
+  location: string;
+  description: string;
+  categories: string[];
+  createdAt: string;
+}
+

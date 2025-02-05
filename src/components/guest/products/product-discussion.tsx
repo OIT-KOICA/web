@@ -67,10 +67,7 @@ export default function ProductDiscussion({
   }, [slug]);
 
   /**
-   * Schéma de validation
-   *
-   * 1. Valider le formulaire de création de discussion
-   * 2. Valider le formulaire de création de message
+   * 🔥 Validation avec Zod
    */
   const discussionSchema = z.object({
     name: z.string().min(1, "Le nom est requis"),
@@ -87,60 +84,8 @@ export default function ProductDiscussion({
   });
 
   /**
-   * Validation de données
-   *
-   * 1. Validation des données de discussion
-   * 2. Validation des données de message
+   * ✅ Gestion des changements de formulaire
    */
-
-  const validateDiscussionData = (data: {
-    name: string;
-    phone: string;
-    slug: string;
-  }) => {
-    try {
-      discussionSchema.parse(data);
-      return { isValid: true, errors: null };
-    } catch (e) {
-      if (e instanceof z.ZodError) return { isValid: false, errors: e.errors };
-      // Si ce n'est pas une erreur Zod, retourner une erreur générique
-      return {
-        isValid: false,
-        errors: [{ message: "Une erreur inconnue est survenue" }],
-      };
-    }
-  };
-
-  const validateMessageData = (data: {
-    content: string;
-    senderType: string;
-    id: string;
-  }) => {
-    try {
-      messageSchema.parse(data);
-      return { isValid: true, errors: null };
-    } catch (e) {
-      if (e instanceof z.ZodError) {
-        return { isValid: false, errors: e.errors };
-      }
-      return {
-        isValid: false,
-        errors: [{ message: "Une erreur inconnue est survenue" }],
-      };
-    }
-  };
-
-  /**
-   * Fonctions
-   *
-   * 1. Changement du state lors des variations d'informations (nom, value) pour une discussion
-   * 2. Changement du state lors des variations d'informations (content) pour un message
-   * 3. Création d'une discussion
-   * 4. Création d'un message
-   * 5. Annulation d'une commande
-   * 6. Validation d'une commande
-   */
-
   const handleChangeDiscussion = (e: {
     target: { name: string; value: string };
   }) => {
@@ -161,114 +106,111 @@ export default function ProductDiscussion({
     }));
   };
 
+  /**
+   * ✅ Démarrer une discussion
+   */
   const handleStartChat = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-
     setLoading(true);
 
-    const validation = validateDiscussionData(formDataDiscussion);
+    try {
+      discussionSchema.parse(formDataDiscussion);
+      savePhoneToCookie(formDataDiscussion.phone);
 
-    if (!validation.isValid && validation.errors) {
+      createDiscussion.mutate(
+        {
+          discussionData: {
+            slug: formDataDiscussion.slug,
+            name: formDataDiscussion.name,
+            phone: formDataDiscussion.phone,
+          },
+        },
+        {
+          onSuccess: (data) => {
+            setDiscussion(data);
+          },
+        }
+      );
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
       toast({
         variant: "destructive",
-        title: "Uh oh! Un problème est survenu.",
-        description: validation.errors
-          .map((error: { message: string }) => error.message)
-          .join(", "),
+        title: "Erreur",
+        description: "Veuillez remplir correctement le formulaire.",
       });
-
-      setLoading(false);
-      return;
     }
-
-    savePhoneToCookie(formDataDiscussion.phone);
-
-    createDiscussion.mutate(
-      {
-        discussionData: {
-          slug: formDataDiscussion.slug,
-          name: formDataDiscussion.name,
-          phone: formDataDiscussion.phone,
-        },
-      },
-      {
-        onSuccess: (data) => {
-          setDiscussion(data);
-        },
-      }
-    );
 
     setLoading(false);
   };
 
+  /**
+   * ✅ Envoyer un message
+   */
   const handleCreateMessage = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-
     setLoading(true);
 
-    const validation = validateMessageData(formDataMessage);
+    try {
+      messageSchema.parse(formDataMessage);
 
-    if (!validation.isValid && validation.errors) {
+      createMessage.mutate(
+        {
+          messageData: {
+            id: formDataMessage.id,
+            senderType: formDataMessage.senderType,
+            content: formDataMessage.content,
+          },
+        },
+        {
+          onSuccess: (data) => {
+            setDiscussion(data);
+          },
+        }
+      );
+
+      setFormDataMessage((prev) => ({ ...prev, content: "" }));
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
       toast({
         variant: "destructive",
-        title: "Uh oh! Un problème est survenu.",
-        description: validation.errors
-          .map((error: { message: string }) => error.message)
-          .join(", "),
+        title: "Erreur",
+        description: "Veuillez entrer un message valide.",
       });
-
-      setLoading(false);
-      return;
     }
-
-    createMessage.mutate(
-      {
-        messageData: {
-          id: formDataMessage.id,
-          senderType: formDataMessage.senderType,
-          content: formDataMessage.content,
-        },
-      },
-      {
-        onSuccess: (data) => {
-          setDiscussion(data);
-        },
-      }
-    );
-
-    formDataMessage.content = "";
 
     setLoading(false);
   };
 
   return (
-    <Card className="mt-8 shadow-lg">
+    <Card className="mx-auto mt-4 w-full max-w-2xl shadow-lg">
       <CardHeader>
-        <CardTitle className="flex items-center text-2xl font-bold text-[#2C5F2D]">
-          <MessageCircle className="mr-2 size-6" />
+        <CardTitle className="flex items-center text-xl font-bold text-[#2C5F2D] sm:text-2xl">
+          <MessageCircle className="mr-2 size-5 sm:size-6" />
           Discussions avec le vendeur
         </CardTitle>
       </CardHeader>
 
       <CardContent>
         {discussion && discussion.messages.length > 0 && (
-          <ScrollArea className="h-[300px] w-full pr-4">
+          <ScrollArea className="h-[200px] w-full pr-2 sm:h-[300px] sm:pr-4">
             {discussion.messages.map((message) => (
               <div
                 key={message.id}
-                className={`mb-4 ${
-                  message.senderType === "CLIENT" ? "text-right" : "text-left"
+                className={`mb-4 flex ${
+                  message.senderType === "CLIENT"
+                    ? "justify-end"
+                    : "justify-start"
                 }`}
               >
                 <div
-                  className={`inline-block max-w-[80%] rounded-lg p-3 ${
+                  className={`inline-block max-w-[90%] rounded-lg p-3 sm:max-w-[80%] ${
                     message.senderType === "CLIENT"
                       ? "bg-primary text-primary-foreground"
                       : "bg-muted"
                   }`}
                 >
-                  <p>{message.content}</p>
-                  <small className="mt-1 block opacity-70">
+                  <p className="text-sm sm:text-base">{message.content}</p>
+                  <small className="mt-1 block text-xs opacity-70">
                     {format(message.createdAt, "MMM d, h:mm a")}
                   </small>
                 </div>
@@ -277,44 +219,54 @@ export default function ProductDiscussion({
           </ScrollArea>
         )}
       </CardContent>
+
       <CardFooter>
         {discussion ? (
           <form
-            className="flex w-full items-center"
+            className="flex w-full flex-col gap-2 sm:flex-row sm:gap-4"
             onSubmit={handleCreateMessage}
           >
-            {/* Champ caché pour l'ID de la discussion */}
-            <input type="hidden" name="id" value={formDataMessage.id} />
             <Textarea
               placeholder="Ecrire votre message ici..."
-              className="mr-2 w-2/3 grow"
+              className="w-full sm:w-2/3"
               name="content"
               value={formDataMessage.content}
               onChange={handleChangeMessage}
             />
-            <Button type="submit" disabled={loading}>
-              <Send className="mr-2" />
+            <Button
+              type="submit"
+              disabled={loading}
+              className="w-full sm:w-auto"
+            >
+              <Send className="mr-1 sm:mr-2" />
               Envoyer
             </Button>
           </form>
         ) : (
-          <form className="flex w-full items-center" onSubmit={handleStartChat}>
+          <form
+            className="flex w-full flex-col gap-2 sm:flex-row sm:gap-4"
+            onSubmit={handleStartChat}
+          >
             <Input
-              placeholder="Entrer votre nom ici..."
-              className="mr-2 w-1/3 grow"
+              placeholder="Nom"
+              className="w-full"
               name="name"
               value={formDataDiscussion.name}
               onChange={handleChangeDiscussion}
             />
             <Input
-              placeholder="Entrer votre numéro de téléphone ici..."
-              className="mr-2 w-1/3 grow"
+              placeholder="Téléphone"
+              className="w-full"
               name="phone"
               value={formDataDiscussion.phone}
               onChange={handleChangeDiscussion}
             />
-            <Button type="submit" disabled={loading}>
-              <Send className="mr-2" />
+            <Button
+              type="submit"
+              disabled={loading}
+              className="w-full sm:w-auto"
+            >
+              <Send className="mr-1 sm:mr-2" />
               Envoyer
             </Button>
           </form>

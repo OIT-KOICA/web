@@ -15,20 +15,14 @@ import { User, Phone, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import FullScreenOffer from "./full-screen-offer";
+import { Offer } from "@/lib/type";
 
 interface OffersCarouselProps {
   className?: string;
 }
 
 export default function OffersCarousel({ className }: OffersCarouselProps) {
-  const [selectedOffer, setSelectedOffer] = React.useState<{
-    id: string;
-    name: string;
-    phone: string;
-    location: string;
-    description: string;
-    createdAt: string;
-  } | null>(null);
+  const [selectedOffer, setSelectedOffer] = React.useState<Offer | null>(null);
 
   const plugin = React.useRef(
     Autoplay({ delay: 3000, stopOnInteraction: true })
@@ -37,7 +31,7 @@ export default function OffersCarousel({ className }: OffersCarouselProps) {
 
   return (
     <div className={className}>
-      <h2 className="mb-4 text-2xl font-bold">Besoins les plus recents</h2>
+      <h2 className="mb-4 text-2xl font-bold">Annonces les plus recentes</h2>
       <Carousel
         plugins={[plugin.current]}
         className="mx-auto w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl"
@@ -88,7 +82,7 @@ export default function OffersCarousel({ className }: OffersCarouselProps) {
               </CarouselItem>
             ))
           ) : (
-            <div className="m-4 text-center">Pas de besoins pour le moment</div>
+            <div className="m-4 text-center">Pas de d&apos;annonces pour le moment</div>
           )}
         </CarouselContent>
         <CarouselPrevious />

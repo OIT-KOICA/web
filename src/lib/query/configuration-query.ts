@@ -37,12 +37,12 @@ export const useGetUnits = () => {
  * @param {string} token - Le token d'authentification.
  */
 export const useGetCompany = () => {
-  const { data, refetch } = useQuery({
+  const { data, error, refetch } = useQuery({
     queryKey: ["company"],
     queryFn: getCompany,
   });
 
-  return { company: data, refetch };
+  return { company: data, error, refetch };
 };
 
 /**
@@ -69,6 +69,7 @@ export const useCreateAdd = () => {
       phone: string;
       location: string;
       description: string;
+      categories: string[];
     }) => createAdd(formData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["adds"] }); // Rafraîchit la liste des annonces

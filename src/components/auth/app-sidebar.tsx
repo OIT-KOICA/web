@@ -16,6 +16,8 @@ import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
 import { useGetCompany } from "@/lib/query/configuration-query";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { useToast } from "@/hooks/use-toast";
+import useUserStore from "@/lib/stores/user-store";
 
 const dashboardMenuLink = {
   productNavMain: [
@@ -37,7 +39,29 @@ const dashboardMenuLink = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { company } = useGetCompany();
+  const { company: fetchedCompany, error } = useGetCompany();
+  const company = useUserStore((state) => state.company);
+  const { setCompany } = useUserStore();
+  const { toast } = useToast();
+
+  // Charger la compagnie depuis l'API uniquement si elle n'existe pas déjà dans le store
+  React.useEffect(() => {
+    if (!company && fetchedCompany) {
+      setCompany(fetchedCompany);
+    }
+  }, [company, fetchedCompany, setCompany]);
+
+  // Gérer les erreurs et afficher un message Toast
+  React.useEffect(() => {
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description:
+          "Impossible de charger les informations de votre compagnie.",
+      });
+    }
+  }, [error, toast]);
 
   return (
     <Sidebar variant="inset" {...props}>
@@ -59,7 +83,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">
-                    {(company && company.name) ?? ""}
+                    {(company && company.name) ?? "Entreprise inconnue"}
                   </span>
                 </div>
               </Link>

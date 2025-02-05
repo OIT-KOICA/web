@@ -18,13 +18,14 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
   return (
     <form
       onSubmit={handleSearch}
-      className="flex w-full max-w-sm items-center space-x-2"
+      className="flex w-full items-center space-x-2 sm:w-auto"
     >
       <Input
         type="text"
         placeholder="Chercher des produits..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
+        className="w-full sm:w-[200px]"
       />
       <Button type="submit">
         <Search className="mr-2 size-4" />

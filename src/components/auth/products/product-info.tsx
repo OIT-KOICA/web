@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Leaf, MapPin } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 
 interface ProductInfoProps {
   product: {
@@ -17,16 +18,21 @@ interface ProductInfoProps {
 
 export default function ProductInfo({ product }: ProductInfoProps) {
   return (
-    <Card>
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>Information sur le produit</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
+        {/* Description */}
         <div>
           <h3 className="font-semibold">Description</h3>
-          <p>{product ? product.description : ""}</p>
+          <ReactMarkdown className="prose prose-sm prose-blue dark:prose-invert">
+            {product ? product.description : ""}
+          </ReactMarkdown>
         </div>
-        <div className="flex justify-between">
+
+        {/* Catégorie & Localisation */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <h3 className="font-semibold">Catégorie</h3>
             <p>{product ? product.category : ""}</p>
@@ -39,7 +45,9 @@ export default function ProductInfo({ product }: ProductInfoProps) {
             </p>
           </div>
         </div>
-        <div className="flex justify-between">
+
+        {/* Quantité, Périssable & Produit dérivé */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div>
             <h3 className="font-semibold">Quantité en stock</h3>
             <p>
@@ -47,15 +55,15 @@ export default function ProductInfo({ product }: ProductInfoProps) {
             </p>
           </div>
           <div>
-            <h3 className="font-semibold">Le produit est-il périmable ?</h3>
+            <h3 className="font-semibold">Le produit est-il périssable ?</h3>
             {product && product.isPerishable ? (
               <Badge variant="destructive" className="flex items-center">
                 <Leaf className="mr-1 size-4" />
-                Périmable
+                Périssable
               </Badge>
             ) : (
               <Badge variant="secondary" className="flex items-center">
-                Non-périmable
+                Non-périssable
               </Badge>
             )}
           </div>

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function TermsAndConditionsPage() {
   return (
     <div className="container mx-auto space-y-24 px-4 py-16">
-      <h1 className="mb-12 text-center text-4xl font-bold">
+      <h1 className="text-gradient mb-12 text-center text-4xl font-bold">
         Conditions d&apos;utilisation
       </h1>
 
@@ -77,7 +77,7 @@ export default function TermsAndConditionsPage() {
         <h2 className="text-3xl font-semibold">6. Contact</h2>
         <p className="text-gray-600">
           Si vous avez des questions concernant ces conditions
-          d&apos;utilisation, veuillez nous contacter à
+          d&apos;utilisation, veuillez nous contacter à{" "}
           <a
             href="mailto:support@cassavamarketplace.com"
             className="text-primary hover:underline"

@@ -6,7 +6,7 @@ import { Plus } from "lucide-react";
 import useProductStore from "@/lib/stores/product-store";
 import { ProductDTO } from "@/lib/type";
 import SearchBar from "./search-bar";
-import FilterDropdown from "./filter-dropdown";
+import FilterDropdown from "../filter-dropdown";
 import ProductTable from "./product-table";
 import { useRouter } from "next/navigation";
 
@@ -36,11 +36,9 @@ export default function ProductList() {
         return matchesSearch && matchesCategory;
       })
       .sort((a: { name: string }, b: { name: string }) => {
-        if (sortOrder === "asc") {
-          return a.name.localeCompare(b.name);
-        } else {
-          return b.name.localeCompare(a.name);
-        }
+        return sortOrder === "asc"
+          ? a.name.localeCompare(b.name)
+          : b.name.localeCompare(a.name);
       });
   }, [products, searchTerm, categoryFilter, sortOrder]);
 
@@ -57,17 +55,19 @@ export default function ProductList() {
   );
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 p-4 sm:p-6">
+      <div className="flex flex-col items-center justify-between space-y-3 sm:flex-row sm:space-y-0">
         <Button
           onClick={() => {
             setEdit(false);
             router.push("/dashboard/products/create");
           }}
+          className="w-full sm:w-auto"
         >
           <Plus className="mr-2 size-4" /> Créer un produit
         </Button>
-        <div className="flex space-x-2">
+
+        <div className="flex w-full flex-col space-y-2 sm:w-auto sm:flex-row sm:space-x-2 sm:space-y-0">
           <SearchBar onSearch={setSearchTerm} />
           <FilterDropdown
             options={[
@@ -85,6 +85,7 @@ export default function ProductList() {
           />
         </div>
       </div>
+
       <ProductTable
         products={paginatedProducts}
         currentPage={currentPage}

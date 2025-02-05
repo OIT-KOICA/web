@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
@@ -19,7 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
+import { Loader2, Wand2 } from "lucide-react";
 import { ProductFormValues, productSchema } from "@/schemas/product-schema";
 import CategorySelect from "./category-select";
 import PriceVariations from "./price-variations";
@@ -28,9 +27,14 @@ import UnitOfMeasureSelect from "./unit-of-measure-select";
 import Image from "next/image";
 import { useCreateProduct, useUpdateProduct } from "@/lib/query/product-query";
 import useProductStore from "@/lib/stores/product-store";
+import dynamic from "next/dynamic";
+
+// Chargement dynamique de l'éditeur Markdown pour éviter les erreurs SSR
+const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
 export default function ProductCreationForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
   const createProduct = useCreateProduct();
@@ -75,6 +79,55 @@ export default function ProductCreationForm() {
     }
   };
 
+  const generateArticleContent = async () => {
+    setIsGenerating(true);
+
+    try {
+      const name = form.getValues("name");
+      if (!name) {
+        toast({
+          title: "Erreur",
+          description:
+            "Veuillez entrer un nom de produit avant de générer sa description.",
+          variant: "destructive",
+        });
+        setIsGenerating(false);
+        return;
+      }
+
+      // Envoi de la requête à l'API Next.js
+      const response = await fetch("/api/generate-description", {
+        method: "POST",
+        body: JSON.stringify({ topic: name }),
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!response.ok) {
+        throw new Error("Erreur lors de la génération de la description.");
+      }
+
+      const data = await response.json();
+
+      if (data.content) {
+        form.setValue("description", data.content);
+        toast({
+          title: "Succès",
+          description: "La description a été généré avec succès !",
+        });
+      }
+    } catch (error) {
+      console.error("Erreur lors de la génération :", error);
+      toast({
+        title: "Erreur",
+        description:
+          "Impossible de générer la description, réessaye plus tard.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   const onSubmit = async (data: ProductFormValues) => {
     setIsSubmitting(true);
 
@@ -102,12 +155,12 @@ export default function ProductCreationForm() {
 
     try {
       if (edit && product)
-        editProduct.mutate({
+        await editProduct.mutateAsync({
           slug: product.slug,
           productData: formData,
         });
       else
-        createProduct.mutate({
+        await createProduct.mutateAsync({
           productData: formData,
         });
 
@@ -195,11 +248,26 @@ export default function ProductCreationForm() {
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description du produit</FormLabel>
+                  <FormLabel>Description</FormLabel>
+                  <div className="flex items-center space-x-2">
+                    <Button
+                      type="button"
+                      onClick={generateArticleContent}
+                      disabled={isGenerating}
+                    >
+                      {isGenerating ? (
+                        <Loader2 className="mr-2 size-4 animate-spin" />
+                      ) : (
+                        <Wand2 className="mr-2 size-4" />
+                      )}
+                      Générer le texte
+                    </Button>
+                  </div>
                   <FormControl>
-                    <Textarea
-                      placeholder="Entrer la description du produit"
-                      {...field}
+                    <MDEditor
+                      value={field.value}
+                      onChange={field.onChange}
+                      height={250}
                     />
                   </FormControl>
                   <FormMessage />

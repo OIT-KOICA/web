@@ -76,7 +76,6 @@ export default function ProductsSection() {
               <Image
                 src={chain.image}
                 alt={chain.name}
-                layout="responsive"
                 width={600}
                 height={400}
                 className="object-cover"

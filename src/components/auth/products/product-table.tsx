@@ -18,7 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { formatCurrency } from "@/lib/utils";
-import ConfirmDialog from "./confirm-dialog";
+import ConfirmDialog from "../confirm-dialog";
 import useProductStore from "@/lib/stores/product-store";
 import { ProductDTO } from "@/lib/type";
 import Link from "next/link";
@@ -80,8 +80,8 @@ export default function ProductTable({
   };
 
   return (
-    <>
-      <Table>
+    <div className="overflow-x-auto">
+      <Table className="w-full min-w-[600px]">
         <TableHeader>
           <TableRow>
             <TableHead className="w-[200px]">
@@ -189,6 +189,6 @@ export default function ProductTable({
         title="Delete Product"
         description={`Êtes vous sur de vouloir supprimer le produit : ${productToDelete?.name} ? Cette action est irreversible.`}
       />
-    </>
+    </div>
   );
 }

@@ -136,7 +136,7 @@ export default function CreateCompanyModal() {
 
   return (
     <Dialog open={true}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="max-h-[90vh] w-full max-w-md overflow-y-auto p-4 sm:max-w-[600px] sm:p-6">
         <DialogHeader>
           <DialogTitle>Créer votre entreprise</DialogTitle>
         </DialogHeader>

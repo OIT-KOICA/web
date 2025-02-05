@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <div className="container mx-auto space-y-24 px-4 py-16">
-      <h1 className="mb-12 text-center text-4xl font-bold">À propos de Cassava Marketplace</h1>
+      <h1 className="text-gradient mb-12 text-center text-4xl font-bold">À propos de Cassava Marketplace</h1>
       <VisionSection />
       <StakeholdersSection />
       <ProjectValueSection />

@@ -8,8 +8,8 @@ export default function Hero() {
       <Image
         src="/images/hero-background.jpg"
         alt="Agricultural landscape"
-        layout="fill"
-        objectFit="cover"
+        fill
+        style={{ objectFit: "cover" }}
         quality={100}
         priority
       />

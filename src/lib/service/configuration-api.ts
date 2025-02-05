@@ -1,5 +1,5 @@
 import { fetchClient } from "../api/fetch-client";
-import { CompanyDTO } from "../type";
+import { CompanyDTO, Offer } from "../type";
 
 export const getCities = async (): Promise<
   Array<{
@@ -51,16 +51,7 @@ export const getCompany = async (): Promise<CompanyDTO> => {
   }
 };
 
-export const getAdds = async (): Promise<
-  Array<{
-    id: string;
-    name: string;
-    phone: string;
-    location: string;
-    description: string;
-    createdAt: string;
-  }>
-> => {
+export const getAdds = async (): Promise<Array<Offer>> => {
   try {
     const data = await fetchClient(`/guest/adds`, {
       requiresAuth: false,
@@ -77,14 +68,8 @@ export const createAdd = async (formData: {
   phone: string;
   location: string;
   description: string;
-}): Promise<{
-  id: string;
-  name: string;
-  phone: string;
-  location: string;
-  description: string;
-  createdAt: string;
-}> => {
+  categories: string[];
+}): Promise<Offer> => {
   try {
     const response = await fetchClient("/guest/add/create", {
       method: "POST",

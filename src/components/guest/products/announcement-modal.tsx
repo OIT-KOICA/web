@@ -21,16 +21,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useCreateAdd } from "@/lib/query/configuration-query";
+import Select from "react-select";
 
+// 🛠️ Définition du schéma de validation
 const announcementSchema = z.object({
-  name: z.string().min(2, "Le nom doit être sur plus de 2 caractères"),
+  name: z.string().min(2, "Le nom doit contenir au moins 2 caractères"),
   phone: z.string().regex(/^\+?[0-9]{8,14}$/, "Numéro de téléphone invalide"),
-  location: z
-    .string()
-    .min(2, "Votre zone de localisation doit être sur plus de 2 caractères"),
-  description: z
-    .string()
-    .min(5, "Description doit tenir sur plus de 5 caractères"),
+  location: z.string().min(2, "Veuillez préciser votre localisation"),
+  description: z.string().min(5, "Décrivez votre besoin en détail"),
+  categories: z.array(z.string()).nonempty("Choisissez au moins une catégorie"),
 });
 
 type AnnouncementForm = z.infer<typeof announcementSchema>;
@@ -51,24 +50,21 @@ export default function AnnouncementModal({
       phone: "",
       location: "",
       description: "",
+      categories: [],
     },
   });
+
   const createAdd = useCreateAdd();
 
   const onSubmit = (data: AnnouncementForm) => {
-    createAdd.mutate({
-      name: data.name,
-      phone: data.phone,
-      location: data.location,
-      description: data.description,
-    });
+    createAdd.mutate(data);
     form.reset();
     onClose();
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg md:max-w-2xl lg:max-w-3xl">
         <DialogHeader>
           <DialogTitle>Poster une annonce</DialogTitle>
         </DialogHeader>
@@ -92,9 +88,9 @@ export default function AnnouncementModal({
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Votre numéro de téléphone</FormLabel>
+                  <FormLabel>Numéro de téléphone</FormLabel>
                   <FormControl>
-                    <Input placeholder="Votre numéro de télephone" {...field} />
+                    <Input placeholder="Numéro WhatsApp de préférence (Ex: +237XXXXXXXXX)" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -105,13 +101,38 @@ export default function AnnouncementModal({
               name="location"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Votre zone de localisation</FormLabel>
+                  <FormLabel>Localisation</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Votre zone de localisation"
-                      {...field}
-                    />
+                    <Input placeholder="Ex: Yaoundé, Douala..." {...field} />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="categories"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Catégories</FormLabel>
+                  <Select
+                    isMulti
+                    options={[
+                      { value: "MANIOC", label: "Manioc" },
+                      { value: "VOLAILLE", label: "Volaille" },
+                      { value: "MAIS", label: "Maïs" },
+                      { value: "TRANSPORT", label: "Transport" },
+                      { value: "LOCATION", label: "Location" },
+                      { value: "AUTRE", label: "Autre" },
+                    ]}
+                    onChange={(selected) =>
+                      field.onChange(selected.map((option) => option.value))
+                    }
+                    value={field.value.map((cat) => ({
+                      value: cat,
+                      label: cat,
+                    }))}
+                  />
                   <FormMessage />
                 </FormItem>
               )}
@@ -121,10 +142,10 @@ export default function AnnouncementModal({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description de votre besoin</FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Décrire votre besoin (ex., J'ai besoin de 40 tonnes de manioc dans la ville de Bertoua...)"
+                      placeholder="Décrivez votre besoin..."
                       {...field}
                     />
                   </FormControl>

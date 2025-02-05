@@ -27,9 +27,8 @@ interface PriceVariationsProps {
 
 const parameters = [
   { value: "DISTANCE", label: "Distance" },
-  { value: "URGENCY", label: "Urgence" },
-  { value: "QUANTITY", label: "Quantité" },
-  { value: "OTHER", label: "Autre" },
+  { value: "URGENCE", label: "Urgence" },
+  { value: "AUTRE", label: "Autre" },
 ];
 
 export default function PriceVariations({ control }: PriceVariationsProps) {
