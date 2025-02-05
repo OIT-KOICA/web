@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, use, useEffect } from "react";
+import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import useArticleStore from "@/lib/stores/article-store";
 import { SidebarInset } from "@/components/ui/sidebar";
@@ -8,11 +8,7 @@ import ArticleInfo from "@/components/auth/articles/article-info";
 import ArticleComments from "@/components/auth/articles/article-comments";
 import ArticleHeader from "@/components/auth/articles/article-header";
 
-export default function ArticleDetailsPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
+export default function ArticleDetailsPage() {
   // const { slug } = params;
   const article = useArticleStore((state) => state.activeArticle);
   //const { setComments } = useArticleStore();
