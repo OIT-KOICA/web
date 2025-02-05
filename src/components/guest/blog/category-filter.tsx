@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
-const categories = ["All", "Production", "Transformation", "Marketing"];
+const categories = ["Toutes les catégories", "Nouvelles", "Formations"];
 
 export default function CategoryFilter() {
   const [activeCategory, setActiveCategory] = useState("All");

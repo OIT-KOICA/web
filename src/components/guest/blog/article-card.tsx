@@ -10,18 +10,10 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-
-interface Article {
-  id: number;
-  title: string;
-  description: string;
-  image: string;
-  date: string;
-  category: string;
-}
+import { ArticleDTO } from "@/lib/type";
 
 interface ArticleCardProps {
-  article: Article;
+  article: ArticleDTO;
 }
 
 export default function ArticleCard({ article }: ArticleCardProps) {
@@ -35,7 +27,7 @@ export default function ArticleCard({ article }: ArticleCardProps) {
         <CardHeader className="p-0">
           <div className="relative h-48 w-full">
             <Image
-              src={article.image}
+              src={`${process.env.NEXT_PUBLIC_API_PATH_URL}/image/${article.file}`}
               alt={article.title}
               layout="fill"
               objectFit="cover"
@@ -48,7 +40,7 @@ export default function ArticleCard({ article }: ArticleCardProps) {
           <h3 className="mb-2 text-xl font-semibold">{article.title}</h3>
           <p className="mb-4 text-muted-foreground">{article.description}</p>
           <p className="text-sm text-muted-foreground">
-            Publié le {new Date(article.date).toLocaleDateString()}
+            Publié le {new Date(article.createdAt).toLocaleDateString()}
           </p>
         </CardContent>
         <CardFooter className="p-4">

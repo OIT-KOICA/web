@@ -5,7 +5,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import useArticleStore from "@/lib/stores/article-store";
 import { SidebarInset } from "@/components/ui/sidebar";
 import ArticleInfo from "@/components/auth/articles/article-info";
-import ArticleComments from "@/components/auth/articles/article-comments";
 import ArticleHeader from "@/components/auth/articles/article-header";
 
 export default function ArticleDetailsPage() {
@@ -30,11 +29,6 @@ export default function ArticleDetailsPage() {
           {/* Informations de l'article */}
           <Suspense fallback={<Skeleton className="h-96 w-full" />}>
             <ArticleInfo article={article} />
-          </Suspense>
-
-          {/* Commentaires sur l'article */}
-          <Suspense fallback={<Skeleton className="h-96 w-full" />}>
-            <ArticleComments slug={article?.slug} />
           </Suspense>
         </div>
       </div>

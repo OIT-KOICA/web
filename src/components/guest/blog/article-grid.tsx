@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import ArticleCard from "./article-card";
+import useArticleStore from "@/lib/stores/article-store";
+import { useGetArticles } from "@/lib/query/article-query";
 
 // Mock data for articles
 const mockArticles = [
@@ -39,6 +41,13 @@ const mockArticles = [
 export default function ArticleGrid() {
   const [visibleArticles, setVisibleArticles] = useState(6);
 
+  const { articles, setArticles } = useArticleStore();
+  const { articles: fetchArticles } = useGetArticles();
+
+  useEffect(() => {
+    if (!articles && fetchArticles) setArticles(fetchArticles);
+  }, [articles, fetchArticles, setArticles]);
+
   const loadMore = () => {
     setVisibleArticles((prev) => prev + 3);
   };
@@ -46,8 +55,8 @@ export default function ArticleGrid() {
   return (
     <div>
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {mockArticles.slice(0, visibleArticles).map((article) => (
-          <ArticleCard key={article.id} article={article} />
+        {articles.slice(0, visibleArticles).map((article) => (
+          <ArticleCard key={article.slug} article={article} />
         ))}
       </div>
       {visibleArticles < mockArticles.length && (
