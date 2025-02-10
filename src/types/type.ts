@@ -14,9 +14,7 @@ export type ProductDTO = {
   companyAvatar: string;
   companyPhones: string[];
   pricings: Array<{
-    id: string;
     description: string;
-    parameterType: string;
     price: number;
   }>;
   localisation: string;
@@ -28,7 +26,6 @@ export type ProductDTO = {
 export type ProductRequest = {
   name: string;
   code: string;
-  type: string;
   description: string;
   category: string;
   unit: string;
@@ -65,9 +62,6 @@ export type Discussion = {
   };
   messages: Array<Message>;
   createdAt: string;
-  status: string;
-  sellerValidated: boolean;
-  clientValidated: boolean;
 };
 
 export type DiscussionRequest = {
@@ -89,9 +83,7 @@ export type CompanyDTO = {
   chainValueFunctions: string[];
   localisation: string;
   serviceType: string;
-  merchantCode: string;
-  user: string;
-  kycStatus: string;
+  user: string; 
   avatar: string;
   createdAt: string;
   updatedAt: string;
@@ -107,6 +99,7 @@ export interface ArticleCategoryDTO {
 }
 
 export interface ArticleDTO {
+  id: string;
   title: string;
   slug: string;
   code: string;
@@ -114,16 +107,19 @@ export interface ArticleDTO {
   category: string;
   company: string;
   file: string | null;
+  documents: Array<string>;
+  links: Array<string>;
   createdAt: string;
   updatedAt: string;
 }
 
 export interface ArticleRequest {
   title: string;
-  code: string;
   description: string;
   category: string;
-  file?: File | null;
+  file: File | null;
+  documents: string | null;
+  links: string | null;
 }
 
 export interface Offer {

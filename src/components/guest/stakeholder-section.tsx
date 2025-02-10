@@ -45,7 +45,7 @@ const stakeholders = [
 export default function StakeholderSection() {
   return (
     <section className="container mx-auto px-6">
-      <h2 className="mb-8 text-center text-3xl font-bold">
+      <h2 className="text-gradient mb-8 text-center text-3xl font-bold">
         Principaux acteurs
       </h2>
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">

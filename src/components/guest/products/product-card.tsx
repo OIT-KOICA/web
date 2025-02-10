@@ -5,7 +5,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatCurrency } from "@/lib/utils";
-import { ProductDTO } from "@/lib/type";
+import { ProductDTO } from "@/types/type";
 import useProductStore from "@/lib/stores/product-store";
 import { useRouter } from "next/navigation";
 

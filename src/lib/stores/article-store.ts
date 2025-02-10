@@ -1,6 +1,6 @@
 import { persist } from "zustand/middleware";
 import { create } from "zustand";
-import { ArticleDTO, TagDTO } from "../type";
+import { ArticleDTO, TagDTO } from "../../types/type";
 
 interface ArticleStoreState {
   articles: Array<ArticleDTO>;

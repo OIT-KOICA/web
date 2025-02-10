@@ -8,7 +8,7 @@ import {
   getDiscussions,
   getDiscussionsBySlug,
 } from "../service/discussion-api";
-import { DiscussionRequest, MessageRequest } from "../type";
+import { DiscussionRequest, MessageRequest } from "../../types/type";
 
 /**
  * Hook pour récupérer toutes les discussions.

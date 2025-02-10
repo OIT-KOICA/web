@@ -1,5 +1,5 @@
 import { fetchClient } from "../api/fetch-client";
-import { ProductDTO } from "../type";
+import { ProductDTO } from "../../types/type";
 
 /**
  * Récupère tous les produits.

@@ -10,7 +10,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArticleDTO } from "@/lib/type";
+import { ArticleDTO } from "@/types/type";
 
 interface ArticleCardProps {
   article: ArticleDTO;

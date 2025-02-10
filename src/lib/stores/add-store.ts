@@ -1,6 +1,6 @@
 import { persist } from "zustand/middleware";
 import { create } from "zustand";
-import { Offer } from "../type";
+import { Offer } from "../../types/type";
 
 interface AddStoreState {
   adds: Array<Offer>;

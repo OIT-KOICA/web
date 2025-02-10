@@ -50,12 +50,10 @@ export default function ProductCreationForm() {
       edit && product
         ? {
             ...product, // Récupère toutes les valeurs de `ProductDTO`
-            type: "PRODUCT", // Forcer le type à "PRODUCT" pour respecter `ProductFormValues`
             file: product.file || undefined, // Assurez-vous que `file` est correct
           }
         : {
             name: "",
-            code: "",
             category: "",
             description: "",
             isPerishable: false,
@@ -65,7 +63,6 @@ export default function ProductCreationForm() {
             unit: "",
             quantity: 0,
             file: undefined,
-            type: "PRODUCT",
           },
   });
 
@@ -134,11 +131,9 @@ export default function ProductCreationForm() {
     const formData = new FormData();
 
     formData.append("name", data.name);
-    formData.append("code", data.code);
     formData.append("description", data.description);
     formData.append("category", data.category);
     formData.append("unit", data.unit);
-    formData.append("type", data.type);
     formData.append("isPerishable", data.isPerishable + "");
     formData.append("isDerivedProduct", data.isDerivedProduct + "");
     formData.append("basePrice", data.basePrice.toString());
@@ -203,21 +198,6 @@ export default function ProductCreationForm() {
                   <FormLabel>Nom du produit</FormLabel>
                   <FormControl>
                     <Input placeholder="Entrer le nom du produit" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Code du produit */}
-            <FormField
-              control={form.control}
-              name="code"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Code du produit</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Entrer le code du produit" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -425,15 +405,6 @@ export default function ProductCreationForm() {
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              )}
-            />
-
-            {/* TYpe */}
-            <FormField
-              control={form.control}
-              name="type"
-              render={({ field }) => (
-                <Input type="hidden" {...field} value="PRODUCT" />
               )}
             />
 

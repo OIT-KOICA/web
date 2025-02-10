@@ -1,5 +1,5 @@
 import { fetchClient } from "../api/fetch-client";
-import { CompanyDTO } from "../type";
+import { CompanyDTO } from "../../types/type";
 
 /**
  * Vérifie si l'utilisateur connecté possède une entreprise ou pas.

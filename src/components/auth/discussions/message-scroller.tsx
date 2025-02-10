@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";;
 import useProductStore from "@/lib/stores/product-store";
 import { format } from "date-fns";
-import { Message } from "@/lib/type";
+import { Message } from "@/types/type";
 
 const MESSAGES_PER_PAGE = 20;
 

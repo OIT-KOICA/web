@@ -39,11 +39,12 @@ import useUserStore from "@/lib/stores/user-store";
 import Phones from "../products/phones";
 
 const services = [
-  { value: "PRODUCTION", label: "Production" },
-  { value: "COLLECTION", label: "Collecte" },
-  { value: "TRANSFORMATION", label: "Transformation" },
-  { value: "MARKETING", label: "Ecoulement" },
-  { value: "TRANSPORT", label: "Transport" },
+  { value: "PRODUCTEUR", label: "Producteur" },
+  { value: "TRANSFORMATEUR", label: "Transformateur" },
+  { value: "COLLECTEUR", label: "Collecteur" },
+  { value: "GROSSISTE", label: "Grossiste" },
+  { value: "DETAILLANT", label: "Détailant" },
+  { value: "ACTEUR_EXTERNE", label: "Acteur Externe" },
 ];
 
 export default function CreateCompanyModal() {
@@ -82,26 +83,20 @@ export default function CreateCompanyModal() {
     data: CompanyFormValues
   ) => {
     setIsSubmitting(true);
+
     const formData = new FormData();
 
     formData.append("name", data.name);
     formData.append("localisation", data.localisation);
     formData.append("serviceType", data.serviceType);
-
-    if (data.email) {
-      formData.append("email", data.email);
-    }
-
-    if (data.file) {
-      formData.append("file", data.file);
-    }
-
     formData.append("phones", JSON.stringify(data.phones));
-
     formData.append(
       "chainValueFunctions",
       JSON.stringify(data.chainValueFunctions)
     );
+
+    if (data.email) formData.append("email", data.email);
+    if (data.file) formData.append("file", data.file);
 
     try {
       await createCompany.mutateAsync({
@@ -117,8 +112,7 @@ export default function CreateCompanyModal() {
 
       router.push("/dashboard");
     } catch (error) {
-      console.error("Failed to create company:", error);
-
+      console.error("Echec lors de la création de la compagnie:", error);
       toast({
         title: "Erreur",
         description:
@@ -184,7 +178,7 @@ export default function CreateCompanyModal() {
               name="chainValueFunctions"
               render={() => (
                 <FormItem>
-                  <FormLabel>Fonctions dans la chaîne de valeur</FormLabel>
+                  <FormLabel>Rôles dans la chaîne de valeur</FormLabel>
                   <div className="grid grid-cols-2 gap-4">
                     {services.map((service, index) => (
                       <FormField
@@ -267,7 +261,7 @@ export default function CreateCompanyModal() {
               name="serviceType"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Type de service</FormLabel>
+                  <FormLabel>Type d&apos;entreprise</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={(value) =>
@@ -276,14 +270,12 @@ export default function CreateCompanyModal() {
                       {...field}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Selectionnez un type de service" />
+                        <SelectValue placeholder="Selectionnez un type" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="PRODUCT_VENDOR">
-                          Vendeur de produit
-                        </SelectItem>
-                        <SelectItem value="SUPPORT_COMPANY">
-                          Accompagnateur d&apos;entrepreneur
+                        <SelectItem value="COMMERCANT">Commerçant</SelectItem>
+                        <SelectItem value="SUPPORT">
+                          Support d&apos;entrepreneurs
                         </SelectItem>
                       </SelectContent>
                     </Select>

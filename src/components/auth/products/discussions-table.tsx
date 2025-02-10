@@ -11,10 +11,9 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import useProductStore from "@/lib/stores/product-store";
 import { useRouter } from "next/navigation";
-import { Discussion } from "@/lib/type";
+import { Discussion } from "@/types/type";
 
 export default function DiscussionsTable({ slug }: { slug?: string }) {
   const [currentPage, setCurrentPage] = useState(1);
@@ -41,7 +40,6 @@ export default function DiscussionsTable({ slug }: { slug?: string }) {
             <TableRow>
               <TableHead>Nom du client</TableHead>
               <TableHead>Dernière interaction</TableHead>
-              <TableHead>Status</TableHead>
               <TableHead className="text-right">Action</TableHead>
             </TableRow>
           </TableHeader>
@@ -51,15 +49,6 @@ export default function DiscussionsTable({ slug }: { slug?: string }) {
                 <TableCell>{discussion.user.name}</TableCell>
                 <TableCell>
                   {new Date(discussion.createdAt).toLocaleString()}
-                </TableCell>
-                <TableCell>
-                  <Badge
-                    variant={
-                      discussion.status === "open" ? "default" : "secondary"
-                    }
-                  >
-                    {discussion.status}
-                  </Badge>
                 </TableCell>
                 <TableCell className="text-right">
                   {slug && (

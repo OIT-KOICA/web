@@ -1,5 +1,5 @@
 import { fetchClient } from "../api/fetch-client";
-import { CompanyDTO, Offer } from "../type";
+import { CompanyDTO, Offer } from "../../types/type";
 
 export const getCities = async (): Promise<
   Array<{

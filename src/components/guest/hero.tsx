@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Hero() {
   return (
-    <div className="relative flex h-[600px] items-center justify-center overflow-hidden">
+    <div className="relative !mt-0 flex min-h-[600px] items-center justify-center overflow-hidden">
       <Image
         src="/images/hero-background.jpg"
         alt="Agricultural landscape"
@@ -13,7 +13,7 @@ export default function Hero() {
         quality={100}
         priority
       />
-      <div className="absolute inset-0 bg-black/50" />
+      <div className="absolute inset-0 bg-black/25" />
       <div className="relative z-10 space-y-6 text-center text-white">
         <h1 className="text-4xl font-bold md:text-6xl">Cassava Marketplace</h1>
         <p className="mx-auto max-w-2xl text-xl md:text-2xl">

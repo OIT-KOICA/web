@@ -20,12 +20,11 @@ import { Loader2, Wand2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import useArticleStore from "@/lib/stores/article-store";
-import {
-  useCreateArticle,
-  useUpdateArticle,
-} from "@/lib/query/article-query";
+import { useCreateArticle, useUpdateArticle } from "@/lib/query/article-query";
 import { ArticleFormValues, articleSchema } from "@/schemas/article-schema";
 import CategoryArticleSelect from "./category-article-select";
+import DocumentsField from "./documents-field";
+import LinksField from "./links-field";
 
 // Chargement dynamique de l'éditeur Markdown pour éviter les erreurs SSR
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
@@ -45,13 +44,20 @@ export default function ArticleCreationForm() {
     resolver: zodResolver(articleSchema),
     defaultValues:
       edit && article
-        ? { ...article, file: article.file || undefined }
+        ? {
+            title: article.title || "",
+            description: article.description || "",
+            category: article.category || "",
+            file: article.file || undefined,
+            links: article.links || [],
+          }
         : {
             title: "",
-            code: "",
             description: "",
             category: "",
             file: undefined,
+            documents: [],
+            links: [],
           },
   });
 
@@ -117,10 +123,20 @@ export default function ArticleCreationForm() {
     const formData = new FormData();
 
     formData.append("title", data.title);
-    formData.append("code", data.code);
     formData.append("description", data.description);
     formData.append("category", data.category);
     if (data.file instanceof File) formData.append("file", data.file);
+
+    // Ajout des documents
+    data.documents?.forEach((doc, index) => {
+      formData.append(`documents[${index}][documentFile]`, doc.documentFile);
+      formData.append(`documents[${index}][documentType]`, doc.documentType);
+    });
+
+    // Ajout des liens
+    data.links?.forEach((link, index) => {
+      formData.append(`links[${index}]`, link);
+    });
 
     try {
       if (edit && article) {
@@ -166,24 +182,6 @@ export default function ArticleCreationForm() {
                   <FormLabel>Titre</FormLabel>
                   <FormControl>
                     <Input placeholder="Titre de l'article" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Code de l'article */}
-            <FormField
-              control={form.control}
-              name="code"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Code de l&apos;article</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Entrer le code de l'article"
-                      {...field}
-                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -286,6 +284,12 @@ export default function ArticleCreationForm() {
                 </FormItem>
               )}
             />
+
+            {/* Documents */}
+            <DocumentsField />
+
+            {/* Liens */}
+            <LinksField />
 
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting && <Loader2 className="mr-2 size-4 animate-spin" />}

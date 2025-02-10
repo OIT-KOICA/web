@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Facebook, Twitter, Instagram } from "lucide-react";
+import { Facebook, Twitter, Linkedin, Youtube } from "lucide-react";
 import Image from "next/image";
 
 export default function Footer() {
@@ -8,13 +8,14 @@ export default function Footer() {
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           <div className="flex items-center space-x-2">
-            <Image
-              src="/images/logo.png"
-              alt="Cassava Marketplace Logo"
-              width={40}
-              height={40}
-              className="rounded-full"
-            />
+            <div className="relative size-12 overflow-hidden rounded-lg shadow-md">
+              <Image
+                src="/images/logo.png"
+                alt="Cassava Marketplace Logo"
+                fill
+                className="object-contain"
+              />
+            </div>
             <div>
               <h3 className="text-lg font-bold">Cassava Marketplace</h3>
               <p className="text-sm text-muted-foreground">
@@ -79,10 +80,13 @@ export default function Footer() {
                 <Facebook size={20} />
               </a>
               <a href="#" className="text-muted-foreground hover:text-primary">
-                <Twitter size={20} />
+                <Linkedin size={20} />
               </a>
               <a href="#" className="text-muted-foreground hover:text-primary">
-                <Instagram size={20} />
+                <Youtube size={20} />
+              </a>
+              <a href="#" className="text-muted-foreground hover:text-primary">
+                <Twitter size={20} />
               </a>
             </div>
           </div>

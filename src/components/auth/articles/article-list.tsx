@@ -4,7 +4,7 @@ import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import useArticleStore from "@/lib/stores/article-store";
-import { ArticleDTO } from "@/lib/type";
+import { ArticleDTO } from "@/types/type";
 import { useRouter } from "next/navigation";
 import ArticleTable from "./article-table";
 import SearchBar from "./search-bar";

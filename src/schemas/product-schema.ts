@@ -2,11 +2,9 @@ import { z } from "zod";
 
 export const productSchema = z.object({
   name: z.string().min(1, "Nom requis"),
-  code: z.string().min(1, "Code requis"),
   description: z.string().min(1, "La description est requise"),
   category: z.string().min(1, "Catégorie requise"),
   unit: z.string().min(1, "Unité de mesure requise"),
-  type: z.literal("PRODUCT"),
   isPerishable: z.boolean().default(false).optional(),
   isDerivedProduct: z.boolean().default(false).optional(),
   basePrice: z.number().positive("Le prix doit être supérieur à 0"),
@@ -17,7 +15,6 @@ export const productSchema = z.object({
       z.object({
         description: z.string().optional(),
         price: z.number().positive("Le prix doit être supérieur à 0").optional(),
-        parameterType: z.string().optional(),
       })
     )
     .optional(),

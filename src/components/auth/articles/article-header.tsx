@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArticleDTO } from "@/lib/type";
+import { ArticleDTO } from "@/types/type";
 
 interface ArticleHeaderProps {
   article: ArticleDTO | null;

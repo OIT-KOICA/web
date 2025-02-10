@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Calendar, FileText, Tag, Building } from "lucide-react";
-import { ArticleDTO } from "@/lib/type";
+import { ArticleDTO } from "@/types/type";
 import Markdown from "react-markdown";
 
 interface ArticleInfoProps {

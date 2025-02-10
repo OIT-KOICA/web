@@ -1,7 +1,7 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ProductDTO } from "@/lib/type";
+import { ProductDTO } from "@/types/type";
 import { CheckCircle, XCircle, Phone } from "lucide-react";
 
 export default function ProductInfo({

@@ -5,13 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   FormControl,
   FormField,
   FormItem,
@@ -24,12 +17,6 @@ interface PriceVariationsProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   control: Control<any>;
 }
-
-const parameters = [
-  { value: "DISTANCE", label: "Distance" },
-  { value: "URGENCE", label: "Urgence" },
-  { value: "AUTRE", label: "Autre" },
-];
 
 export default function PriceVariations({ control }: PriceVariationsProps) {
   const { fields, append, remove } = useFieldArray({
@@ -80,30 +67,6 @@ export default function PriceVariations({ control }: PriceVariationsProps) {
                     onChange={(e) => field.onChange(parseFloat(e.target.value))}
                   />
                 </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name={`pricings.${index}.parameterType`}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Paramètre de variation</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Choisir un paramètre" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {parameters.map((param) => (
-                      <SelectItem key={param.value} value={param.value}>
-                        {param.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
                 <FormMessage />
               </FormItem>
             )}

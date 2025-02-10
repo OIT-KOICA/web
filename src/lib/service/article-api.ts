@@ -1,5 +1,5 @@
 import { fetchClient } from "../api/fetch-client";
-import { ArticleDTO, TagDTO } from "../type";
+import { ArticleDTO, TagDTO } from "../../types/type";
 
 export const getArticles = async (): Promise<ArticleDTO[]> => {
   try {

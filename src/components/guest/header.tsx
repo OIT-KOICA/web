@@ -49,15 +49,15 @@ export default function Header() {
       )}
     >
       <div className="container mx-auto flex items-center justify-between px-6 py-4">
-        <Link href="/" className="flex items-center space-x-2">
-          <Image
-            src="/images/logo.png"
-            alt="Cassava Marketplace Logo"
-            width={40}
-            height={40}
-            style={{ maxWidth: "100%", height: "auto" }}
-            className="rounded-full"
-          />
+        <Link href="/" className="flex items-center space-x-3">
+          <div className="relative size-12 overflow-hidden rounded-lg shadow-md">
+            <Image
+              src="/images/logo.png"
+              alt="Cassava Marketplace Logo"
+              fill
+              className="object-contain"
+            />
+          </div>
           <span className="text-gradient text-2xl font-bold">
             Cassava Marketplace
           </span>

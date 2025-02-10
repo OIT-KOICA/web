@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { MapPin, Phone, Mail, Facebook, Linkedin } from "lucide-react";
+import { MapPin, Phone, Mail, Facebook, Linkedin, Youtube, Twitter } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 const contactInfo = [
@@ -26,6 +26,8 @@ const contactInfo = [
 const socialMedia = [
   { icon: Facebook, href: "https://facebook.com/cassavamarketplace" },
   { icon: Linkedin, href: "https://linkedin.com/company/cassavamarketplace" },
+  { icon: Youtube, href: "https://linkedin.com/company/cassavamarketplace" },
+  { icon: Twitter, href: "https://linkedin.com/company/cassavamarketplace" },
 ];
 
 export default function ContactInfo() {

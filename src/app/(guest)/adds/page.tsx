@@ -7,7 +7,7 @@ import { Plus } from "lucide-react";
 import { motion } from "framer-motion";
 import { useGetAdds } from "@/lib/query/configuration-query";
 import AnnouncementModal from "@/components/guest/products/announcement-modal";
-import { Offer } from "@/lib/type";
+import { Offer } from "@/types/type";
 import AddInfo from "@/components/guest/adds/add-info";
 
 export default function AddListPage() {

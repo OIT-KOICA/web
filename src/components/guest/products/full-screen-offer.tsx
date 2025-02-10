@@ -3,7 +3,7 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, User, Phone, MapPin, Tag } from "lucide-react";
-import { Offer } from "@/lib/type";
+import { Offer } from "@/types/type";
 
 interface FullScreenOfferProps {
   offer: Offer;

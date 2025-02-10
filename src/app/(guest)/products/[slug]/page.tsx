@@ -7,7 +7,7 @@ import ProductInfo from "@/components/guest/products/product-info";
 import SkeletonLoader from "@/components/guest/products/skeleton-loader";
 import { getDiscussion } from "@/lib/service/discussion-api";
 import useProductStore from "@/lib/stores/product-store";
-import { Discussion } from "@/lib/type";
+import { Discussion } from "@/types/type";
 import { getPhoneFromCookie } from "@/lib/utils";
 import { Suspense, useEffect, useState } from "react";
 import { motion } from 'framer-motion'

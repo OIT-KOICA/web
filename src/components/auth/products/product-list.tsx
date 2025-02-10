@@ -4,7 +4,7 @@ import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import useProductStore from "@/lib/stores/product-store";
-import { ProductDTO } from "@/lib/type";
+import { ProductDTO } from "@/types/type";
 import SearchBar from "./search-bar";
 import FilterDropdown from "../filter-dropdown";
 import ProductTable from "./product-table";
@@ -73,7 +73,7 @@ export default function ProductList() {
             options={[
               "Tous les produits",
               "Manioc",
-              "Maïs",
+              "Mais",
               "Poulet",
               "Transport",
               "Location",

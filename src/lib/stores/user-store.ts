@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { checkUser } from "@/lib/service/user-api";
 import { toast } from "@/hooks/use-toast";
-import { CompanyDTO } from "../type";
+import { CompanyDTO } from "../../types/type";
 import { persist } from "zustand/middleware";
 
 interface UserState {

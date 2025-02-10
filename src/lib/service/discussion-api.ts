@@ -1,5 +1,5 @@
 import { fetchClient } from "../api/fetch-client";
-import { Discussion, DiscussionRequest, MessageRequest } from "../type";
+import { Discussion, DiscussionRequest, MessageRequest } from "../../types/type";
 
 /**
  * Récupère toutes les discussions.

@@ -1,6 +1,6 @@
 import { persist } from "zustand/middleware";
 import { create } from "zustand";
-import { Discussion, ProductDTO } from "../type";
+import { Discussion, ProductDTO } from "../../types/type";
 
 // Définir le type pour l'état et les actions du store
 interface ProductStoreState {

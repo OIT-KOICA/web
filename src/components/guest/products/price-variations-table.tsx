@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ProductDTO } from "@/lib/type";
+import { ProductDTO } from "@/types/type";
 import { formatCurrency } from "@/lib/utils";
 
 export default function PriceVariationsTable({

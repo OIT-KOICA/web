@@ -15,7 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Discussion } from "@/lib/type";
+import { Discussion } from "@/types/type";
 import {
   useCreateDiscussion,
   useCreateMessage,
@@ -113,8 +113,13 @@ export default function ProductDiscussion({
     e.preventDefault();
     setLoading(true);
 
+    console.log(formDataDiscussion);
+    
+
     try {
       discussionSchema.parse(formDataDiscussion);
+      console.log(formDataDiscussion);
+      
       savePhoneToCookie(formDataDiscussion.phone);
 
       createDiscussion.mutate(

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { ProductDTO } from "@/lib/type";
+import { ProductDTO } from "@/types/type";
 import { useGetProducts } from "@/lib/query/product-query";
 import ProductCard from "./product-card";
 import { useInView } from "react-intersection-observer";

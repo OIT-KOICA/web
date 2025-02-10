@@ -15,7 +15,7 @@ import { User, Phone, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import FullScreenOffer from "./full-screen-offer";
-import { Offer } from "@/lib/type";
+import { Offer } from "@/types/type";
 
 interface OffersCarouselProps {
   className?: string;

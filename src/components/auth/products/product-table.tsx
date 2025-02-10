@@ -20,7 +20,7 @@ import {
 import { formatCurrency } from "@/lib/utils";
 import ConfirmDialog from "../confirm-dialog";
 import useProductStore from "@/lib/stores/product-store";
-import { ProductDTO } from "@/lib/type";
+import { ProductDTO } from "@/types/type";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";

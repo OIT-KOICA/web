@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Offer } from "@/lib/type";
+import { Offer } from "@/types/type";
 import { MapPin, Phone, Tag, User } from "lucide-react";
 
 export default function AddInfo({ add }: { add: Offer }) {

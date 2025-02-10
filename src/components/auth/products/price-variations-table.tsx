@@ -10,9 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatCurrency } from "@/lib/utils";
 
 type PriceVariation = {
-  id: string;
   description: string;
-  parameterType: string;
   price: number;
 };
 
@@ -33,7 +31,6 @@ export default function PriceVariationsTable({
           <TableHeader>
             <TableRow>
               <TableHead>Description</TableHead>
-              <TableHead>Paramètre de variation</TableHead>
               <TableHead className="text-right">Prix</TableHead>
             </TableRow>
           </TableHeader>
@@ -42,7 +39,6 @@ export default function PriceVariationsTable({
               variations.map((variation, index) => (
                 <TableRow key={index}>
                   <TableCell>{variation.description}</TableCell>
-                  <TableCell>{variation.parameterType}</TableCell>
                   <TableCell className="text-right">
                     {formatCurrency(variation.price)}
                   </TableCell>

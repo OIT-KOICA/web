@@ -18,7 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import useArticleStore from "@/lib/stores/article-store";
-import { ArticleDTO } from "@/lib/type";
+import { ArticleDTO } from "@/types/type";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
