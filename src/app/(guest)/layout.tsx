@@ -1,5 +1,6 @@
 import Footer from "@/components/guest/footer";
 import Header from "@/components/guest/header";
+import ProjectSponsorsCarousel from "@/components/guest/project-sponsors-carousel";
 
 export default function GuestLayout({
   children,
@@ -9,7 +10,10 @@ export default function GuestLayout({
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
-      <main className="flex-1 pt-20">{children}</main>
+      <div className="flex-1 pt-20">
+        <ProjectSponsorsCarousel />
+      </div>
+      <main className="flex-1">{children}</main>
       <Footer />
     </div>
   );

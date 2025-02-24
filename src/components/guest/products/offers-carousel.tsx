@@ -10,12 +10,12 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import { useGetAdds } from "@/lib/query/configuration-query";
 import { User, Phone, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import FullScreenOffer from "./full-screen-offer";
 import { Offer } from "@/types/type";
+import { useGetAdds } from "@/lib/query/configuration-query";
 
 interface OffersCarouselProps {
   className?: string;
@@ -23,15 +23,18 @@ interface OffersCarouselProps {
 
 export default function OffersCarousel({ className }: OffersCarouselProps) {
   const [selectedOffer, setSelectedOffer] = React.useState<Offer | null>(null);
-
+  const { data, fetchNextPage, hasNextPage } = useGetAdds();
   const plugin = React.useRef(
     Autoplay({ delay: 3000, stopOnInteraction: true })
   );
-  const { adds } = useGetAdds();
+
+  const offers = data?.pages
+    ? data.pages.flatMap((page) => page.adds || [])
+    : [];
 
   return (
     <div className={className}>
-      <h2 className="mb-4 text-2xl font-bold">Annonces les plus recentes</h2>
+      <h2 className="mb-4 text-2xl font-bold">Annonces les plus récentes</h2>
       <Carousel
         plugins={[plugin.current]}
         className="mx-auto w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl"
@@ -39,8 +42,8 @@ export default function OffersCarousel({ className }: OffersCarouselProps) {
         onMouseLeave={plugin.current.reset}
       >
         <CarouselContent>
-          {adds && adds.length > 0 ? (
-            adds.map((offer) => (
+          {offers.length > 0 ? (
+            offers.map((offer) => (
               <CarouselItem key={offer.id}>
                 <motion.div
                   whileHover={{ scale: 1.05 }}
@@ -74,7 +77,7 @@ export default function OffersCarousel({ className }: OffersCarouselProps) {
                         size="sm"
                         className="mt-4 w-full bg-primary/10 text-primary hover:bg-primary/20 dark:text-primary-foreground"
                       >
-                        Voir les Details
+                        Voir les détails
                       </Button>
                     </CardContent>
                   </Card>
@@ -82,12 +85,21 @@ export default function OffersCarousel({ className }: OffersCarouselProps) {
               </CarouselItem>
             ))
           ) : (
-            <div className="m-4 text-center">Pas de d&apos;annonces pour le moment</div>
+            <div className="m-4 text-center">
+              Pas d&apos;annonces pour le moment
+            </div>
           )}
         </CarouselContent>
         <CarouselPrevious />
         <CarouselNext />
       </Carousel>
+
+      {hasNextPage && (
+        <div className="mt-4 flex justify-center">
+          <Button onClick={() => fetchNextPage()}>Charger plus...</Button>
+        </div>
+      )}
+
       {selectedOffer && (
         <FullScreenOffer
           offer={selectedOffer}

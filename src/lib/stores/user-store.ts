@@ -1,15 +1,17 @@
 import { create } from "zustand";
 import { checkUser } from "@/lib/service/user-api";
 import { toast } from "@/hooks/use-toast";
-import { CompanyDTO } from "../../types/type";
+import { CompanyDTO, UserDTO } from "../../types/type";
 import { persist } from "zustand/middleware";
 
 interface UserState {
   isNewUser: boolean | null; // `null` signifie que l'état n'a pas encore été chargé
   company: CompanyDTO | null;
+  user: UserDTO | null;
   setUserStatus: () => Promise<void>; // Définit l'état utilisateur
   setStatus: () => Promise<void>; // Définit l'état utilisateur à false
   setCompany: (company: CompanyDTO) => void;
+  setUser: (activeUser: UserDTO) => void;
 }
 
 const useUserStore = create<UserState>()(
@@ -17,6 +19,7 @@ const useUserStore = create<UserState>()(
     (set) => ({
       isNewUser: null, // État initial : non défini
       company: null,
+      user: null,
 
       setUserStatus: async () => {
         try {
@@ -39,8 +42,12 @@ const useUserStore = create<UserState>()(
         set({ isNewUser: false });
       },
       setCompany: (company: CompanyDTO) => {
-        if (!company) return;
+        console.log(`Chargement de la compagnie ${company}`);
         set(() => ({ company }));
+      },
+      setUser: (activeUser: UserDTO) => {
+        console.log(`Chargement de l'utilisateur ${activeUser}`);
+        set(() => ({ user: activeUser }));
       },
     }),
     { name: "user-store" }

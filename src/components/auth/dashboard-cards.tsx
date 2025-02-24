@@ -15,11 +15,11 @@ const productCards = [
     href: "/dashboard/products",
   },
   {
-    title: "Découvrez des articles utiles",
+    title: "Découvrez des documents utiles",
     description:
-      "Lisez des articles informatifs sur les chaînes de valeur, les possibilités de financement et des conseils pour développer votre entreprise.",
+      "Consultez des documents informatifs sur les chaînes de valeur, les possibilités de financement et des conseils pour développer votre entreprise.",
     icon: BookOpen,
-    cta: "Visiter le blog",
+    cta: "Visiter la documentation",
     href: "/blog",
   },
   {
@@ -42,19 +42,19 @@ const productCards = [
 
 const articleCards = [
   {
-    title: "Gérer vos articles",
+    title: "Gérer votre documentation",
     description:
-      "Consultez la liste des articles que vous avez créés, ajoutez-en de nouveaux ou mettez à jour les articles existants.",
+      "Consultez la liste des documents que vous avez créés, ajoutez-en de nouveaux ou mettez à jour les documents existants.",
     icon: Package,
-    cta: "Aller à Mes articles",
+    cta: "Aller à ma documentation",
     href: "/dashboard/articles",
   },
   {
-    title: "Découvrez des articles utiles",
+    title: "Découvrez des documents utiles",
     description:
-      "Lisez des articles informatifs sur les chaînes de valeur, les possibilités de financement et des conseils pour développer votre entreprise.",
+      "Consultez des documents informatifs sur les chaînes de valeur, les possibilités de financement et des conseils pour développer votre entreprise.",
     icon: BookOpen,
-    cta: "Visiter le blog",
+    cta: "Visiter la documentation",
     href: "/blog",
   },
   {
@@ -80,7 +80,7 @@ export default function DashboardCards() {
 
   return (
     <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-      {company && company.serviceType === "PRODUCT_VENDOR"
+      {company && company.serviceType === "COMMERCANT"
         ? productCards.map((card, index) => (
             <motion.div
               key={card.title}

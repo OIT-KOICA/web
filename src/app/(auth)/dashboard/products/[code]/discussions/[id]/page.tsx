@@ -31,7 +31,7 @@ export default function DiscussionView({
               </Button>
             </Link>
             <h1 className="text-xl font-bold">
-              Discussion avec {discussion?.user.name}
+              Discussion avec {discussion?.username}
             </h1>
           </div>
           <Card>

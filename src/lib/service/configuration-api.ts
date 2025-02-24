@@ -1,5 +1,5 @@
 import { fetchClient } from "../api/fetch-client";
-import { CompanyDTO, Offer } from "../../types/type";
+import { CompanyDTO, NotificationDTO, Offer } from "../../types/type";
 
 export const getCities = async (): Promise<
   Array<{
@@ -39,6 +39,31 @@ export const getUnits = async (): Promise<
   }
 };
 
+export const getNotifications = async (): Promise<Array<NotificationDTO>> => {
+  try {
+    const data = await fetchClient(`/user/notifications`, {
+      requiresAuth: true,
+    });
+    return data;
+  } catch (error) {
+    console.error("Erreur lors de la récupération des notifications", error);
+    throw error;
+  }
+};
+
+export const markAsRead = async (id: string): Promise<string> => {
+  try {
+    const data = await fetchClient(`/user/notifications/${id}/read`, {
+      method: "PUT",
+      requiresAuth: true,
+    });
+    return data;
+  } catch (error) {
+    console.error("Erreur lors de la modification de la notification", error);
+    throw error;
+  }
+};
+
 export const getCompany = async (): Promise<CompanyDTO> => {
   try {
     const data = await fetchClient(`/user/company`, {
@@ -51,32 +76,38 @@ export const getCompany = async (): Promise<CompanyDTO> => {
   }
 };
 
-export const getAdds = async (): Promise<Array<Offer>> => {
+/**
+ * Récupère une liste paginée d'annonces.
+ * @param {number} page - Numéro de la page actuelle.
+ * @param {number} pageSize - Nombre d'annonces par page.
+ * @returns {Promise<{ adds: Offer[]; totalPages: number; totalItems: number; currentPage: number }>}
+ */
+export const getAdds = async (page: number = 0, pageSize: number = 10) => {
   try {
-    const data = await fetchClient(`/guest/adds`, {
-      requiresAuth: false,
-    });
-    return data;
+    const response = await fetchClient(
+      `/guest/adds?page=${page}&size=${pageSize}`,
+      {
+        requiresAuth: false,
+      }
+    );
+
+    return {
+      adds: response.adds || [],
+      totalPages: response.totalPages || 0,
+      totalItems: response.totalItems || 0,
+      currentPage: response.currentPage || 1,
+    };
   } catch (error) {
     console.error("Erreur lors de la récupération des annonces :", error);
     throw error;
   }
 };
 
-export const createAdd = async (formData: {
-  name: string;
-  phone: string;
-  location: string;
-  description: string;
-  categories: string[];
-}): Promise<Offer> => {
+export const createAdd = async (formData: FormData): Promise<Offer> => {
   try {
     const response = await fetchClient("/guest/add/create", {
       method: "POST",
-      headers: {
-        "Content-Type": `application/json`,
-      },
-      body: JSON.stringify(formData),
+      body: formData,
       requiresAuth: false, // Requête nécessitant une authentification
     });
 

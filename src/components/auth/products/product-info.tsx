@@ -1,19 +1,13 @@
+/* eslint-disable tailwindcss/no-custom-classname */
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Leaf, MapPin } from "lucide-react";
+import { formatCurrency } from "@/lib/utils";
+import { ProductDTO } from "@/types/type";
+import { BadgePercent, Leaf, MapPin } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
 interface ProductInfoProps {
-  product: {
-    name: string;
-    description: string;
-    category: string;
-    localisation: string;
-    quantity: number;
-    unit: string;
-    isPerishable: boolean;
-    isDerivedProduct: boolean;
-  } | null;
+  product: ProductDTO | null;
 }
 
 export default function ProductInfo({ product }: ProductInfoProps) {
@@ -42,6 +36,13 @@ export default function ProductInfo({ product }: ProductInfoProps) {
             <p className="flex items-center">
               <MapPin className="mr-1 size-4" />
               {product ? product.localisation : ""}
+            </p>
+          </div>
+          <div>
+            <h3 className="font-semibold">Prix</h3>
+            <p className="flex items-center">
+              <BadgePercent className="mr-1 size-4" />
+              {product ? formatCurrency(product.basePrice) : ""}
             </p>
           </div>
         </div>

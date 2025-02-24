@@ -1,35 +1,46 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import {
   createProduct,
   deleteProduct,
   getProduct,
-  getProductByUserId,
   getProducts,
+  getProductsByUserId,
   updateProduct,
 } from "../service/product-api";
 
 /**
- * Hook pour récupérer tous les produits.
+ * Hook pour récupérer les produits d'un utilisateur avec pagination.
  */
 export const useGetProductsByUserID = () => {
-  const { data, refetch } = useQuery({
-    queryKey: ["products"],
-    queryFn: getProductByUserId,
+  return useInfiniteQuery({
+    queryKey: ["user-products"],
+    queryFn: async ({ pageParam = 0 }) => await getProductsByUserId(pageParam, 10),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => {
+      return lastPage.currentPage < lastPage.totalPages ? lastPage.currentPage + 1 : undefined;
+    },
   });
-
-  return { products: data, refetch };
 };
 
 /**
- * Hook pour récupérer tous les produits d'un utilisateur.
+ * Hook pour récupérer les produits avec pagination.
  */
 export const useGetProducts = () => {
-  const { data, refetch } = useQuery({
+  return useInfiniteQuery({
     queryKey: ["products"],
-    queryFn: getProducts,
+    queryFn: async ({ pageParam = 0 }) => await getProducts(pageParam, 10),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => {
+      return lastPage.currentPage < lastPage.totalPages
+        ? lastPage.currentPage + 1
+        : undefined;
+    },
   });
-
-  return { products: data, refetch };
 };
 
 /**

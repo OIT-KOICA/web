@@ -103,7 +103,7 @@ export default function ArticleTable({
           {articles.length === 0 ? (
             <TableRow>
               <TableCell colSpan={4} className="text-center">
-                Aucun article trouvé
+                Aucune documentation trouvée
               </TableCell>
             </TableRow>
           ) : (

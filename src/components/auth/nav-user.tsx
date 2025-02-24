@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  LogOut,
-  Settings,
-} from "lucide-react";
-
+import { BadgeCheck, Bell, ChevronsUpDown, LogOut } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -25,10 +18,25 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import useUserStore from "@/lib/stores/user-store";
+import React, { useEffect, useState } from "react";
+import { useGetNotifications } from "@/lib/query/configuration-query";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
   const { data: session } = useSession();
+  const router = useRouter();
+  const { user } = useUserStore();
+  const { notifications } = useGetNotifications();
+
+  const [hasUnread, setHasUnread] = useState(false);
+
+  useEffect(() => {
+    if (notifications) {
+      setHasUnread(notifications.some((notif) => !notif.isRead));
+    }
+  }, [notifications]);
 
   return (
     <SidebarMenu>
@@ -42,19 +50,17 @@ export function NavUser() {
               <Avatar className="size-8 rounded-lg">
                 <AvatarImage
                   src={session?.user?.image ?? "#"}
-                  alt={session?.user?.name ?? "..."}
+                  alt={user?.username ?? "..."}
                 />
                 <AvatarFallback className="rounded-lg">
-                  {session?.user?.name?.substring(0, 1) ?? "..."}
+                  {user?.username.substring(0, 1) ?? "..."}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">
-                  {session?.user?.name ?? "..."}
+                  {user?.username ?? "..."}
                 </span>
-                <span className="truncate text-xs">
-                  {session?.user?.email ?? "..."}
-                </span>
+                <span className="truncate text-xs">{user?.email ?? "..."}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -70,34 +76,39 @@ export function NavUser() {
                 <Avatar className="size-8 rounded-lg">
                   <AvatarImage
                     src={session?.user?.image ?? "#"}
-                    alt={session?.user?.name ?? "..."}
+                    alt={user?.username ?? "..."}
                   />
                   <AvatarFallback className="rounded-lg">
-                    {session?.user?.name?.substring(0, 1) ?? "..."}
+                    {user?.username?.substring(0, 1) ?? "..."}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">
-                    {session?.user?.name ?? "..."}
+                    {user?.username ?? "..."}
                   </span>
                   <span className="truncate text-xs">
-                    {session?.user?.email ?? "..."}
+                    {user?.email ?? "..."}
                   </span>
                 </div>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => router.push("/dashboard/account")}
+              >
                 <BadgeCheck />
                 Compte
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Settings />
-                Paramètres
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
+              <DropdownMenuItem
+                onClick={() => router.push("/dashboard/notifications")}
+              >
+                <div className="relative">
+                  <Bell />
+                  {hasUnread && (
+                    <span className="absolute -right-1 -top-1 size-2 rounded-full bg-red-500"></span>
+                  )}
+                </div>
                 Notifications
               </DropdownMenuItem>
             </DropdownMenuGroup>

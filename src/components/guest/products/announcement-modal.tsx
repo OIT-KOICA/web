@@ -56,8 +56,16 @@ export default function AnnouncementModal({
 
   const createAdd = useCreateAdd();
 
-  const onSubmit = (data: AnnouncementForm) => {
-    createAdd.mutate(data);
+  const onSubmit = async (data: AnnouncementForm) => {
+    const formData = new FormData();
+
+    formData.append("name", data.name);
+    formData.append("phone", data.phone);
+    formData.append("location", data.location);
+    formData.append("description", data.description);
+    formData.append("categories", JSON.stringify(data.categories));
+
+    await createAdd.mutateAsync({ data: formData });
     form.reset();
     onClose();
   };
@@ -90,7 +98,10 @@ export default function AnnouncementModal({
                 <FormItem>
                   <FormLabel>Numéro de téléphone</FormLabel>
                   <FormControl>
-                    <Input placeholder="Numéro WhatsApp de préférence (Ex: +237XXXXXXXXX)" {...field} />
+                    <Input
+                      placeholder="Numéro WhatsApp de préférence (Ex: +237XXXXXXXXX)"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

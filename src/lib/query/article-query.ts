@@ -1,24 +1,24 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createArticle,
-  createArticleTag,
   deleteArticle,
   getArticle,
   getArticles,
-  getArticleTags,
   updateArticle,
 } from "../service/article-api";
 
 /**
- * Hook pour récupérer tous les articles.
+ * Hook pour récupérer les articles avec pagination.
  */
 export const useGetArticles = () => {
-  const { data, refetch } = useQuery({
+  return useInfiniteQuery({
     queryKey: ["articles"],
-    queryFn: getArticles,
+    queryFn: async ({ pageParam = 0 }) => await getArticles(pageParam, 10),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => {
+      return lastPage.currentPage < lastPage.totalPages ? lastPage.currentPage + 1 : undefined;
+    },
   });
-
-  return { articles: data, refetch };
 };
 
 /**
@@ -79,38 +79,6 @@ export const useDeleteArticle = () => {
     mutationFn: ({ slug }: { slug: string }) => deleteArticle(slug),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["articles"] });
-    },
-  });
-};
-
-/**
- * Hook pour récupérer les tags d'articles.
- */
-export const useGetArticleTags = () => {
-  const { data, refetch } = useQuery({
-    queryKey: ["article-tags"],
-    queryFn: getArticleTags,
-  });
-
-  return { tags: data, refetch };
-};
-
-/**
- * Hook pour créer un nouveau tag.
- */
-export const useCreateArticleTag = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({
-      name,
-      description,
-    }: {
-      name: string;
-      description: string;
-    }) => createArticleTag({ name, description }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["article-tags"] });
     },
   });
 };

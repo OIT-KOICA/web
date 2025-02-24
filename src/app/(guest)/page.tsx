@@ -12,16 +12,6 @@ const ProjectPartnersCarousel = dynamic(
     ),
   }
 );
-const ProjectSponsorsCarousel = dynamic(
-  () => import("@/components/guest/project-sponsors-carousel"),
-  {
-    loading: () => (
-      <div className="flex h-[600px] items-center justify-center">
-        <Loader2 className="animate-spin" />
-      </div>
-    ),
-  }
-);
 const DynamicHero = dynamic(() => import("@/components/guest/hero"), {
   loading: () => (
     <div className="flex h-[600px] items-center justify-center">
@@ -63,15 +53,6 @@ const DynamicProductsSection = dynamic(
 export default function Home() {
   return (
     <div className="space-y-24">
-      <Suspense
-        fallback={
-          <div className="flex h-[400px] items-center justify-center">
-            <Loader2 className="animate-spin" />
-          </div>
-        }
-      >
-        <ProjectSponsorsCarousel />
-      </Suspense>
       <Suspense
         fallback={
           <div className="flex h-[600px] items-center justify-center">

@@ -58,24 +58,24 @@ export default function MessageScroller() {
           <div
             key={message.id}
             className={`flex ${
-              message.senderType === "SELLER" ? "justify-end" : "justify-start"
+              message.senderType === "VENDEUR" ? "justify-end" : "justify-start"
             }`}
           >
             <div
               className={`flex max-w-[70%] items-start space-x-2 ${
-                message.senderType === "SELLER"
+                message.senderType === "VENDEUR"
                   ? "flex-row-reverse space-x-reverse"
                   : ""
               }`}
             >
               <Avatar>
                 <AvatarFallback>
-                  {message.senderType === "SELLER" ? "V" : "C"}
+                  {message.senderType === "VENDEUR" ? "V" : "C"}
                 </AvatarFallback>
               </Avatar>
               <div
                 className={`rounded-lg p-3 ${
-                  message.senderType === "SELLER"
+                  message.senderType === "VENDEUR"
                     ? "bg-primary text-primary-foreground"
                     : "bg-muted"
                 }`}

@@ -13,8 +13,8 @@ export const articleSchema = z.object({
   documents: z
     .array(
       z.object({
-        documentFile: z.instanceof(File),
-        documentType: z.string().min(1, "Type de document requis")
+        documentFile: z.union([z.instanceof(File), z.string()]),
+        documentType: z.string().min(1, "Type de document requis"),
       })
     )
     .optional()

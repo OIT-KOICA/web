@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import useArticleStore from "@/lib/stores/article-store";
 
 const categories = ["Toutes les catégories", "Nouvelles", "Formations"];
 
 export default function CategoryFilter() {
-  const [activeCategory, setActiveCategory] = useState("All");
+  const { activeCategory, setActiveCategory } = useArticleStore();
 
   return (
     <div className="flex flex-wrap gap-2">

@@ -1,58 +1,51 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import useProductStore from "@/lib/stores/product-store";
 import { ProductDTO } from "@/types/type";
 import SearchBar from "./search-bar";
 import FilterDropdown from "../filter-dropdown";
 import ProductTable from "./product-table";
 import { useRouter } from "next/navigation";
-
-const ITEMS_PER_PAGE = 10;
+import { useGetProductsByUserID } from "@/lib/query/product-query";
+import { useInView } from "react-intersection-observer";
+import { Loader2 } from "lucide-react";
+import useProductStore from "@/lib/stores/product-store";
 
 export default function ProductList() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-  const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
-  const products = useProductStore((state) => state.products);
-  const { setEdit } = useProductStore();
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useGetProductsByUserID();
+  const { ref, inView } = useInView();
   const router = useRouter();
 
-  const filteredAndSortedProducts = useMemo(() => {
-    if (!products) return [];
+  const [searchTerm, setSearchTerm] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
+  const [filteredProducts, setFilteredProducts] = useState<ProductDTO[]>([]);
+  const { setEdit } = useProductStore();
 
-    return products
-      .filter((product: ProductDTO) => {
-        const matchesSearch =
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, fetchNextPage]);
+
+  // Filtrer les produits en fonction des filtres et du terme de recherche
+  useEffect(() => {
+    if (!data) return;
+
+    const allProducts = data.pages.flatMap((page) => page.products);
+    const filtered = allProducts.filter((product) => {
+      return (
+        (categoryFilter === null || product.category === categoryFilter) &&
+        (searchTerm === "" ||
           product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          product.description.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesCategory = !categoryFilter
-          ? product
-          : product.category === categoryFilter;
+          product.description.toLowerCase().includes(searchTerm.toLowerCase()))
+      );
+    });
 
-        return matchesSearch && matchesCategory;
-      })
-      .sort((a: { name: string }, b: { name: string }) => {
-        return sortOrder === "asc"
-          ? a.name.localeCompare(b.name)
-          : b.name.localeCompare(a.name);
-      });
-  }, [products, searchTerm, categoryFilter, sortOrder]);
-
-  const paginatedProducts = useMemo(() => {
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    return filteredAndSortedProducts.slice(
-      startIndex,
-      startIndex + ITEMS_PER_PAGE
-    );
-  }, [filteredAndSortedProducts, currentPage]);
-
-  const totalPages = Math.ceil(
-    filteredAndSortedProducts.length / ITEMS_PER_PAGE
-  );
+    setFilteredProducts(filtered);
+  }, [data, searchTerm, categoryFilter]);
 
   return (
     <div className="space-y-4 p-4 sm:p-6">
@@ -74,7 +67,7 @@ export default function ProductList() {
               "Tous les produits",
               "Manioc",
               "Mais",
-              "Poulet",
+              "Volaille",
               "Transport",
               "Location",
               "Autre",
@@ -86,14 +79,17 @@ export default function ProductList() {
         </div>
       </div>
 
-      <ProductTable
-        products={paginatedProducts}
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-        sortOrder={sortOrder}
-        onSortOrderChange={setSortOrder}
-      />
+      <ProductTable products={filteredProducts} />
+
+      {hasNextPage && (
+        <div ref={ref} className="mt-8 flex justify-center">
+          {isFetchingNextPage ? (
+            <Loader2 className="animate-spin" />
+          ) : (
+            <Button onClick={() => fetchNextPage()}>Charger plus...</Button>
+          )}
+        </div>
+      )}
     </div>
   );
 }

@@ -22,11 +22,11 @@ import {
 } from "@/lib/query/discussion-query";
 
 export default function ProductDiscussion({
-  slug,
+  code,
   discussion,
   setDiscussion,
 }: {
-  slug?: string;
+  code?: string;
   discussion: Discussion | null;
   setDiscussion: Dispatch<SetStateAction<Discussion | null>>;
 }) {
@@ -38,11 +38,11 @@ export default function ProductDiscussion({
 
   /* State local */
   const [loading, setLoading] = useState(false);
-  const [localSlug, setLocalSlug] = useState("");
+  const [localCode, setLocalCode] = useState("");
   const [formDataDiscussion, setFormDataDiscussion] = useState({
     name: "",
     phone: "",
-    slug: localSlug, // slug du produit passé en prop
+    code: localCode, // code du produit passé en prop
   });
   const [formDataMessage, setFormDataMessage] = useState({
     content: "",
@@ -61,10 +61,10 @@ export default function ProductDiscussion({
   }, [discussion]);
 
   useEffect(() => {
-    if (slug) {
-      setLocalSlug(slug);
+    if (code) {
+      setLocalCode(code);
     }
-  }, [slug]);
+  }, [code]);
 
   /**
    * 🔥 Validation avec Zod
@@ -74,11 +74,11 @@ export default function ProductDiscussion({
     phone: z
       .string()
       .regex(/^6(5|7|8|9)[0-9]{7}$/, "Numéro de téléphone invalide"),
-    slug: z.string().min(1, "Slug du produit invalide"),
+    code: z.string().min(1, "code du produit invalide"),
   });
 
   const messageSchema = z.object({
-    content: z.string().min(4, "Le message est requis"),
+    content: z.string().min(2, "Le message est requis"),
     senderType: z.string().min(2, "Le type d'expéditeur est requis"),
     id: z.string().min(2, "L'ID est requis"),
   });
@@ -113,30 +113,33 @@ export default function ProductDiscussion({
     e.preventDefault();
     setLoading(true);
 
-    console.log(formDataDiscussion);
-    
+    if (!formDataDiscussion.code && localCode)
+      setFormDataDiscussion((prev) => ({
+        ...prev,
+        code: localCode,
+      }));
 
     try {
-      discussionSchema.parse(formDataDiscussion);
-      console.log(formDataDiscussion);
-      
-      savePhoneToCookie(formDataDiscussion.phone);
+      if (formDataDiscussion.code) {
+        discussionSchema.parse(formDataDiscussion);
+        savePhoneToCookie(formDataDiscussion.phone);
 
-      createDiscussion.mutate(
-        {
-          discussionData: {
-            slug: formDataDiscussion.slug,
-            name: formDataDiscussion.name,
-            phone: formDataDiscussion.phone,
+        createDiscussion.mutate(
+          {
+            discussionData: {
+              code: formDataDiscussion.code,
+              name: formDataDiscussion.name,
+              phone: formDataDiscussion.phone,
+            },
           },
-        },
-        {
-          onSuccess: (data) => {
-            setDiscussion(data);
-          },
-        }
-      );
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          {
+            onSuccess: (data) => {
+              setDiscussion(data);
+            },
+          }
+        );
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast({
         variant: "destructive",
@@ -174,7 +177,7 @@ export default function ProductDiscussion({
       );
 
       setFormDataMessage((prev) => ({ ...prev, content: "" }));
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast({
         variant: "destructive",

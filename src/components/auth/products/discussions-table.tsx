@@ -46,7 +46,7 @@ export default function DiscussionsTable({ slug }: { slug?: string }) {
           <TableBody>
             {currentDiscussions?.map((discussion: Discussion) => (
               <TableRow key={discussion.id}>
-                <TableCell>{discussion.user.name}</TableCell>
+                <TableCell>{discussion.username}</TableCell>
                 <TableCell>
                   {new Date(discussion.createdAt).toLocaleString()}
                 </TableCell>

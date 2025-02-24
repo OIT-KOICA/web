@@ -54,18 +54,14 @@ export type Message = {
 export type Discussion = {
   id: string;
   product: string;
-  user: {
-    id: string;
-    name: string;
-    phone: string;
-    createdAt: string;
-  };
+  username: string;
+  userphone: string;
   messages: Array<Message>;
   createdAt: string;
 };
 
 export type DiscussionRequest = {
-  slug: string;
+  code: string;
   name: string;
   phone: string;
 };
@@ -83,16 +79,27 @@ export type CompanyDTO = {
   chainValueFunctions: string[];
   localisation: string;
   serviceType: string;
-  user: string; 
-  avatar: string;
+  user: string;
+  avatar: string | File;
   createdAt: string;
   updatedAt: string;
 };
 
-export interface TagDTO {
-  name: string;
-  description: string;
-}
+export type UserDTO = {
+  username: string;
+  email: string;
+  lastname: string;
+  firstname: string;
+  company: string;
+  roles: Array<string>;
+};
+
+export type NotificationDTO = {
+  id: string;
+  message: string;
+  isRead: boolean;
+  createdAt: string;
+};
 
 export interface ArticleCategoryDTO {
   name: string;
@@ -107,7 +114,7 @@ export interface ArticleDTO {
   category: string;
   company: string;
   file: string | null;
-  documents: Array<string>;
+  documents: Array<{ id: string; documentType: string }>;
   links: Array<string>;
   createdAt: string;
   updatedAt: string;
@@ -131,4 +138,3 @@ export interface Offer {
   categories: string[];
   createdAt: string;
 }
-

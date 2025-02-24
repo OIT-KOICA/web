@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import useArticleStore from "@/lib/stores/article-store";
 
 export default function SearchBar() {
-  const [searchTerm, setSearchTerm] = useState("");
+  const { searchTerm, setSearchTerm } = useArticleStore();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();

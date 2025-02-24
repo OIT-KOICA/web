@@ -6,7 +6,7 @@ import {
   getDiscussion,
   getDiscussionById,
   getDiscussions,
-  getDiscussionsBySlug,
+  getDiscussionsByCode,
 } from "../service/discussion-api";
 import { DiscussionRequest, MessageRequest } from "../../types/type";
 
@@ -23,21 +23,21 @@ export const useGetDiscussions = () => {
 };
 
 /**
- * Hook pour récupérer une discussion par le slug de son produit et le numéro de téléphone du client.
- * @param {string} slug - Le slug du produit.
+ * Hook pour récupérer une discussion par le code de son produit et le numéro de téléphone du client.
+ * @param {string} code - Le code du produit.
  * @param {string} phone - Le numéro de téléphone du client.
  */
 export const useGetDiscussion = ({
-  slug,
+  code,
   phone,
 }: {
-  slug: string;
+  code: string;
   phone: string;
 }) => {
   const { data, refetch, error } = useQuery({
-    queryKey: ["discussion", { slug, phone }],
-    queryFn: () => getDiscussion({ slug, phone }),
-    enabled: !!slug && !!phone, // Ne fait rien si l'ID est null ou undefined
+    queryKey: ["discussion", { code, phone }],
+    queryFn: () => getDiscussion({ code, phone }),
+    enabled: !!code && !!phone, // Ne fait rien si l'ID est null ou undefined
   });
 
   return { discussion: data, refetch, error };
@@ -59,15 +59,15 @@ export const useGetDiscussionById = ({ id }: { id: string }) => {
 };
 
 /**
- * Hook pour récupérer une discussion à partir de son slug.
- * @param {string} slug - Le slug de la discussion.
+ * Hook pour récupérer une discussion à partir de son code.
+ * @param {string} code - Le code de la discussion.
  * @param {string} token - Le token d'authentification.
  */
-export const useGetDiscussionsBySlug = ({ slug }: { slug: string }) => {
+export const useGetDiscussionsByCode = ({ code }: { code: string }) => {
   const { data, refetch, error } = useQuery({
-    queryKey: ["discussions", { slug }],
-    queryFn: () => getDiscussionsBySlug({ slug }),
-    enabled: !!slug, // Ne fait rien si l'ID est null ou undefined
+    queryKey: ["discussions", { code }],
+    queryFn: () => getDiscussionsByCode({ code }),
+    enabled: !!code, // Ne fait rien si l'ID est null ou undefined
   });
 
   return { discussions: data, refetch, error };

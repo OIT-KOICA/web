@@ -18,7 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Wand2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { ProductFormValues, productSchema } from "@/schemas/product-schema";
 import CategorySelect from "./category-select";
 import PriceVariations from "./price-variations";
@@ -34,7 +34,7 @@ const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
 export default function ProductCreationForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
+  // const [isGenerating, setIsGenerating] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
   const createProduct = useCreateProduct();
@@ -76,7 +76,7 @@ export default function ProductCreationForm() {
     }
   };
 
-  const generateArticleContent = async () => {
+  /* const generateArticleContent = async () => {
     setIsGenerating(true);
 
     try {
@@ -123,7 +123,7 @@ export default function ProductCreationForm() {
     } finally {
       setIsGenerating(false);
     }
-  };
+  };*/
 
   const onSubmit = async (data: ProductFormValues) => {
     setIsSubmitting(true);
@@ -229,7 +229,7 @@ export default function ProductCreationForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Description</FormLabel>
-                  <div className="flex items-center space-x-2">
+                  {/*<div className="flex items-center space-x-2">
                     <Button
                       type="button"
                       onClick={generateArticleContent}
@@ -242,7 +242,7 @@ export default function ProductCreationForm() {
                       )}
                       Générer le texte
                     </Button>
-                  </div>
+                  </div>*/}
                   <FormControl>
                     <MDEditor
                       value={field.value}
@@ -354,7 +354,7 @@ export default function ProductCreationForm() {
                     <div className="mt-2">
                       <FormLabel>Aperçu existant :</FormLabel>
                       <Image
-                        src={`${process.env.NEXT_PUBLIC_API_PATH_URL}/image/${product.file}`} // Chemin vers l'image existante
+                        src={`${process.env.NEXT_PUBLIC_API_PATH_URL}/media/download/image/${product.file}`} // Chemin vers l'image existante
                         alt="Aperçu de l'image existante"
                         width={100}
                         height={100}

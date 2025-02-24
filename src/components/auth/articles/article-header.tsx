@@ -18,7 +18,7 @@ export default function ArticleHeader({ article }: ArticleHeaderProps) {
       <div className="flex items-center space-x-4">
         {article.file && (
           <Image
-            src={`${process.env.NEXT_PUBLIC_API_PATH_URL}/image/${article.file}`}
+            src={`${process.env.NEXT_PUBLIC_API_PATH_URL}/media/download/image/${article.file}`}
             alt={article.title}
             width={100}
             height={100}

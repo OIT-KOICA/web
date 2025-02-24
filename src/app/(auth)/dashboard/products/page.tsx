@@ -1,10 +1,8 @@
 "use client";
 
-import { Suspense, useEffect } from "react";
+import { Suspense } from "react";
 import ProductList from "@/components/auth/products/product-list";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useGetProductsByUserID } from "@/lib/query/product-query";
-import useProductStore from "@/lib/stores/product-store";
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -17,13 +15,6 @@ import {
 } from "@/components/ui/breadcrumb";
 
 export default function ProductsPage() {
-  const { products } = useGetProductsByUserID();
-  const { setProducts } = useProductStore();
-
-  useEffect(() => {
-    if (products) setProducts(products);
-  }, [products, setProducts]);
-
   return (
     <SidebarInset>
       <header className="flex h-16 shrink-0 items-center gap-2">

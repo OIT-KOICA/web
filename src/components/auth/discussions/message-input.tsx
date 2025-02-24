@@ -44,7 +44,7 @@ export default function MessageInput() {
           {
             messageData: {
               id: discussion?.id,
-              senderType: "SELLER",
+              senderType: "VENDEUR",
               content: data.content,
             },
           },

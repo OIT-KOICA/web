@@ -8,14 +8,7 @@ import ArticleInfo from "@/components/auth/articles/article-info";
 import ArticleHeader from "@/components/auth/articles/article-header";
 
 export default function ArticleDetailsPage() {
-  // const { slug } = params;
   const article = useArticleStore((state) => state.activeArticle);
-  //const { setComments } = useArticleStore();
-  // const { comments } = useGetCommentsByArticleSlug(slug);
-
-  /*useEffect(() => {
-    if (comments) setComments(comments);
-  }, [comments, setComments]);*/
 
   return (
     <SidebarInset>

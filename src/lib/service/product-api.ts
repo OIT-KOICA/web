@@ -2,13 +2,23 @@ import { fetchClient } from "../api/fetch-client";
 import { ProductDTO } from "../../types/type";
 
 /**
- * Récupère tous les produits.
- * @returns {Promise<ProductDTO[]>} Les produits.
+ * Récupère tous les produits en paginant.
+ * @param {number} page - Numéro de la page actuelle.
+ * @param {number} pageSize - Nombre de produits par page.
+ * @returns {Promise<{ products: ProductDTO[]; totalPages: number; totalItems: number; currentPage: number }>}
  */
-export const getProducts = async (): Promise<ProductDTO[]> => {
+export const getProducts = async (page: number = 0, pageSize: number = 10) => {
   try {
-    const data = await fetchClient(`/guest/products`, { requiresAuth: false });
-    return data;
+    const response = await fetchClient(`/guest/products?page=${page}&size=${pageSize}`, {
+      requiresAuth: false,
+    });
+
+    return {
+      products: response.products || [],
+      totalPages: response.totalPages || 0,
+      totalItems: response.totalItems || 0,
+      currentPage: response.currentPage || 1,
+    };
   } catch (error) {
     console.error("Erreur lors du chargement des produits :", error);
     throw error;
@@ -33,15 +43,23 @@ export const getProduct = async (slug: string): Promise<ProductDTO> => {
 };
 
 /**
- * Récupère une liste de produits par le nom d'utlisateur.
- * @returns {Promise<ProductDTO[]> } Le produit correspondant.
+ * Récupère une liste de produits par utilisateur avec pagination.
+ * @param {number} page - Numéro de la page actuelle.
+ * @param {number} pageSize - Nombre de produits par page.
+ * @returns {Promise<{ products: ProductDTO[]; totalPages: number; totalItems: number; currentPage: number }>}
  */
-export const getProductByUserId = async (): Promise<ProductDTO[]> => {
+export const getProductsByUserId = async (page: number = 0, pageSize: number = 10) => {
   try {
-    const data = await fetchClient(`/product/products`, {
+    const response = await fetchClient(`/product/user-products?page=${page}&size=${pageSize}`, {
       requiresAuth: true,
     });
-    return data;
+
+    return {
+      products: response.products || [],
+      totalPages: response.totalPages || 0,
+      totalItems: response.totalItems || 0,
+      currentPage: response.currentPage || 1,
+    };
   } catch (error) {
     console.error("Erreur lors de la récupération des produits :", error);
     throw error;

@@ -1,18 +1,17 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { motion } from "framer-motion";
-import { useGetAdds } from "@/lib/query/configuration-query";
 import AnnouncementModal from "@/components/guest/products/announcement-modal";
 import { Offer } from "@/types/type";
 import AddInfo from "@/components/guest/adds/add-info";
+import { useGetAdds } from "@/lib/query/configuration-query";
 
 export default function AddListPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { adds } = useGetAdds();
+  const { data, fetchNextPage, hasNextPage } = useGetAdds();
 
   return (
     <div className="container mx-auto min-h-screen px-4 py-8">
@@ -31,15 +30,19 @@ export default function AddListPage() {
       </div>
       <div className="container py-12">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {adds && adds.length > 0 ? (
-            adds.map((add: Offer) => <AddInfo key={add.id} add={add} />)
-          ) : (
-            <div className="m-4 text-center">
-              Pas de d&apos;annonces pour le moment
-            </div>
-          )}
+          {data?.pages
+            .flatMap((page) => page.adds)
+            .map((add: Offer) => (
+              <AddInfo key={add.id} add={add} />
+            ))}
         </div>
       </div>
+
+      {hasNextPage && (
+        <div className="mt-4 flex justify-center">
+          <Button onClick={() => fetchNextPage()}>Charger plus...</Button>
+        </div>
+      )}
 
       <AnnouncementModal
         isOpen={isModalOpen}

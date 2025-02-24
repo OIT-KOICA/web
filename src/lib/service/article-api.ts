@@ -1,10 +1,24 @@
 import { fetchClient } from "../api/fetch-client";
-import { ArticleDTO, TagDTO } from "../../types/type";
+import { ArticleDTO } from "../../types/type";
 
-export const getArticles = async (): Promise<ArticleDTO[]> => {
+/**
+ * Récupère une liste paginée d'articles.
+ * @param {number} page - Numéro de la page actuelle.
+ * @param {number} pageSize - Nombre d'articles par page.
+ * @returns {Promise<{ articles: ArticleDTO[]; totalPages: number; totalItems: number; currentPage: number }>}
+ */
+export const getArticles = async (page: number = 0, pageSize: number = 10) => {
   try {
-    const data = await fetchClient("/guest/articles", { requiresAuth: false });
-    return data;
+    const response = await fetchClient(`/guest/articles?page=${page}&size=${pageSize}`, {
+      requiresAuth: false,
+    });
+
+    return {
+      articles: response.articles || [],
+      totalPages: response.totalPages || 0,
+      totalItems: response.totalItems || 0,
+      currentPage: response.currentPage || 1,
+    };
   } catch (error) {
     console.error("Erreur lors du chargement des articles :", error);
     throw error;
@@ -68,35 +82,6 @@ export const deleteArticle = async (slug: string): Promise<string> => {
     return response;
   } catch (error) {
     console.error("Echec lors de la suppression de l'article :", error);
-    throw error;
-  }
-};
-
-export const getArticleTags = async (): Promise<TagDTO[]> => {
-  try {
-    const data = await fetchClient("/guest/tags", { requiresAuth: false });
-    return data;
-  } catch (error) {
-    console.error("Erreur lors du chargement des tags :", error);
-    throw error;
-  }
-};
-
-/**
- * Crée un nouveau tag.
- */
-export const createArticleTag = async (tag: { name: string; description: string }): Promise<TagDTO> => {
-  try {
-    const response = await fetchClient("/article/create/tag", {
-      method: "POST",
-      body: JSON.stringify(tag),
-      headers: { "Content-Type": "application/json" },
-      requiresAuth: true,
-    });
-
-    return response;
-  } catch (error) {
-    console.error("Erreur lors de la création du tag :", error);
     throw error;
   }
 };

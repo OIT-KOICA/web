@@ -16,7 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Wand2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import useArticleStore from "@/lib/stores/article-store";
@@ -31,7 +31,7 @@ const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
 export default function ArticleCreationForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
+  // const [isGenerating, setIsGenerating] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
   const createArticle = useCreateArticle();
@@ -40,16 +40,26 @@ export default function ArticleCreationForm() {
   const edit = useArticleStore((state) => state.edit);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
+  // Transformer les documents existants pour le formulaire
+  const initialDocuments =
+    edit && article?.documents
+      ? article.documents.map((doc) => ({
+          documentFile: doc.id, // URL du document existant
+          documentType: doc.documentType,
+        }))
+      : [];
+
   const form = useForm<ArticleFormValues>({
     resolver: zodResolver(articleSchema),
     defaultValues:
       edit && article
         ? {
-            title: article.title || "",
-            description: article.description || "",
-            category: article.category || "",
-            file: article.file || undefined,
+            title: article.title,
+            description: article.description,
+            category: article.category,
+            documents: initialDocuments, // Documents adaptés
             links: article.links || [],
+            file: article.file || undefined,
           }
         : {
             title: "",
@@ -71,7 +81,7 @@ export default function ArticleCreationForm() {
     }
   };
 
-  const generateArticleContent = async () => {
+  /*const generateArticleContent = async () => {
     setIsGenerating(true);
 
     try {
@@ -116,7 +126,7 @@ export default function ArticleCreationForm() {
     } finally {
       setIsGenerating(false);
     }
-  };
+  };*/
 
   const onSubmit = async (data: ArticleFormValues) => {
     setIsSubmitting(true);
@@ -129,8 +139,14 @@ export default function ArticleCreationForm() {
 
     // Ajout des documents
     data.documents?.forEach((doc, index) => {
-      formData.append(`documents[${index}][documentFile]`, doc.documentFile);
-      formData.append(`documents[${index}][documentType]`, doc.documentType);
+      if (doc.documentFile instanceof File) {
+        formData.append(`documents[${index}].[documentFile]`, doc.documentFile);
+        formData.append(`documents[${index}].[documentType]`, doc.documentType);
+      } else if (typeof doc.documentFile === "string") {
+        // Cas de document existant
+        formData.append(`documents[${index}].existingFile`, doc.documentFile);
+        formData.append(`documents[${index}].documentType`, doc.documentType);
+      }
     });
 
     // Ajout des liens
@@ -181,7 +197,7 @@ export default function ArticleCreationForm() {
                 <FormItem>
                   <FormLabel>Titre</FormLabel>
                   <FormControl>
-                    <Input placeholder="Titre de l'article" {...field} />
+                    <Input placeholder="Titre de la documentation" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -195,7 +211,7 @@ export default function ArticleCreationForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Description</FormLabel>
-                  <div className="flex items-center space-x-2">
+                  {/*<div className="flex items-center space-x-2">
                     <Button
                       type="button"
                       onClick={generateArticleContent}
@@ -208,7 +224,7 @@ export default function ArticleCreationForm() {
                       )}
                       Générer le texte
                     </Button>
-                  </div>
+                  </div>*/}
                   <FormControl>
                     <MDEditor
                       value={field.value}
@@ -271,7 +287,7 @@ export default function ArticleCreationForm() {
                     <div className="mt-2">
                       <FormLabel>Aperçu existant :</FormLabel>
                       <Image
-                        src={`${process.env.NEXT_PUBLIC_API_PATH_URL}/image/${article.file}`} // Chemin vers l'image existante
+                        src={`${process.env.NEXT_PUBLIC_API_PATH_URL}/media/download/image/${article.file}`} // Chemin vers l'image existante
                         alt="Aperçu de l'image existante"
                         width={100}
                         height={100}

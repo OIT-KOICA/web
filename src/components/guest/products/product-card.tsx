@@ -35,7 +35,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       <div className={`relative h-48 ${getProductColor(product.category)}`}>
         {product.file && (
           <Image
-            src={`${process.env.NEXT_PUBLIC_API_PATH_URL}/image/${product.file}`}
+            src={`${process.env.NEXT_PUBLIC_API_PATH_URL}/media/download/image/${product.file}`}
             alt={product.name}
             layout="fill"
             objectFit="cover"

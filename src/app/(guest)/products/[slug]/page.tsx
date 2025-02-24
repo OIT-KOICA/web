@@ -24,7 +24,7 @@ export default function ProductDetailPage() {
    */
   useEffect(() => {
     if (phone && product)
-      getDiscussion({ slug: product.slug, phone }).then((data) =>
+      getDiscussion({ code: product.code, phone }).then((data) =>
         setDiscussion(data)
       );
   }, [phone, product, setDiscussion]);
@@ -44,7 +44,7 @@ export default function ProductDetailPage() {
               <PriceVariationsTable product={product} />
             </div>
             <ProductDiscussion
-              slug={product?.slug}
+              code={product?.code}
               discussion={discussion}
               setDiscussion={setDiscussion}
             />

@@ -8,18 +8,18 @@ import ProductInfo from "@/components/auth/products/product-info";
 import PriceVariationsTable from "@/components/auth/products/price-variations-table";
 import DiscussionsTable from "@/components/auth/products/discussions-table";
 import { SidebarInset } from "@/components/ui/sidebar";
-import { useGetDiscussionsBySlug } from "@/lib/query/discussion-query";
+import { useGetDiscussionsByCode } from "@/lib/query/discussion-query";
 
 export default function ProductDetailsPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ code: string }>;
 }) {
-  const { slug } = use(params);
+  const { code } = use(params);
   const product = useProductStore((state) => state.activeProduct);
   const { setDiscussions } = useProductStore();
-  const { discussions } = useGetDiscussionsBySlug({
-    slug: slug,
+  const { discussions } = useGetDiscussionsByCode({
+    code: code,
   });
 
   useEffect(() => {

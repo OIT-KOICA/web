@@ -18,7 +18,7 @@ const menuItems = [
   { name: "FAQ", href: "/faq" },
   { name: "A propos", href: "/about" },
   { name: "Contact", href: "/contact" },
-  { name: "Blog", href: "/blog" },
+  { name: "Documentation", href: "/blog" },
 ];
 
 export default function Header() {

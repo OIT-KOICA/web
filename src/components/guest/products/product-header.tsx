@@ -16,7 +16,7 @@ export default function ProductHeader({
       <div className="relative h-64 w-full overflow-hidden rounded-lg md:h-96 md:w-1/2">
         {product && product.file && (
           <Image
-            src={`${process.env.NEXT_PUBLIC_API_PATH_URL}/image/${product.file}`}
+            src={`${process.env.NEXT_PUBLIC_API_PATH_URL}/media/download/image/${product.file}`}
             alt={product.name ?? "Nom du produit"}
             layout="fill"
             objectFit="cover"

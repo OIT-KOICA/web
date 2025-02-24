@@ -19,19 +19,19 @@ export const getDiscussions = async (): Promise<Discussion[]> => {
 
 /**
  * Récupère par le slug de son produit et le numéro de téléphone du client.
- * @param {string} slug - Le slug du produit.
+ * @param {string} code - Le code du produit.
  * @param {string} phone - Le numéro de téléphone du client.
  * @returns {Promise<Discussion> } La discussion correspondante.
  */
 export const getDiscussion = async ({
-  slug,
+  code,
   phone,
 }: {
-  slug: string;
+  code: string;
   phone: string;
 }): Promise<Discussion> => {
   try {
-    const data = await fetchClient(`/guest/discussion/${phone}/${slug}`, {
+    const data = await fetchClient(`/guest/discussion/${phone}/${code}`, {
       requiresAuth: false,
     });
     return data;
@@ -41,13 +41,13 @@ export const getDiscussion = async ({
   }
 };
 
-export const getDiscussionsBySlug = async ({
-  slug,
+export const getDiscussionsByCode = async ({
+  code,
 }: {
-  slug: string;
+  code: string;
 }): Promise<Array<Discussion>> => {
   try {
-    const data = await fetchClient(`/product/${slug}/discussion`, {
+    const data = await fetchClient(`/product/${code}/discussion`, {
       requiresAuth: true,
     });
     return data;
