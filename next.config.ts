@@ -23,14 +23,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  async rewrites() {
-    return [
-      {
-        source: "/api/auth/keycloak/:path*",
-        destination: `${process.env.KEYCLOAK_URL}/realms/${process.env.KEYCLOAK_REALM}/protocol/openid-connect/:path*`,
-      },
-    ];
-  },
 };
 
 export default nextConfig;
