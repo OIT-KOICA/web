@@ -25,6 +25,7 @@ import { ArticleFormValues, articleSchema } from "@/schemas/article-schema";
 import CategoryArticleSelect from "./category-article-select";
 import DocumentsField from "./documents-field";
 import LinksField from "./links-field";
+import { isFileSizeValid } from "@/lib/utils";
 
 // Chargement dynamique de l'éditeur Markdown pour éviter les erreurs SSR
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
@@ -74,10 +75,19 @@ export default function ArticleCreationForm() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      form.setValue("file", file);
-      const reader = new FileReader();
-      reader.onloadend = () => setPreviewImage(reader.result as string);
-      reader.readAsDataURL(file);
+      if (!isFileSizeValid(file)) {
+        toast({
+          title: "Erreur",
+          description: "Le fichier ne doit pas dépasser 1 Mo.",
+          variant: "destructive",
+        });
+        return;
+      } else {
+        form.setValue("file", file);
+        const reader = new FileReader();
+        reader.onloadend = () => setPreviewImage(reader.result as string);
+        reader.readAsDataURL(file);
+      }
     }
   };
 

@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { FormLabel } from "@/components/ui/form";
 import { Trash, Plus, FileIcon } from "lucide-react";
 import { useEffect } from "react";
+import { isFileSizeValid } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 export default function DocumentsField() {
   const { control, register, setValue, watch } = useFormContext();
@@ -15,6 +17,7 @@ export default function DocumentsField() {
   });
 
   const documents = watch("documents");
+  const { toast } = useToast();
 
   // ✅ Bloque la boucle infinie avec un effet contrôlé :
   useEffect(() => {
@@ -47,7 +50,14 @@ export default function DocumentsField() {
               onChange={(e) => {
                 const file = e.target.files?.[0];
                 if (file) {
-                  setValue(`documents.${index}.documentFile`, file);
+                  if (!isFileSizeValid(file)) {
+                    toast({
+                      title: "Erreur",
+                      description: "Le fichier ne doit pas dépasser 1 Mo.",
+                      variant: "destructive",
+                    });
+                    return;
+                  } else setValue(`documents.${index}.documentFile`, file);
                 }
               }}
             />
@@ -68,7 +78,9 @@ export default function DocumentsField() {
       <Button
         type="button"
         variant="outline"
-        onClick={() => append({ documentFile: new File([], ""), documentType: "" })}
+        onClick={() =>
+          append({ documentFile: new File([], ""), documentType: "" })
+        }
       >
         <Plus size={16} /> Ajouter un document
       </Button>

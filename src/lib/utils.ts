@@ -3,6 +3,17 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import Cookies from "js-cookie";
 
+const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1 Mo (1 048 576 octets)
+
+/**
+ * Vérifie si un fichier dépasse la limite autorisée de 1 Mo.
+ * @param file Le fichier à vérifier.
+ * @returns {boolean} True si la taille est correcte, False sinon.
+ */
+export const isFileSizeValid = (file: File | undefined | null): boolean => {
+  return file ? file.size <= MAX_FILE_SIZE : true;
+};
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }

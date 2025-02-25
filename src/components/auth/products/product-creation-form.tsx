@@ -28,6 +28,7 @@ import Image from "next/image";
 import { useCreateProduct, useUpdateProduct } from "@/lib/query/product-query";
 import useProductStore from "@/lib/stores/product-store";
 import dynamic from "next/dynamic";
+import { isFileSizeValid } from "@/lib/utils";
 
 // Chargement dynamique de l'éditeur Markdown pour éviter les erreurs SSR
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
@@ -69,10 +70,19 @@ export default function ProductCreationForm() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      form.setValue("file", file); // Mettre à jour le champ dans React Hook Form
-      const reader = new FileReader();
-      reader.onloadend = () => setPreviewImage(reader.result as string);
-      reader.readAsDataURL(file);
+      if (!isFileSizeValid(file)) {
+        toast({
+          title: "Erreur",
+          description: "Le fichier ne doit pas dépasser 1 Mo.",
+          variant: "destructive",
+        });
+        return;
+      } else {
+        form.setValue("file", file); // Mettre à jour le champ dans React Hook Form
+        const reader = new FileReader();
+        reader.onloadend = () => setPreviewImage(reader.result as string);
+        reader.readAsDataURL(file);
+      }
     }
   };
 

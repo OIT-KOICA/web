@@ -37,6 +37,7 @@ import { CompanyFormValues, companySchema } from "@/schemas/company-schema";
 import Image from "next/image";
 import useUserStore from "@/lib/stores/user-store";
 import Phones from "../products/phones";
+import { isFileSizeValid } from "@/lib/utils";
 
 const services = [
   { value: "PRODUCTEUR", label: "Producteur" },
@@ -300,11 +301,21 @@ export default function CreateCompanyModal() {
                       onChange={(e) => {
                         const file = e.target.files?.[0];
                         if (file) {
-                          form.setValue("file", file);
-                          const reader = new FileReader();
-                          reader.onload = () =>
-                            setPreviewImage(reader.result as string);
-                          reader.readAsDataURL(file);
+                          if (!isFileSizeValid(file)) {
+                            toast({
+                              title: "Erreur",
+                              description:
+                                "Le fichier ne doit pas dépasser 1 Mo.",
+                              variant: "destructive",
+                            });
+                            return;
+                          } else {
+                            form.setValue("file", file);
+                            const reader = new FileReader();
+                            reader.onload = () =>
+                              setPreviewImage(reader.result as string);
+                            reader.readAsDataURL(file);
+                          }
                         }
                       }}
                     />
