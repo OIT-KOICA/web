@@ -12,7 +12,9 @@ interface CustomUser {
   expiresAt: number;
 }
 
-const PUBLIC_KEY = process.env.NEXTAUTH_JWT_PUBLIC_KEY?.replace(/\\n/g, "\n");
+const PUBLIC_KEY = process.env.NEXTAUTH_JWT_PUBLIC_KEY
+  ? process.env.NEXTAUTH_JWT_PUBLIC_KEY.replace(/\\n/g, "\n")
+  : null;
 
 if (!PUBLIC_KEY) {
   throw new Error("🔴 La clé publique JWT est manquante !");
@@ -30,7 +32,10 @@ async function refreshAccessToken(token: any) {
       }
     );
 
-    if (!res.ok) throw new Error("Refresh token expiré");
+    if (!res.ok) {
+      console.error("🔴 Erreur lors du rafraîchissement du token:", res.status);
+      return { ...token, error: "RefreshTokenError" };
+    }
 
     const refreshedToken = await res.json();
 
@@ -100,9 +105,11 @@ const authOptions: NextAuthOptions = {
 
       // ✅ Vérification JWT
       try {
-        jwt.verify(token.accessToken as string, PUBLIC_KEY!, {
-          algorithms: ["RS256"],
-        });
+        if (PUBLIC_KEY) {
+          jwt.verify(token.accessToken as string, PUBLIC_KEY, {
+            algorithms: ["RS256"],
+          });
+        }
       } catch (error) {
         console.error("🔴 JWT invalide :", error);
         return await refreshAccessToken(token);

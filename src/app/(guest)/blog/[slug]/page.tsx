@@ -1,20 +1,24 @@
 "use client";
 
 import ArticleDetail from "@/components/guest/blog/article-detail";
-import { useGetArticle } from "@/lib/query/article-query";
+import useArticleStore from "@/lib/stores/article-store";
+import { useEffect, useState } from "react";
 
-interface Props {
-  params: { slug: string };
-}
+export default function ArticleDetailPage() {
+  const article = useArticleStore((state) => state.activeArticle);
+  const [currentArticle, setCurrentArticle] = useState(article);
 
-export default function ArticleDetailPage({ params }: Props) {
-  const { article, error } = useGetArticle(params.slug);
+  useEffect(() => {
+    if (article) setCurrentArticle(article);
+  }, [article]);
 
-  if (error) return <div>Article non trouvé</div>;
+  if (!currentArticle) {
+    return <div className="text-center text-red-500">Article non trouvé.</div>;
+  }
 
   return (
     <div className="container mx-auto px-4 py-16">
-      <ArticleDetail article={article} />
+      <ArticleDetail article={currentArticle} />
     </div>
   );
 }
