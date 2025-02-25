@@ -1,8 +1,9 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { formatCurrency } from "@/lib/utils";
 import { ProductDTO } from "@/types/type";
-import { CheckCircle, XCircle, Phone } from "lucide-react";
+import { CheckCircle, XCircle, Phone, BadgePercent } from "lucide-react";
 
 export default function ProductInfo({
   product,
@@ -19,6 +20,13 @@ export default function ProductInfo({
         <div>
           <h3 className="font-semibold">Catégorie</h3>
           <p>{product ? product.category : ""}</p>
+        </div>
+        <div>
+          <h3 className="font-semibold">Prix</h3>
+          <p className="flex items-center">
+            <BadgePercent className="mr-1 size-4" />
+            {product ? formatCurrency(product.basePrice) : ""}
+          </p>
         </div>
         <div>
           <h3 className="font-semibold">Quantité en stock</h3>
