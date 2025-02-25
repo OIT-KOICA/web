@@ -23,7 +23,6 @@ export default function PriceVariationsTable({
         <TableHeader>
           <TableRow>
             <TableHead>Description</TableHead>
-            <TableHead>Paramètre de variation</TableHead>
             <TableHead>Prix</TableHead>
           </TableRow>
         </TableHeader>
