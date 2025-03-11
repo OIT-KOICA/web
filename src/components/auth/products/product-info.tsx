@@ -42,7 +42,8 @@ export default function ProductInfo({ product }: ProductInfoProps) {
             <h3 className="font-semibold">Prix</h3>
             <p className="flex items-center">
               <BadgePercent className="mr-1 size-4" />
-              {product ? formatCurrency(product.basePrice) : ""}
+              {product ? formatCurrency(product.basePrice) : ""} /{" "}
+              {product ? product.unit : ""}
             </p>
           </div>
         </div>

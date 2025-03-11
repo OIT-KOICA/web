@@ -31,7 +31,9 @@ export default function PriceVariationsTable({
             product.pricings.map((variation, index) => (
               <TableRow key={index}>
                 <TableCell>{variation.description}</TableCell>
-                <TableCell>{formatCurrency(variation.price)}</TableCell>
+                <TableCell>
+                  {formatCurrency(variation.price)} / {product.unit}
+                </TableCell>
               </TableRow>
             ))
           ) : (

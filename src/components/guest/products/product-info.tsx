@@ -35,16 +35,16 @@ export default function ProductInfo({
           </p>
         </div>
         <div>
-          <h3 className="font-semibold">Le produit est-il périmable ?</h3>
+          <h3 className="font-semibold">Le produit est-il périssable ?</h3>
           {product && product.isPerishable ? (
             <div className="flex items-center text-red-500">
               <XCircle className="mr-1 size-4" />
-              Périmable
+              Périssable
             </div>
           ) : (
             <div className="flex items-center text-green-500">
               <CheckCircle className="mr-1 size-4" />
-              Non-périmable
+              Non-périssable
             </div>
           )}
         </div>

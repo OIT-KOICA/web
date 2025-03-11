@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Facebook, Twitter, Linkedin, Youtube } from "lucide-react";
+import { Facebook, Linkedin, Youtube } from "lucide-react";
 import Image from "next/image";
 
 export default function Footer() {
@@ -76,23 +76,32 @@ export default function Footer() {
           <div>
             <h3 className="mb-4 font-bold">Suivez-nous</h3>
             <div className="flex space-x-4">
-              <a href="#" className="text-muted-foreground hover:text-primary">
+              <a
+                href="https://www.facebook.com/oitkoica"
+                className="text-muted-foreground hover:text-primary"
+                target="_blank"
+              >
                 <Facebook size={20} />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-primary">
+              <a
+                href="https://www.linkedin.com/in/ilo-koica-cameroon/"
+                className="text-muted-foreground hover:text-primary"
+                target="_blank"
+              >
                 <Linkedin size={20} />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-primary">
+              <a
+                href="https://www.youtube.com/@oitbertoua2343"
+                className="text-muted-foreground hover:text-primary"
+                target="_blank"
+              >
                 <Youtube size={20} />
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-primary">
-                <Twitter size={20} />
               </a>
             </div>
           </div>
         </div>
         <div className="mt-8 border-t pt-8 text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Cassava Marketplace. Tous droits
+          © 2024 - {new Date().getFullYear()} Cassava Marketplace. Tous droits
           réservés.
         </div>
       </div>

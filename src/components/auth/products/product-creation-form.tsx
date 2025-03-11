@@ -73,7 +73,7 @@ export default function ProductCreationForm() {
       if (!isFileSizeValid(file)) {
         toast({
           title: "Erreur",
-          description: "Le fichier ne doit pas dépasser 1 Mo.",
+          description: "Le fichier ne doit pas dépasser 10 Mo.",
           variant: "destructive",
         });
         return;

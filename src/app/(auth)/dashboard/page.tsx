@@ -60,8 +60,7 @@ export default function DashboardPage() {
   useEffect(() => {
     if (error) {
       toast({
-        variant: "destructive",
-        title: "Erreur",
+        title: "Info",
         description:
           "Impossible de charger les informations de votre compagnie.",
       });

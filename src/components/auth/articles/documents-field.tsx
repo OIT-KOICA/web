@@ -19,12 +19,10 @@ export default function DocumentsField() {
   const documents = watch("documents");
   const { toast } = useToast();
 
-  // ✅ Bloque la boucle infinie avec un effet contrôlé :
   useEffect(() => {
     if (fields.length === 0 && (!documents || documents.length === 0)) {
       append({ documentFile: new File([], ""), documentType: "" });
     }
-    // ⚠️ N'ajoute PAS 'documents' dans les dépendances.
   }, [append, documents, fields.length]);
 
   return (
@@ -53,7 +51,7 @@ export default function DocumentsField() {
                   if (!isFileSizeValid(file)) {
                     toast({
                       title: "Erreur",
-                      description: "Le fichier ne doit pas dépasser 1 Mo.",
+                      description: "Le fichier ne doit pas dépasser 10 Mo.",
                       variant: "destructive",
                     });
                     return;

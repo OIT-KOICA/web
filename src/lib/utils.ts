@@ -2,11 +2,14 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import Cookies from "js-cookie";
+import imageCompression from "browser-image-compression";
+import { PDFDocument } from "pdf-lib";
+import JSZip from "jszip";
 
-const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1 Mo (1 048 576 octets)
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 /**
- * Vérifie si un fichier dépasse la limite autorisée de 1 Mo.
+ * Vérifie si un fichier dépasse la limite autorisée de 10 Mo.
  * @param file Le fichier à vérifier.
  * @returns {boolean} True si la taille est correcte, False sinon.
  */
@@ -88,4 +91,27 @@ export function deepEqual(obj1: any, obj2: any) {
   }
 
   return true;
+}
+
+export async function compressImage(file: File) {
+  const options = {
+    maxSizeMB: 2, // Max 2MB après compression
+    maxWidthOrHeight: 1920, // Redimensionnement max
+    useWebWorker: true, // Optimisation
+  };
+  return await imageCompression(file, options);
+}
+
+export async function compressPDF(file: File) {
+  const pdfDoc = await PDFDocument.load(await file.arrayBuffer());
+  pdfDoc.setCreator("Compression Service");
+  const compressedPdf = await pdfDoc.save();
+  return new File([compressedPdf], file.name, { type: "application/pdf" });
+}
+
+export async function compressFile(file: File) {
+  const zip = new JSZip();
+  zip.file(file.name, file);
+  const zipFile = await zip.generateAsync({ type: "blob" });
+  return new File([zipFile], file.name + ".zip", { type: "application/zip" });
 }

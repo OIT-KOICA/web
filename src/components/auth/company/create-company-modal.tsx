@@ -276,7 +276,7 @@ export default function CreateCompanyModal() {
                       <SelectContent>
                         <SelectItem value="COMMERCANT">Commerçant</SelectItem>
                         <SelectItem value="SUPPORT">
-                          Support d&apos;entrepreneurs
+                          Service d&apos;accompagnement aux entreprises (SAE)
                         </SelectItem>
                       </SelectContent>
                     </Select>
@@ -305,7 +305,7 @@ export default function CreateCompanyModal() {
                             toast({
                               title: "Erreur",
                               description:
-                                "Le fichier ne doit pas dépasser 1 Mo.",
+                                "Le fichier ne doit pas dépasser 10 Mo.",
                               variant: "destructive",
                             });
                             return;

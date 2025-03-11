@@ -59,8 +59,8 @@ export default function ProductTable({ products }: ProductTableProps) {
               <TableRow key={product.slug}>
                 <TableCell className="font-medium">{product.name}</TableCell>
                 <TableCell>{product.category}</TableCell>
-                <TableCell>{product.quantity}</TableCell>
-                <TableCell>{formatCurrency(product.basePrice)}</TableCell>
+                <TableCell>{product.quantity} ({product.unit})</TableCell>
+                <TableCell>{formatCurrency(product.basePrice)} / {product.unit}</TableCell>
                 <TableCell className="text-right">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
