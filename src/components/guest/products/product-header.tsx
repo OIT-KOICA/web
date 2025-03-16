@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ProductDTO } from "@/types/type";
+import { ProductDTO } from "@/types/typeDTO";
 
 export default function ProductHeader({
   product,

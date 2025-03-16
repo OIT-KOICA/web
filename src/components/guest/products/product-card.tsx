@@ -5,9 +5,10 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatCurrency } from "@/lib/utils";
-import { ProductDTO } from "@/types/type";
-import useProductStore from "@/lib/stores/product-store";
 import { useRouter } from "next/navigation";
+import { ProductDTO } from "@/types/typeDTO";
+import useStore from "@/lib/stores/store";
+import Markdown from "react-markdown";
 
 interface ProductCardProps {
   product: ProductDTO;
@@ -27,7 +28,7 @@ function getProductColor(category: string): string {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
-  const { setActiveProduct } = useProductStore();
+  const { setActiveProduct } = useStore();
   const router = useRouter();
 
   return (
@@ -52,13 +53,15 @@ export default function ProductCard({ product }: ProductCardProps) {
             {product.localisation}
           </span>
           <span className="font-semibold">
-            {formatCurrency(product.basePrice)} / {product.unit}
+            {formatCurrency(product.basePrice)} / {product.priceUnit}
           </span>
         </div>
         <p className="mb-2 text-sm">
           Quantité en stock: {product.quantity} {product.unit}
         </p>
-        <p className="mb-2 line-clamp-2 text-sm">{product.description}</p>
+        <Markdown className="prose dark:prose-invert mb-2">
+          {product.description}
+        </Markdown>
         <div className="mt-2 flex items-center space-x-2">
           <Avatar className="size-8">
             <AvatarImage src={product.companyAvatar} alt={product.company} />

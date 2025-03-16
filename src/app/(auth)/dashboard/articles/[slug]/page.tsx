@@ -2,13 +2,13 @@
 
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import useArticleStore from "@/lib/stores/article-store";
 import { SidebarInset } from "@/components/ui/sidebar";
 import ArticleInfo from "@/components/auth/articles/article-info";
 import ArticleHeader from "@/components/auth/articles/article-header";
+import useStore from "@/lib/stores/store";
 
 export default function ArticleDetailsPage() {
-  const article = useArticleStore((state) => state.activeArticle);
+  const { activeArticle: article } = useStore();
 
   return (
     <SidebarInset>

@@ -1,10 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { ArticleDTO } from "@/types/typeDTO";
 import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArticleDTO } from "@/types/type";
 
 interface ArticleHeaderProps {
   article: ArticleDTO | null;

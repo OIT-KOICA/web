@@ -16,7 +16,15 @@ export const companySchema = z.object({
   serviceType: z
     .string()
     .min(3, "Le type de service doit contenir au moins 3 caractères."),
-  file: z.instanceof(File).optional(),
+  file: z
+    .any()
+    .refine(
+      (file) => file instanceof File || file === undefined || file === null,
+      {
+        message: "Le fichier doit être une image valide",
+      }
+    )
+    .optional(),
 });
 
 export type CompanyFormValues = z.infer<typeof companySchema>;

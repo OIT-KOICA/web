@@ -1,5 +1,5 @@
-import { fetchClient } from "../api/fetch-client";
-import { ProductDTO } from "../../types/type";
+import { ProductDTO } from "@/types/typeDTO";
+import { fetchClient } from "../fetch-client";
 
 /**
  * Récupère tous les produits en paginant.
@@ -9,9 +9,12 @@ import { ProductDTO } from "../../types/type";
  */
 export const getProducts = async (page: number = 0, pageSize: number = 10) => {
   try {
-    const response = await fetchClient(`/guest/products?page=${page}&size=${pageSize}`, {
-      requiresAuth: false,
-    });
+    const response = await fetchClient(
+      `/guest/products?page=${page}&size=${pageSize}`,
+      {
+        requiresAuth: false,
+      }
+    );
 
     return {
       products: response.products || [],
@@ -48,11 +51,17 @@ export const getProduct = async (slug: string): Promise<ProductDTO> => {
  * @param {number} pageSize - Nombre de produits par page.
  * @returns {Promise<{ products: ProductDTO[]; totalPages: number; totalItems: number; currentPage: number }>}
  */
-export const getProductsByUserId = async (page: number = 0, pageSize: number = 10) => {
+export const getProductsByUserId = async (
+  page: number = 0,
+  pageSize: number = 10
+) => {
   try {
-    const response = await fetchClient(`/product/user-products?page=${page}&size=${pageSize}`, {
-      requiresAuth: true,
-    });
+    const response = await fetchClient(
+      `/product/user-products?page=${page}&size=${pageSize}`,
+      {
+        requiresAuth: true,
+      }
+    );
 
     return {
       products: response.products || [],
@@ -79,7 +88,7 @@ export const createProduct = async (
     const response = await fetchClient("/product/create", {
       method: "POST",
       body: productData,
-      requiresAuth: true, // Requête nécessitant une authentification
+      requiresAuth: true,
     });
 
     return response;
@@ -103,7 +112,7 @@ export const updateProduct = async (
     const response = await fetchClient(`/product/edit/${slug}`, {
       method: "PUT",
       body: productData,
-      requiresAuth: true, // Requête nécessitant une authentification
+      requiresAuth: true,
     });
 
     return response;
@@ -123,7 +132,7 @@ export const deleteProduct = async (slug: string): Promise<string> => {
   try {
     const response = await fetchClient(`/product/delete/${slug}`, {
       method: "DELETE",
-      requiresAuth: true, // Requête nécessitant une authentification
+      requiresAuth: true,
     });
 
     return response;

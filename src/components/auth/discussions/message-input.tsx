@@ -11,10 +11,10 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import useProductStore from "@/lib/stores/product-store";
 import { useCreateMessage } from "@/lib/query/discussion-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import useStore from "@/lib/stores/store";
 
 const messageSchema = z.object({
   content: z.string().min(1, "Le message est requis"),
@@ -24,8 +24,7 @@ type MessageFormValues = z.infer<typeof messageSchema>;
 
 export default function MessageInput() {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const discussion = useProductStore((state) => state.activeDiscussion);
-  const { setActiveDiscussion } = useProductStore();
+  const { activeDiscussion: discussion, setActiveDiscussion } = useStore();
   const createMessage = useCreateMessage();
 
   const form = useForm<MessageFormValues>({

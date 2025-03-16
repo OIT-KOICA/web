@@ -15,11 +15,14 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/lib/hooks/use-toast";
 import {
   useEditCompany,
   useEditPassword,
   useEditProfile,
+  useGetCities,
+  useGetCompany,
+  useGetProfile,
 } from "@/lib/query/configuration-query";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -30,10 +33,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Phones from "@/components/auth/account/phones";
-import { CompanyDTO, UserDTO } from "@/types/type";
 import { Checkbox } from "@/components/ui/checkbox";
-import useUserStore from "@/lib/stores/user-store";
-import useConfigurationStore from "@/lib/stores/configuration-store";
+import { compressFile, compressImage, compressPDF, isFileSizeValid } from "@/lib/utils";
+import { CompanyDTO, UserDTO } from "@/types/typeDTO";
 
 const services = [
   { value: "PRODUCTEUR", label: "Producteur" },
@@ -46,8 +48,9 @@ const services = [
 
 export default function AccountPage() {
   const { toast } = useToast();
-  const { cities } = useConfigurationStore();
-  const { company, user } = useUserStore();
+  const { cities } = useGetCities();
+  const { company } = useGetCompany();
+  const { user } = useGetProfile();
 
   // 🔥 Récupération des informations de l'utilisateur
   const [userProfile, setUserProfile] = useState<UserDTO>({
@@ -118,7 +121,7 @@ export default function AccountPage() {
     }
   }, [user]);
 
-  // ✅ Fonction pour enregistrer les modifications utilisateur
+  // Fonction pour enregistrer les modifications utilisateur
   const handleSaveProfile = async () => {
     try {
       await updateProfile.mutateAsync({
@@ -142,7 +145,7 @@ export default function AccountPage() {
     }
   };
 
-  // ✅ Fonction pour modifier le mot de passe de l'utilisateur
+  // Fonction pour modifier le mot de passe de l'utilisateur
   const handleChangePassword = async () => {
     try {
       await changePassword.mutateAsync({
@@ -164,7 +167,7 @@ export default function AccountPage() {
     }
   };
 
-  // ✅ Fonction pour enregistrer les modifications de la compagnie
+  // Fonction pour enregistrer les modifications de la compagnie
   const handleSaveCompany = async () => {
     const formData = new FormData();
 
@@ -217,7 +220,7 @@ export default function AccountPage() {
       </header>
       <div className="container mx-auto p-4">
         <div className="flex flex-col gap-12">
-          {/* 🔥 Carte utilisateur */}
+          {/* Carte utilisateur */}
           <Card>
             <CardHeader>
               <h2 className="text-lg font-bold">Mon Compte</h2>
@@ -271,7 +274,7 @@ export default function AccountPage() {
             </CardContent>
           </Card>
 
-          {/* 🔥 Carte mot de passe */}
+          {/* Carte mot de passe */}
           <Card>
             <CardHeader>
               <h2 className="text-lg font-bold">Modifier le mot de passe</h2>
@@ -295,7 +298,7 @@ export default function AccountPage() {
             </CardContent>
           </Card>
 
-          {/* 🔥 Carte entreprise */}
+          {/* Carte entreprise */}
           <Card>
             <CardHeader>
               <h2 className="text-lg font-bold">
@@ -316,10 +319,42 @@ export default function AccountPage() {
                   <input
                     type="file"
                     accept="image/*"
-                    onChange={(e) => {
+                    onChange={async (e) => {
                       const file = e.target.files?.[0];
                       if (file) {
-                        setCompanyData({ ...companyData, avatar: file.name });
+                        if (!isFileSizeValid(file)) {
+                          toast({
+                            title: "Erreur",
+                            description:
+                              "Le fichier ne doit pas dépasser 10 Mo.",
+                            variant: "destructive",
+                          });
+                          return;
+                        }
+
+                        let compressedFile = file;
+                        if (file.type.includes("image")) {
+                          compressedFile = await compressImage(file);
+                        } else if (file.type === "application/pdf") {
+                          compressedFile = await compressPDF(file);
+                        } else {
+                          compressedFile = await compressFile(file);
+                        }
+
+                        if (!(compressedFile instanceof File)) {
+                          compressedFile = new File(
+                            [compressedFile],
+                            file.name,
+                            {
+                              type: file.type,
+                            }
+                          );
+                        }
+                        
+                        setCompanyData({
+                          ...companyData,
+                          avatar: compressedFile.name,
+                        });
                         const reader = new FileReader();
                         reader.onload = () =>
                           setPreviewImage(reader.result as string);
@@ -382,39 +417,6 @@ export default function AccountPage() {
                   </Select>
                 </div>
 
-                {/* 🔄 Rôles dans la chaîne de valeur */}
-                <div>
-                  <label className="block text-sm font-medium">
-                    Rôles dans la chaîne de valeur
-                  </label>
-                  <div className="grid grid-cols-2 gap-4">
-                    {services.map((service, index) => (
-                      <div key={index} className="flex items-center gap-2">
-                        <Checkbox
-                          checked={companyData.chainValueFunctions?.includes(
-                            service.value
-                          )}
-                          onCheckedChange={(checked) => {
-                            const updatedRoles = checked
-                              ? [
-                                  ...companyData.chainValueFunctions,
-                                  service.value,
-                                ]
-                              : companyData.chainValueFunctions.filter(
-                                  (v) => v !== service.value
-                                );
-                            setCompanyData({
-                              ...companyData,
-                              chainValueFunctions: updatedRoles,
-                            });
-                          }}
-                        />
-                        <span>{service.label}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
                 <div>
                   <label className="block text-sm font-medium">
                     Type d&apos;entreprise
@@ -422,7 +424,11 @@ export default function AccountPage() {
                   <Select
                     value={companyData.serviceType ?? ""}
                     onValueChange={(value) =>
-                      setCompanyData({ ...companyData, serviceType: value })
+                      setCompanyData({
+                        ...companyData,
+                        serviceType: value,
+                        chainValueFunctions: [],
+                      })
                     }
                   >
                     <SelectTrigger>
@@ -431,10 +437,54 @@ export default function AccountPage() {
                     <SelectContent>
                       <SelectItem value="COMMERCANT">Commerçant</SelectItem>
                       <SelectItem value="SUPPORT">
-                        Support d&apos;entrepreneurs
+                        Service d&apos;accompagnement aux entreprises (SAE)
                       </SelectItem>
                     </SelectContent>
                   </Select>
+                </div>
+
+                {/* Rôles dans la chaîne de valeur */}
+                <div>
+                  <label className="block text-sm font-medium">
+                    Rôles dans la chaîne de valeur
+                  </label>
+                  <div className="grid grid-cols-2 gap-4">
+                    {services.map((service, index) => {
+                      const isDisabled =
+                        companyData.serviceType === "SUPPORT" &&
+                        service.value !== "ACTEUR_EXTERNE";
+                      const isHidden =
+                        !companyData.serviceType ||
+                        (companyData.serviceType === "COMMERCANT" &&
+                          service.value === "ACTEUR_EXTERNE");
+
+                      return !isHidden ? (
+                        <div key={index} className="flex items-center gap-2">
+                          <Checkbox
+                            disabled={isDisabled}
+                            checked={companyData.chainValueFunctions?.includes(
+                              service.value
+                            )}
+                            onCheckedChange={(checked) => {
+                              const updatedRoles = checked
+                                ? [
+                                    ...companyData.chainValueFunctions,
+                                    service.value,
+                                  ]
+                                : companyData.chainValueFunctions.filter(
+                                    (v) => v !== service.value
+                                  );
+                              setCompanyData({
+                                ...companyData,
+                                chainValueFunctions: updatedRoles,
+                              });
+                            }}
+                          />
+                          <span>{service.label}</span>
+                        </div>
+                      ) : null;
+                    })}
+                  </div>
                 </div>
                 <Button onClick={handleSaveCompany}>Enregistrer</Button>
               </div>

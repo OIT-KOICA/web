@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   useInfiniteQuery,
   useMutation,
@@ -11,27 +12,50 @@ import {
   getProducts,
   getProductsByUserId,
   updateProduct,
-} from "../service/product-api";
+} from "../api/product-api";
+import useStore from "../stores/store";
+import { useEffect } from "react";
 
 /**
  * Hook pour récupérer les produits d'un utilisateur avec pagination.
  */
 export const useGetProductsByUserID = () => {
-  return useInfiniteQuery({
+  const queryClient = useQueryClient();
+  const { setProducts, addProducts, setTotalPages } = useStore();
+
+  const query = useInfiniteQuery({
     queryKey: ["user-products"],
-    queryFn: async ({ pageParam = 0 }) => await getProductsByUserId(pageParam, 10),
+    queryFn: async ({ pageParam = 0 }) =>
+      await getProductsByUserId(pageParam, 10),
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {
-      return lastPage.currentPage < lastPage.totalPages ? lastPage.currentPage + 1 : undefined;
+      return lastPage.currentPage < lastPage.totalPages
+        ? lastPage.currentPage + 1
+        : undefined;
     },
+    staleTime: 5 * 60 * 1000,
   });
+
+  useEffect(() => {
+    if (query.data) {
+      const allProducts = query.data.pages.flatMap((page) => page.products);
+      setTotalPages(query.data.pages?.[0]?.totalPages ?? 1);
+      setProducts(allProducts);
+      queryClient.setQueryData(["user-products"], addProducts);
+    }
+  }, [query.data, setProducts, queryClient, addProducts, setTotalPages]);
+
+  return query;
 };
 
 /**
  * Hook pour récupérer les produits avec pagination.
  */
 export const useGetProducts = () => {
-  return useInfiniteQuery({
+  const queryClient = useQueryClient();
+  const { setProducts, addProducts } = useStore();
+
+  const query = useInfiniteQuery({
     queryKey: ["products"],
     queryFn: async ({ pageParam = 0 }) => await getProducts(pageParam, 10),
     initialPageParam: 0,
@@ -40,7 +64,18 @@ export const useGetProducts = () => {
         ? lastPage.currentPage + 1
         : undefined;
     },
+    staleTime: 5 * 60 * 1000,
   });
+
+  useEffect(() => {
+    if (query.data) {
+      const allProducts = query.data.pages.flatMap((page) => page.products);
+      setProducts(allProducts);
+      queryClient.setQueryData(["products"], addProducts);
+    }
+  }, [query.data, setProducts, queryClient, addProducts]);
+
+  return query;
 };
 
 /**
@@ -48,13 +83,29 @@ export const useGetProducts = () => {
  * @param {string} slug - Le slug du produit.
  */
 export const useGetProduct = (slug: string) => {
-  const { data, refetch, error } = useQuery({
+  const queryClient = useQueryClient();
+  const { products, addProduct } = useStore();
+  const cachedProduct = products.find((p) => p.slug === slug);
+
+  const query = useQuery({
     queryKey: ["product", slug],
     queryFn: () => getProduct(slug),
-    enabled: !!slug, // Ne fait rien si le slug est null ou undefined
+    enabled: !!cachedProduct,
+    staleTime: 5 * 60 * 1000,
   });
 
-  return { product: data, refetch, error };
+  useEffect(() => {
+    if (query.data && !cachedProduct) {
+      addProduct(query.data);
+      queryClient.setQueryData(["product", slug], query.data);
+    }
+  }, [query.data, queryClient, cachedProduct, addProduct, slug]);
+
+  return {
+    product: cachedProduct || query.data,
+    isLoading: query.isLoading && !cachedProduct,
+    isError: query.isError,
+  };
 };
 
 /**
@@ -62,12 +113,14 @@ export const useGetProduct = (slug: string) => {
  */
 export const useCreateProduct = () => {
   const queryClient = useQueryClient();
+  const { addProduct } = useStore();
 
   return useMutation({
     mutationFn: ({ productData }: { productData: FormData }) =>
       createProduct(productData),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["products"] }); // Rafraîchit la liste des produits
+    onSuccess: (newProduct) => {
+      addProduct(newProduct);
+      queryClient.invalidateQueries({ queryKey: ["products"] });
     },
   });
 };
@@ -77,6 +130,7 @@ export const useCreateProduct = () => {
  */
 export const useUpdateProduct = () => {
   const queryClient = useQueryClient();
+  const { setProduct } = useStore();
 
   return useMutation({
     mutationFn: ({
@@ -86,8 +140,9 @@ export const useUpdateProduct = () => {
       slug: string;
       productData: FormData;
     }) => updateProduct(slug, productData),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["products"] }); // Rafraîchit la liste des produits
+    onSuccess: (updatedProduct) => {
+      setProduct(updatedProduct.slug, updatedProduct);
+      queryClient.invalidateQueries({ queryKey: ["products"] });
     },
   });
 };
@@ -97,11 +152,13 @@ export const useUpdateProduct = () => {
  */
 export const useDeleteProduct = () => {
   const queryClient = useQueryClient();
+  const { removeProduct } = useStore();
 
   return useMutation({
     mutationFn: ({ slug }: { slug: string }) => deleteProduct(slug),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["products"] }); // Rafraîchit la liste des produits
+    onSuccess: (_, { slug }) => {
+      removeProduct(slug);
+      queryClient.invalidateQueries({ queryKey: ["products"] });
     },
   });
 };

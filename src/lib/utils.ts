@@ -28,22 +28,6 @@ export function formatCurrency(amount: number): string {
   }).format(amount);
 }
 
-export function clearNextAuthCookies() {
-  // Récupérer tous les cookies
-  const cookies = document.cookie.split(";");
-
-  // Parcourir chaque cookie
-  cookies.forEach((cookie) => {
-    const [key] = cookie.trim().split("=");
-
-    // Si le cookie commence par "next.auth"
-    if (key.startsWith("next.auth")) {
-      // Supprimer le cookie en réglant sa date d'expiration dans le passé
-      document.cookie = `${key}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; Path=/`;
-    }
-  });
-}
-
 export const savePhoneToCookie = (phone: string) => {
   Cookies.set("userPhone", phone, {
     expires: 7,
@@ -95,18 +79,29 @@ export function deepEqual(obj1: any, obj2: any) {
 
 export async function compressImage(file: File) {
   const options = {
-    maxSizeMB: 2, // Max 2MB après compression
-    maxWidthOrHeight: 1920, // Redimensionnement max
-    useWebWorker: true, // Optimisation
+    maxSizeMB: 2, // Compression à max 2MB
+    maxWidthOrHeight: 1920, // Redimensionner max à 1920px
+    useWebWorker: true, // Optimisation des performances
   };
-  return await imageCompression(file, options);
+
+  try {
+    return await imageCompression(file, options);
+  } catch (error) {
+    console.error("Erreur lors de la compression de l'image:", error);
+    return file;
+  }
 }
 
 export async function compressPDF(file: File) {
-  const pdfDoc = await PDFDocument.load(await file.arrayBuffer());
-  pdfDoc.setCreator("Compression Service");
-  const compressedPdf = await pdfDoc.save();
-  return new File([compressedPdf], file.name, { type: "application/pdf" });
+  try {
+    const pdfDoc = await PDFDocument.load(await file.arrayBuffer());
+    pdfDoc.setCreator("Optimisation PDF");
+    const compressedPdf = await pdfDoc.save();
+    return new File([compressedPdf], file.name, { type: "application/pdf" });
+  } catch (error) {
+    console.error("Erreur lors de la compression du PDF:", error);
+    return file;
+  }
 }
 
 export async function compressFile(file: File) {
@@ -114,4 +109,32 @@ export async function compressFile(file: File) {
   zip.file(file.name, file);
   const zipFile = await zip.generateAsync({ type: "blob" });
   return new File([zipFile], file.name + ".zip", { type: "application/zip" });
+}
+
+export async function compressDocx(file: File) {
+  try {
+    const zip = new JSZip();
+    zip.file(file.name, file);
+    const compressedDocx = await zip.generateAsync({ type: "blob" });
+    return new File([compressedDocx], file.name, {
+      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    });
+  } catch (error) {
+    console.error("Erreur lors de la compression du fichier DOCX:", error);
+    return file;
+  }
+}
+
+export async function compressXls(file: File) {
+  try {
+    const zip = new JSZip();
+    zip.file(file.name, file);
+    const compressedXls = await zip.generateAsync({ type: "blob" });
+    return new File([compressedXls], file.name, {
+      type: "application/vnd.ms-excel",
+    });
+  } catch (error) {
+    console.error("Erreur lors de la compression du fichier XLS:", error);
+    return file;
+  }
 }

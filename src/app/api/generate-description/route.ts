@@ -5,7 +5,7 @@ async function generateText(prompt: string) {
   const apiToken = process.env.HF_TOKEN;
 
   if (!apiToken) {
-    throw new Error("🚨 ERREUR: Le token Hugging Face n'est pas défini !");
+    throw new Error("ERREUR: Le token Hugging Face n'est pas défini !");
   }
 
   try {
@@ -26,9 +26,9 @@ async function generateText(prompt: string) {
     }
 
     const data = await response.json();
-    return data[0]?.generated_text || "❌ Aucune réponse générée.";
+    return data[0]?.generated_text || "Aucune réponse générée.";
   } catch (error) {
-    console.error("🚨 Erreur lors de la requête Hugging Face :", error);
+    console.error("Erreur lors de la requête Hugging Face :", error);
     throw new Error(
       "Hugging Face API est inaccessible ou en surcharge. Réessaye plus tard."
     );
@@ -52,7 +52,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ content: result });
   } catch (error) {
-    console.error("🚨 Erreur lors de la génération :", error);
+    console.error("Erreur lors de la génération :", error);
     return NextResponse.json(
       { error: "Impossible de générer la description. Réessaye plus tard." },
       { status: 500 }

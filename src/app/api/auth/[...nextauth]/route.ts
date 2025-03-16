@@ -17,10 +17,10 @@ const PUBLIC_KEY = process.env.NEXTAUTH_JWT_PUBLIC_KEY
   : null;
 
 if (!PUBLIC_KEY) {
-  throw new Error("🔴 La clé publique JWT est manquante !");
+  throw new Error("La clé publique JWT est manquante !");
 }
 
-// ✅ Fonction de rafraîchissement du token
+// Fonction de rafraîchissement du token
 async function refreshAccessToken(token: any) {
   try {
     const res = await fetch(
@@ -33,7 +33,7 @@ async function refreshAccessToken(token: any) {
     );
 
     if (!res.ok) {
-      console.error("🔴 Erreur lors du rafraîchissement du token:", res.status);
+      console.error("Erreur lors du rafraîchissement du token:", res.status);
       return { ...token, error: "RefreshTokenError" };
     }
 
@@ -46,7 +46,7 @@ async function refreshAccessToken(token: any) {
       expiresAt: Date.now() + refreshedToken.expiresAt * 1000,
     };
   } catch (error) {
-    console.error("🔴 Erreur refresh token :", error);
+    console.error("Erreur refresh token :", error);
     return { ...token, error: "RefreshTokenError" };
   }
 }
@@ -84,7 +84,7 @@ const authOptions: NextAuthOptions = {
           email: user.email,
           accessToken: user.accessToken,
           refreshToken: user.refreshToken,
-          expiresAt: Date.now() + user.expiresIn * 1000, // ✅ expiresIn utilisé directement ici
+          expiresAt: Date.now() + user.expiresIn * 1000,
         };
       },
     }),
@@ -111,13 +111,13 @@ const authOptions: NextAuthOptions = {
           });
         }
       } catch (error) {
-        console.error("🔴 JWT invalide :", error);
+        console.error("JWT invalide :", error);
         return await refreshAccessToken(token);
       }
 
       // 🔄 Refresh si expiré
       if (!token.expiresAt || Date.now() >= token.expiresAt) {
-        console.log("🔄 Token expiré, rafraîchissement...");
+        console.log("Token expiré, rafraîchissement...");
         return await refreshAccessToken(token);
       }
 

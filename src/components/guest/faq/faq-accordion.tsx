@@ -7,7 +7,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { useFAQData } from "@/hooks/use-faq-data";
+import { useFAQData } from "@/lib/hooks/use-faq-data";
 import { motion } from "framer-motion";
 
 export default function FAQAccordion() {

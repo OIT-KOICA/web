@@ -21,7 +21,7 @@ import {
 const categories = [
   { value: "MANIOC", label: "Manioc" },
   { value: "MAIS", label: "Maïs" },
-  { value: "VOLAILLE", label: "Poulet" },
+  { value: "VOLAILLE", label: "Volaille" },
   { value: "LOCATION", label: "Location" },
   { value: "TRANSPORT", label: "Transport" },
   { value: "AUTRE", label: "Autre" },

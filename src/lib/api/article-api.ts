@@ -1,5 +1,5 @@
-import { fetchClient } from "../api/fetch-client";
-import { ArticleDTO } from "../../types/type";
+import { ArticleDTO } from "@/types/typeDTO";
+import { fetchClient } from "../fetch-client";
 
 /**
  * Récupère une liste paginée d'articles.
@@ -9,9 +9,12 @@ import { ArticleDTO } from "../../types/type";
  */
 export const getArticles = async (page: number = 0, pageSize: number = 10) => {
   try {
-    const response = await fetchClient(`/guest/articles?page=${page}&size=${pageSize}`, {
-      requiresAuth: false,
-    });
+    const response = await fetchClient(
+      `/guest/articles?page=${page}&size=${pageSize}`,
+      {
+        requiresAuth: false,
+      }
+    );
 
     return {
       articles: response.articles || [],
@@ -82,6 +85,36 @@ export const deleteArticle = async (slug: string): Promise<string> => {
     return response;
   } catch (error) {
     console.error("Echec lors de la suppression de l'article :", error);
+    throw error;
+  }
+};
+
+/**
+ * Récupère une liste d'articles par utilisateur avec pagination.
+ * @param {number} page - Numéro de la page actuelle.
+ * @param {number} pageSize - Nombre de produits par page.
+ * @returns {Promise<{ articles: ArticleDTO[]; totalPages: number; totalItems: number; currentPage: number }>}
+ */
+export const getArticlesByUserId = async (
+  page: number = 0,
+  pageSize: number = 10
+) => {
+  try {
+    const response = await fetchClient(
+      `/article/user-articles?page=${page}&size=${pageSize}`,
+      {
+        requiresAuth: true,
+      }
+    );
+
+    return {
+      articles: response.articles || [],
+      totalPages: response.totalPages || 0,
+      totalItems: response.totalItems || 0,
+      currentPage: response.currentPage || 1,
+    };
+  } catch (error) {
+    console.error("Erreur lors de la récupération des articles :", error);
     throw error;
   }
 };

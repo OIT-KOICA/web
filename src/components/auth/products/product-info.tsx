@@ -2,7 +2,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatCurrency } from "@/lib/utils";
-import { ProductDTO } from "@/types/type";
+import { ProductDTO } from "@/types/typeDTO";
 import { BadgePercent, Leaf, MapPin } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
@@ -43,7 +43,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
             <p className="flex items-center">
               <BadgePercent className="mr-1 size-4" />
               {product ? formatCurrency(product.basePrice) : ""} /{" "}
-              {product ? product.unit : ""}
+              {product ? product.priceUnit : ""}
             </p>
           </div>
         </div>

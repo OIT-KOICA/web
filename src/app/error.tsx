@@ -21,7 +21,7 @@ export default function Error({
       </h1>
       <p className="mb-8 text-xl text-muted-foreground">
         Nous nous excusons pour la gêne occasionnée. Notre équipe a été informée
-        et travaille travaille sur un correctif.
+        et travaille sur un correctif.
       </p>
       <Button onClick={() => reset()}>Réessayer</Button>
     </div>

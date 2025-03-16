@@ -14,8 +14,8 @@ import { User, Phone, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import FullScreenOffer from "./full-screen-offer";
-import { Offer } from "@/types/type";
 import { useGetAdds } from "@/lib/query/configuration-query";
+import { Offer } from "@/types/typeDTO";
 
 interface OffersCarouselProps {
   className?: string;
@@ -53,7 +53,7 @@ export default function OffersCarousel({ className }: OffersCarouselProps) {
                   <Card className="bg-gradient-to-br from-cassava-100 to-maize-100 transition-shadow duration-300 hover:shadow-lg dark:from-cassava-800 dark:to-maize-800">
                     <CardContent className="p-4">
                       <h3 className="mb-2 text-lg font-bold text-primary dark:text-primary-foreground">
-                        J&apos;ai besoin de
+                        {offer.title}
                       </h3>
                       <p className="mb-4 text-sm text-muted-foreground">
                         {offer.description}

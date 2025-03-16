@@ -10,9 +10,14 @@ import {
   Link2,
   Download,
 } from "lucide-react";
-import { ArticleDTO } from "@/types/type";
 import Markdown from "react-markdown";
 import { Button } from "@/components/ui/button";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import { ArticleDTO } from "@/types/typeDTO";
 
 interface ArticleInfoProps {
   article: ArticleDTO | null;
@@ -47,7 +52,12 @@ export default function ArticleInfo({ article }: ArticleInfoProps) {
           <div className="flex items-center space-x-2">
             <FileText className="size-5 text-primary" />
             <p className="text-gray-700 dark:text-gray-300">
-              <strong>Code :</strong> {article.code}
+              <strong>Code :</strong>{" "}
+              <span className="font-mono text-sm">
+                {article.code.length > 10
+                  ? `${article.code.slice(0, 10)}...`
+                  : article.code}
+              </span>
             </p>
           </div>
 
@@ -92,17 +102,29 @@ export default function ArticleInfo({ article }: ArticleInfoProps) {
             </h3>
             <ul className="mt-2 space-y-2">
               {article.documents.map((doc, index) => (
-                <li key={index} className="flex items-center space-x-2">
-                  <Download className="size-5 text-primary" />
-                  <a
-                    href={`${process.env.NEXT_PUBLIC_API_PATH_URL}/media/download/document/${doc.id}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:underline dark:text-blue-400"
-                  >
-                    {doc.documentType}
-                  </a>
-                </li>
+                <HoverCard key={index}>
+                  <HoverCardTrigger asChild>
+                    <li className="flex items-center space-x-2 rounded-md p-2 transition hover:bg-gray-100 dark:hover:bg-gray-800">
+                      <Download className="size-5 text-primary" />
+                      <a
+                        href={`${process.env.NEXT_PUBLIC_API_PATH_URL}/media/download/document/${doc.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:underline dark:text-blue-400"
+                      >
+                        {doc.documentType}
+                      </a>
+                    </li>
+                  </HoverCardTrigger>
+                  {doc.summary && (
+                    <HoverCardContent className="w-72 rounded-md border bg-white p-4 shadow-md dark:bg-gray-800 dark:text-gray-200">
+                      <h4 className="text-sm font-semibold">Résumé :</h4>
+                      <p className="text-xs text-gray-600 dark:text-gray-300">
+                        {doc.summary}
+                      </p>
+                    </HoverCardContent>
+                  )}
+                </HoverCard>
               ))}
             </ul>
           </div>
@@ -124,7 +146,7 @@ export default function ArticleInfo({ article }: ArticleInfoProps) {
                   onClick={() => window.open(link, "_blank")}
                 >
                   <Link2 className="size-5" />
-                  <span>{link}</span>
+                  <span className="max-w-[250px] truncate">{link}</span>
                 </Button>
               ))}
             </div>

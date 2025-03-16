@@ -17,7 +17,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 import { ProductFormValues, productSchema } from "@/schemas/product-schema";
 import CategorySelect from "./category-select";
@@ -26,9 +25,20 @@ import LocationSelect from "./location-select";
 import UnitOfMeasureSelect from "./unit-of-measure-select";
 import Image from "next/image";
 import { useCreateProduct, useUpdateProduct } from "@/lib/query/product-query";
-import useProductStore from "@/lib/stores/product-store";
 import dynamic from "next/dynamic";
-import { isFileSizeValid } from "@/lib/utils";
+import {
+  compressDocx,
+  compressFile,
+  compressImage,
+  compressPDF,
+  compressXls,
+  isFileSizeValid,
+} from "@/lib/utils";
+import { useToast } from "@/lib/hooks/use-toast";
+import useStore from "@/lib/stores/store";
+
+// Liste des unités de mesure disponibles
+const unitOptions = ["Kg", "Sac", "Cuvette", "Sceau de 5L"];
 
 // Chargement dynamique de l'éditeur Markdown pour éviter les erreurs SSR
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
@@ -40,8 +50,8 @@ export default function ProductCreationForm() {
   const { toast } = useToast();
   const createProduct = useCreateProduct();
   const editProduct = useUpdateProduct();
-  const product = useProductStore((state) => state.activeProduct);
-  const edit = useProductStore((state) => state.edit);
+  const product = useStore((state) => state.activeProduct);
+  const edit = useStore((state) => state.edit);
 
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
@@ -50,8 +60,9 @@ export default function ProductCreationForm() {
     defaultValues:
       edit && product
         ? {
-            ...product, // Récupère toutes les valeurs de `ProductDTO`
-            file: product.file || undefined, // Assurez-vous que `file` est correct
+            ...product,
+            file: product.file || undefined,
+            priceUnit: product.priceUnit || "Kg",
           }
         : {
             name: "",
@@ -63,11 +74,12 @@ export default function ProductCreationForm() {
             basePrice: 0,
             unit: "",
             quantity: 0,
+            priceUnit: "Kg",
             file: undefined,
           },
   });
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       if (!isFileSizeValid(file)) {
@@ -77,12 +89,40 @@ export default function ProductCreationForm() {
           variant: "destructive",
         });
         return;
-      } else {
-        form.setValue("file", file); // Mettre à jour le champ dans React Hook Form
-        const reader = new FileReader();
-        reader.onloadend = () => setPreviewImage(reader.result as string);
-        reader.readAsDataURL(file);
       }
+
+      let compressedFile = file;
+
+      if (file.type.includes("image")) {
+        compressedFile = await compressImage(file);
+      } else if (file.type === "application/pdf") {
+        compressedFile = await compressPDF(file);
+      } else if (
+        file.type ===
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+        file.type === "application/msword"
+      ) {
+        compressedFile = await compressDocx(file);
+      } else if (
+        file.type === "application/vnd.ms-excel" ||
+        file.type ===
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      ) {
+        compressedFile = await compressXls(file);
+      } else {
+        compressedFile = await compressFile(file);
+      }
+
+      if (!(compressedFile instanceof File)) {
+        compressedFile = new File([compressedFile], file.name, {
+          type: file.type,
+        });
+      }
+
+      form.setValue("file", compressedFile);
+      const reader = new FileReader();
+      reader.onloadend = () => setPreviewImage(reader.result as string);
+      reader.readAsDataURL(file);
     }
   };
 
@@ -149,6 +189,7 @@ export default function ProductCreationForm() {
     formData.append("basePrice", data.basePrice.toString());
     formData.append("quantity", data.quantity.toString());
     formData.append("localisation", data.localisation);
+    formData.append("priceUnit", data.priceUnit);
 
     // Champs conditionnels pour l'image
     if (data.file instanceof File) {
@@ -278,9 +319,9 @@ export default function ProductCreationForm() {
                     />
                   </FormControl>
                   <div className="space-y-1 leading-none">
-                    <FormLabel>Le produit est-il périsable ?</FormLabel>
+                    <FormLabel>Le produit est-il périssable ?</FormLabel>
                     <FormDescription>
-                      Cocher cette case si le produit est périsable
+                      Cocher cette case si le produit est périssable
                     </FormDescription>
                   </div>
                 </FormItem>
@@ -338,6 +379,9 @@ export default function ProductCreationForm() {
               render={({ field: { value, onChange, ...field } }) => (
                 <FormItem>
                   <FormLabel>Image du produit</FormLabel>
+                  <label className="block text-sm font-medium text-gray-700">
+                    📁 Sélectionner un fichier (max 10MB)
+                  </label>
                   <FormControl>
                     <Input
                       type="file"
@@ -379,25 +423,52 @@ export default function ProductCreationForm() {
             />
 
             {/* Prix de base */}
-            <FormField
-              control={form.control}
-              name="basePrice"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Prix de base</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      {...field}
-                      onChange={(e) =>
-                        field.onChange(parseFloat(e.target.value))
-                      }
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="flex gap-4">
+              <FormField
+                control={form.control}
+                name="basePrice"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Prix de base</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        {...field}
+                        onChange={(e) =>
+                          field.onChange(parseFloat(e.target.value))
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Sélection de l'unité */}
+              <FormField
+                control={form.control}
+                name="priceUnit"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>Unité de mesure du prix</FormLabel>
+                    <FormControl>
+                      <select
+                        value={field.value}
+                        onChange={(e) => field.onChange(e.target.value)}
+                        className="w-full rounded-md border p-2"
+                      >
+                        {unitOptions.map((unit) => (
+                          <option key={unit} value={unit}>
+                            {unit}
+                          </option>
+                        ))}
+                      </select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             {/* Quantité en stock */}
             <FormField

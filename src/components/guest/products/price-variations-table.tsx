@@ -8,8 +8,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ProductDTO } from "@/types/type";
 import { formatCurrency } from "@/lib/utils";
+import { ProductDTO } from "@/types/typeDTO";
 
 export default function PriceVariationsTable({
   product,
@@ -32,7 +32,7 @@ export default function PriceVariationsTable({
               <TableRow key={index}>
                 <TableCell>{variation.description}</TableCell>
                 <TableCell>
-                  {formatCurrency(variation.price)} / {product.unit}
+                  {formatCurrency(variation.price)} / {product.priceUnit}
                 </TableCell>
               </TableRow>
             ))

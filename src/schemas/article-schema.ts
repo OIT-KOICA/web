@@ -8,13 +8,32 @@ export const articleSchema = z.object({
   description: z.string().min(1, "La description est requise"),
   category: z.string().min(1, "Catégorie requise"),
   file: z
-    .union([z.instanceof(File), z.string(), z.null(), z.undefined()])
+    .any()
+    .refine(
+      (file) =>
+        file instanceof File ||
+        typeof file === "string" ||
+        file === null ||
+        file === undefined,
+      {
+        message:
+          "Le fichier doit être une image valide ou un chemin de fichier.",
+      }
+    )
     .optional(),
   documents: z
     .array(
       z.object({
-        documentFile: z.union([z.instanceof(File), z.string()]),
+        documentFile: z
+          .any()
+          .refine((file) => file instanceof File || typeof file === "string", {
+            message: "Le document doit être un fichier ou une URL valide.",
+          }),
         documentType: z.string().min(1, "Type de document requis"),
+        summary: z.string().optional(),
+        user: z
+          .string()
+          .min(1, "Le username ou l'email de l'utilisateur est requis"),
       })
     )
     .optional()

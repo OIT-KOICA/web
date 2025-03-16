@@ -16,10 +16,12 @@ type PriceVariation = {
 
 type PriceVariationsTableProps = {
   variations: PriceVariation[] | undefined;
+  unit: string | undefined;
 };
 
 export default function PriceVariationsTable({
   variations,
+  unit,
 }: PriceVariationsTableProps) {
   return (
     <Card>
@@ -40,7 +42,7 @@ export default function PriceVariationsTable({
                 <TableRow key={index}>
                   <TableCell>{variation.description}</TableCell>
                   <TableCell className="text-right">
-                    {formatCurrency(variation.price)}
+                    {formatCurrency(variation.price)} / {unit}
                   </TableCell>
                 </TableRow>
               ))

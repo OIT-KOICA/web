@@ -1,11 +1,11 @@
 "use client";
 
 import ArticleDetail from "@/components/guest/blog/article-detail";
-import useArticleStore from "@/lib/stores/article-store";
+import useStore from "@/lib/stores/store";
 import { useEffect, useState } from "react";
 
 export default function ArticleDetailPage() {
-  const article = useArticleStore((state) => state.activeArticle);
+  const { activeArticle: article } = useStore();
   const [currentArticle, setCurrentArticle] = useState(article);
 
   useEffect(() => {

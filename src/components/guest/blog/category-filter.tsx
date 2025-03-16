@@ -1,12 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import useArticleStore from "@/lib/stores/article-store";
+import useStore from "@/lib/stores/store";
 
-const categories = ["Toutes les catégories", "Nouvelles", "Formations"];
+const categories = ["Toutes les catégories", "Nouvelles", "Formation"];
 
 export default function CategoryFilter() {
-  const { activeCategory, setActiveCategory } = useArticleStore();
+  const { activeCategory, setActiveCategory } = useStore();
 
   return (
     <div className="flex flex-wrap gap-2">

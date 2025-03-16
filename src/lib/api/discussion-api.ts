@@ -1,5 +1,6 @@
-import { fetchClient } from "../api/fetch-client";
-import { Discussion, DiscussionRequest, MessageRequest } from "../../types/type";
+import { fetchClient } from "../fetch-client";
+import { DiscussionRequest, MessageRequest } from "../../types/typeRequest";
+import { Discussion } from "@/types/typeDTO";
 
 /**
  * Récupère toutes les discussions.

@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Package, BookOpen, Megaphone, HelpCircle } from "lucide-react";
 import DashboardCard from "./dashboard-card";
-import useUserStore from "@/lib/stores/user-store";
+import { useGetCompany } from "@/lib/query/configuration-query";
 
 const productCards = [
   {
@@ -76,7 +76,7 @@ const articleCards = [
 ];
 
 export default function DashboardCards() {
-  const company = useUserStore((state) => state.company);
+  const { company } = useGetCompany();
 
   return (
     <div className="grid grid-cols-1 gap-8 md:grid-cols-2">

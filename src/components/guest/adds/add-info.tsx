@@ -1,65 +1,75 @@
-import React from "react";
+"use client";
+
 import { motion } from "framer-motion";
-import { Offer } from "@/types/type";
-import { MapPin, Phone, Tag, User } from "lucide-react";
+import { MapPin, Phone, Tag, User, MessageSquare } from "lucide-react";
+import { Offer } from "@/types/typeDTO";
 
 export default function AddInfo({ add }: { add: Offer }) {
   return (
     <motion.div
-      className="rounded-lg border bg-white p-4 shadow dark:bg-gray-800"
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
+      className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800"
+      whileHover={{ scale: 1.03 }}
+      whileTap={{ scale: 0.97 }}
     >
-      <h2 className="text-gradient mb-4 text-3xl font-bold">
-        J&apos;ai besoin de
-      </h2>
-      <p className="mb-6 text-lg">{add.description}</p>
+      <div className="p-5">
+        {/* Titre de l'annonce */}
+        <h2 className="mb-2 text-2xl font-bold text-gray-800 dark:text-white">
+          {add.title}
+        </h2>
 
-      {/* Informations Utilisateur */}
-      <div className="mb-6 space-y-4">
-        <div className="flex items-center">
-          <User className="mr-3 size-6 text-primary" />
-          <span className="text-lg font-semibold">{add.name}</span>
-        </div>
-        <div className="flex items-center">
-          <Phone className="mr-3 size-6 text-primary" />
-          <span className="text-lg">{add.phone}</span>
-        </div>
-        <div className="flex items-center">
-          <MapPin className="mr-3 size-6 text-primary" />
-          <span className="text-lg">{add.location}</span>
-        </div>
-      </div>
+        {/* Description */}
+        <p className="mb-4 text-gray-600 dark:text-gray-300">
+          {add.description}
+        </p>
 
-      {/* Catégories */}
-      {add.categories.length > 0 && (
-        <div className="mb-6">
-          <h3 className="text-xl font-semibold">Catégories concernées :</h3>
-          <div className="mt-2 flex flex-wrap gap-2">
-            {add.categories.map((category, index) => (
-              <span
-                key={index}
-                className="flex items-center gap-2 rounded-full bg-primary px-3 py-1 text-sm text-white"
-              >
-                <Tag className="size-4" />
-                {category}
-              </span>
-            ))}
+        {/* Informations Utilisateur */}
+        <div className="space-y-3">
+          <div className="flex items-center">
+            <User className="mr-3 size-5 text-blue-600 dark:text-blue-400" />
+            <span className="text-base font-medium">{add.name}</span>
+          </div>
+          <div className="flex items-center">
+            <Phone className="mr-3 size-5 text-green-600 dark:text-green-400" />
+            <span className="text-base">{add.phone}</span>
+          </div>
+          <div className="flex items-center">
+            <MapPin className="mr-3 size-5 text-red-600 dark:text-red-400" />
+            <span className="text-base">{add.location}</span>
           </div>
         </div>
-      )}
 
-      {/* Bouton de contact */}
-      <div className="flex justify-end">
-        <a
-          href={`https://wa.me/${add.phone}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-white transition hover:bg-green-700"
-        >
-          <Phone className="size-5" />
-          Contacter sur WhatsApp
-        </a>
+        {/* Catégories concernées */}
+        {add.categories.length > 0 && (
+          <div className="mt-4">
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
+              Catégories concernées :
+            </h3>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {add.categories.map((category, index) => (
+                <span
+                  key={index}
+                  className="flex items-center gap-2 rounded-full bg-primary px-3 py-1 text-sm font-medium text-white"
+                >
+                  <Tag className="size-4" />
+                  {category}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Bouton de contact amélioré */}
+        <div className="mt-6 flex justify-between">
+          <a
+            href={`https://wa.me/${add.phone}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-green-500 px-4 py-2 text-white transition hover:bg-green-600"
+          >
+            <MessageSquare className="size-5" />
+            Contacter sur WhatsApp
+          </a>
+        </div>
       </div>
     </motion.div>
   );

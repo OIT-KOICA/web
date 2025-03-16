@@ -1,21 +1,18 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import ArticleCard from "./article-card";
 import { useGetArticles } from "@/lib/query/article-query";
 import { useInView } from "react-intersection-observer";
 import { Loader2 } from "lucide-react";
-import { ArticleDTO } from "@/types/type";
-import useArticleStore from "@/lib/stores/article-store";
+import useStore from "@/lib/stores/store";
 
 export default function ArticleGrid() {
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useGetArticles();
+  const { articles } = useStore();
+  const { fetchNextPage, hasNextPage, isFetchingNextPage } = useGetArticles();
   const { ref, inView } = useInView();
-  const { searchTerm, activeCategory } = useArticleStore();
-
-  const [articles, setArticles] = useState<ArticleDTO[]>([]);
+  const { searchTerm, activeCategory } = useStore();
 
   useEffect(() => {
     if (inView && hasNextPage) {
@@ -23,13 +20,7 @@ export default function ArticleGrid() {
     }
   }, [inView, hasNextPage, fetchNextPage]);
 
-  useEffect(() => {
-    if (data?.pages) {
-      setArticles(data.pages.flatMap((page) => page.articles));
-    }
-  }, [data]);
-
-  // 🔥 Filtrage et recherche côté client avec useMemo
+  // Filtrage et recherche côté client avec useMemo
   const filteredArticles = useMemo(() => {
     return articles.filter((article) => {
       const matchesCategory =
@@ -49,7 +40,7 @@ export default function ArticleGrid() {
     <div>
       {filteredArticles.length === 0 && (
         <p className="text-center">
-          Aucun article ne correspond à votre recherche.
+          Aucune documentation ne correspond à votre recherche.
         </p>
       )}
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">

@@ -7,24 +7,23 @@ import { useRouter } from "next/navigation";
 import ArticleTable from "./article-table";
 import SearchBar from "./search-bar";
 import FilterDropdown from "../filter-dropdown";
-import { useGetArticles } from "@/lib/query/article-query";
+import { useGetArticlesByUserID } from "@/lib/query/article-query";
 import { useInView } from "react-intersection-observer";
 import { Loader2 } from "lucide-react";
-import { ArticleDTO } from "@/types/type";
-import useArticleStore from "@/lib/stores/article-store";
+import { ArticleDTO } from "@/types/typeDTO";
+import useStore from "@/lib/stores/store";
 
 export default function ArticleList() {
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useGetArticles();
+  const { articles, setEdit, totalPages } = useStore();
+  const { fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useGetArticlesByUserID();
   const { ref, inView } = useInView();
   const router = useRouter();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
-  const [filteredArticles, setFilteredArticles] = useState<ArticleDTO[]>([]); // ✅ Correction du type
+  const [filteredArticles, setFilteredArticles] = useState<ArticleDTO[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = data?.pages?.[0]?.totalPages ?? 1; // ✅ Correction pour éviter `undefined`
-  const { setEdit } = useArticleStore();
 
   useEffect(() => {
     if (inView && hasNextPage) {
@@ -33,12 +32,7 @@ export default function ArticleList() {
   }, [inView, hasNextPage, fetchNextPage]);
 
   useEffect(() => {
-    if (!data?.pages) return;
-
-    // ✅ Correction pour éviter `undefined` et `never[]`
-    const allArticles = data.pages.flatMap((page) => page.articles || []);
-
-    const filtered = allArticles.filter((article) => {
+    const filtered = articles.filter((article) => {
       return (
         (categoryFilter === null || article.category === categoryFilter) &&
         (searchTerm === "" ||
@@ -48,7 +42,7 @@ export default function ArticleList() {
     });
 
     setFilteredArticles(filtered);
-  }, [data, searchTerm, categoryFilter]);
+  }, [articles, searchTerm, categoryFilter]);
 
   return (
     <div className="space-y-4 p-4 sm:p-6">
@@ -74,7 +68,6 @@ export default function ArticleList() {
         </div>
       </div>
 
-      {/* ✅ Correction : Ajout des props manquants */}
       <ArticleTable
         articles={filteredArticles}
         currentPage={currentPage}

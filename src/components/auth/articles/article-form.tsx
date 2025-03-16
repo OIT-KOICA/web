@@ -15,17 +15,25 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/lib/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
-import useArticleStore from "@/lib/stores/article-store";
 import { useCreateArticle, useUpdateArticle } from "@/lib/query/article-query";
 import { ArticleFormValues, articleSchema } from "@/schemas/article-schema";
 import CategoryArticleSelect from "./category-article-select";
 import DocumentsField from "./documents-field";
 import LinksField from "./links-field";
-import { isFileSizeValid } from "@/lib/utils";
+import {
+  compressDocx,
+  compressFile,
+  compressImage,
+  compressPDF,
+  compressXls,
+  isFileSizeValid,
+} from "@/lib/utils";
+import useStore from "@/lib/stores/store";
+import { useGetProfile } from "@/lib/query/configuration-query";
 
 // Chargement dynamique de l'éditeur Markdown pour éviter les erreurs SSR
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
@@ -37,16 +45,18 @@ export default function ArticleCreationForm() {
   const { toast } = useToast();
   const createArticle = useCreateArticle();
   const updateArticle = useUpdateArticle();
-  const article = useArticleStore((state) => state.activeArticle);
-  const edit = useArticleStore((state) => state.edit);
+  const { activeArticle: article, edit } = useStore();
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const { user } = useGetProfile();
 
   // Transformer les documents existants pour le formulaire
   const initialDocuments =
-    edit && article?.documents
+    edit && article && article.documents
       ? article.documents.map((doc) => ({
           documentFile: doc.id, // URL du document existant
           documentType: doc.documentType,
+          summary: doc.summary || "",
+          user: doc.user || user?.username || "Inconnu",
         }))
       : [];
 
@@ -72,7 +82,7 @@ export default function ArticleCreationForm() {
           },
   });
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       if (!isFileSizeValid(file)) {
@@ -82,12 +92,39 @@ export default function ArticleCreationForm() {
           variant: "destructive",
         });
         return;
-      } else {
-        form.setValue("file", file);
-        const reader = new FileReader();
-        reader.onloadend = () => setPreviewImage(reader.result as string);
-        reader.readAsDataURL(file);
       }
+
+      let compressedFile = file;
+
+      if (file.type.includes("image")) {
+        compressedFile = await compressImage(file);
+      } else if (file.type === "application/pdf") {
+        compressedFile = await compressPDF(file);
+      } else if (
+        file.type ===
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+        file.type === "application/msword"
+      ) {
+        compressedFile = await compressDocx(file);
+      } else if (
+        file.type === "application/vnd.ms-excel" ||
+        file.type ===
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      ) {
+        compressedFile = await compressXls(file);
+      } else {
+        compressedFile = await compressFile(file);
+      }
+
+      if (!(compressedFile instanceof File)) {
+        compressedFile = new File([compressedFile], file.name, {
+          type: file.type,
+        });
+      }
+      form.setValue("file", compressedFile);
+      const reader = new FileReader();
+      reader.onloadend = () => setPreviewImage(reader.result as string);
+      reader.readAsDataURL(file);
     }
   };
 
@@ -152,10 +189,20 @@ export default function ArticleCreationForm() {
       if (doc.documentFile instanceof File) {
         formData.append(`documents[${index}].[documentFile]`, doc.documentFile);
         formData.append(`documents[${index}].[documentType]`, doc.documentType);
+        formData.append(`documents[${index}].[summary]`, doc.summary || "");
+        formData.append(
+          `documents[${index}].[user]`,
+          user?.username || "Inconnu"
+        );
       } else if (typeof doc.documentFile === "string") {
         // Cas de document existant
         formData.append(`documents[${index}].existingFile`, doc.documentFile);
         formData.append(`documents[${index}].documentType`, doc.documentType);
+        formData.append(`documents[${index}].summary`, doc.summary || "");
+        formData.append(
+          `documents[${index}].user`,
+          doc.user || user?.username || "Inconnu"
+        );
       }
     });
 

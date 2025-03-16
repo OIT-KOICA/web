@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { LibraryBig, Package } from "lucide-react";
+import { LibraryBig, Package, CalendarCheck } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -15,7 +15,7 @@ import Link from "next/link";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import useUserStore from "@/lib/stores/user-store";
+import { useGetCompany } from "@/lib/query/configuration-query";
 
 const dashboardMenuLink = {
   productNavMain: [
@@ -33,11 +33,17 @@ const dashboardMenuLink = {
       icon: LibraryBig,
       isActive: true,
     },
+    {
+      title: "Evènement",
+      url: "/dashboard/events",
+      icon: CalendarCheck,
+      isActive: true,
+    },
   ],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { company } = useUserStore();
+  const { company } = useGetCompany();
 
   return (
     <Sidebar variant="inset" {...props}>

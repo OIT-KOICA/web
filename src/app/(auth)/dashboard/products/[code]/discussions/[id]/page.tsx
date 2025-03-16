@@ -6,17 +6,17 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import useProductStore from "@/lib/stores/product-store";
 import MessageScroller from "@/components/auth/discussions/message-scroller";
 import MessageInput from "@/components/auth/discussions/message-input";
 import { SidebarInset } from "@/components/ui/sidebar";
+import useStore from "@/lib/stores/store";
 
 export default function DiscussionView({
   params,
 }: {
   params: Promise<{ productSlug: string; discussionId: string }>;
 }) {
-  const discussion = useProductStore((state) => state.activeDiscussion);
+  const { activeDiscussion: discussion } = useStore();
   const { productSlug } = use(params);
 
   return (

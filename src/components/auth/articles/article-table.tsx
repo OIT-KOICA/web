@@ -17,13 +17,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import useArticleStore from "@/lib/stores/article-store";
-import { ArticleDTO } from "@/types/type";
 import Link from "next/link";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/lib/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { useDeleteArticle } from "@/lib/query/article-query";
 import ConfirmDialog from "../confirm-dialog";
+import useStore from "@/lib/stores/store";
+import { ArticleDTO } from "@/types/typeDTO";
 
 interface ArticleTableProps {
   articles: ArticleDTO[];
@@ -45,7 +45,7 @@ export default function ArticleTable({
   const [articleToDelete, setArticleToDelete] = useState<ArticleDTO | null>(
     null
   );
-  const { setActiveArticle, setEdit } = useArticleStore();
+  const { setActiveArticle, setEdit } = useStore();
   const { toast } = useToast();
   const router = useRouter();
   const deleteArticle = useDeleteArticle();

@@ -1,37 +1,109 @@
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import {
   createArticle,
   deleteArticle,
   getArticle,
   getArticles,
+  getArticlesByUserId,
   updateArticle,
-} from "../service/article-api";
+} from "../api/article-api";
+import { useEffect } from "react";
+import useStore from "../stores/store";
+
+/**
+ * Hook pour récupérer les articles d'un utilisateur avec pagination.
+ */
+export const useGetArticlesByUserID = () => {
+  const queryClient = useQueryClient();
+  const { setArticles, addArticles, setTotalPages } = useStore();
+
+  const query = useInfiniteQuery({
+    queryKey: ["user-articles"],
+    queryFn: async ({ pageParam = 0 }) =>
+      await getArticlesByUserId(pageParam, 10),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => {
+      return lastPage.currentPage < lastPage.totalPages
+        ? lastPage.currentPage + 1
+        : undefined;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+
+  useEffect(() => {
+    if (query.data) {
+      const allArticles = query.data.pages.flatMap((page) => page.articles);
+      setTotalPages(query.data.pages?.[0]?.totalPages ?? 1)
+      setArticles(allArticles);
+      queryClient.setQueryData(["user-articles"], addArticles);
+    }
+  }, [query.data, setArticles, queryClient, addArticles, setTotalPages]);
+
+  return query;
+};
 
 /**
  * Hook pour récupérer les articles avec pagination.
  */
 export const useGetArticles = () => {
-  return useInfiniteQuery({
+  const queryClient = useQueryClient();
+  const { setArticles, addArticles } = useStore();
+
+  const query = useInfiniteQuery({
     queryKey: ["articles"],
     queryFn: async ({ pageParam = 0 }) => await getArticles(pageParam, 10),
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {
-      return lastPage.currentPage < lastPage.totalPages ? lastPage.currentPage + 1 : undefined;
+      return lastPage.currentPage < lastPage.totalPages
+        ? lastPage.currentPage + 1
+        : undefined;
     },
+    staleTime: 5 * 60 * 1000,
   });
+
+  useEffect(() => {
+    if (query.data) {
+      const allArticles = query.data.pages.flatMap((page) => page.articles);
+      setArticles(allArticles);
+      queryClient.setQueryData(["user-articles"], addArticles);
+    }
+  }, [query.data, setArticles, queryClient, addArticles]);
+
+  return query;
 };
 
 /**
  * Hook pour récupérer un article par son slug.
  */
 export const useGetArticle = (slug: string) => {
-  const { data, refetch, error } = useQuery({
+  const queryClient = useQueryClient();
+  const { articles, addArticle } = useStore();
+  const cachedArticle = articles.find((a) => a.slug === slug);
+
+  const query = useQuery({
     queryKey: ["article", slug],
     queryFn: () => getArticle(slug),
-    enabled: !!slug,
+    enabled: !!cachedArticle,
+    staleTime: 5 * 60 * 1000,
   });
 
-  return { article: data, refetch, error };
+  useEffect(() => {
+    if (query.data && !cachedArticle) {
+      addArticle(query.data);
+      queryClient.setQueryData(["article", slug], query.data);
+    }
+  }, [query.data, queryClient, cachedArticle, addArticle, slug]);
+
+  return {
+    article: cachedArticle || query.data,
+    isLoading: query.isLoading && !cachedArticle,
+    isError: query.isError,
+  };
 };
 
 /**
@@ -39,11 +111,13 @@ export const useGetArticle = (slug: string) => {
  */
 export const useCreateArticle = () => {
   const queryClient = useQueryClient();
+  const { addArticle } = useStore();
 
   return useMutation({
     mutationFn: ({ articleData }: { articleData: FormData }) =>
       createArticle(articleData),
-    onSuccess: () => {
+    onSuccess: (newArticle) => {
+      addArticle(newArticle);
       queryClient.invalidateQueries({ queryKey: ["articles"] });
     },
   });
@@ -54,6 +128,7 @@ export const useCreateArticle = () => {
  */
 export const useUpdateArticle = () => {
   const queryClient = useQueryClient();
+  const { setArticle } = useStore();
 
   return useMutation({
     mutationFn: ({
@@ -63,7 +138,8 @@ export const useUpdateArticle = () => {
       slug: string;
       articleData: FormData;
     }) => updateArticle(slug, articleData),
-    onSuccess: () => {
+    onSuccess: (updatedArticle) => {
+      setArticle(updatedArticle.slug, updatedArticle);
       queryClient.invalidateQueries({ queryKey: ["articles"] });
     },
   });
@@ -74,10 +150,12 @@ export const useUpdateArticle = () => {
  */
 export const useDeleteArticle = () => {
   const queryClient = useQueryClient();
+  const { removeArticle } = useStore();
 
   return useMutation({
     mutationFn: ({ slug }: { slug: string }) => deleteArticle(slug),
-    onSuccess: () => {
+    onSuccess: (_, { slug }) => {
+      removeArticle(slug);
       queryClient.invalidateQueries({ queryKey: ["articles"] });
     },
   });

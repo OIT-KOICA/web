@@ -1,11 +1,11 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
+import useStore from "@/lib/stores/store";
 import { Search } from "lucide-react";
-import useArticleStore from "@/lib/stores/article-store";
 
 export default function SearchBar() {
-  const { searchTerm, setSearchTerm } = useArticleStore();
+  const { searchTerm, setSearchTerm } = useStore();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -15,7 +15,7 @@ export default function SearchBar() {
     <form onSubmit={handleSearch} className="relative w-full max-w-sm">
       <Input
         type="text"
-        placeholder="Rechercher un article..."
+        placeholder="Rechercher une documentation..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="pl-10"

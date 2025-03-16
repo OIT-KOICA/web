@@ -28,6 +28,8 @@ const announcementSchema = z.object({
   name: z.string().min(2, "Le nom doit contenir au moins 2 caractères"),
   phone: z.string().regex(/^\+?[0-9]{8,14}$/, "Numéro de téléphone invalide"),
   location: z.string().min(2, "Veuillez préciser votre localisation"),
+  title: z.string().min(2, "Veuillez renseigner un titre pour l'annonce"),
+  email: z.string().email("Veuillez entrer une adresse e-mail valide."),
   description: z.string().min(5, "Décrivez votre besoin en détail"),
   categories: z.array(z.string()).nonempty("Choisissez au moins une catégorie"),
 });
@@ -49,6 +51,8 @@ export default function AnnouncementModal({
       name: "",
       phone: "",
       location: "",
+      title: "",
+      email: "",
       description: "",
       categories: [],
     },
@@ -62,6 +66,8 @@ export default function AnnouncementModal({
     formData.append("name", data.name);
     formData.append("phone", data.phone);
     formData.append("location", data.location);
+    formData.append("title", data.title);
+    formData.append("email", data.email);
     formData.append("description", data.description);
     formData.append("categories", JSON.stringify(data.categories));
 
@@ -109,12 +115,38 @@ export default function AnnouncementModal({
             />
             <FormField
               control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Adresse mail</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Ex: johndoe@gmail.com" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="location"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Localisation</FormLabel>
                   <FormControl>
                     <Input placeholder="Ex: Yaoundé, Douala..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Titre de l&apos;annonce</FormLabel>
+                  <FormControl>
+                    <Input placeholder="J'ai besoin..." {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

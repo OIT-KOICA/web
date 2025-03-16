@@ -20,7 +20,6 @@ import {
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useGetCities } from "@/lib/query/configuration-query";
-import useConfigurationStore from "@/lib/stores/configuration-store";
 
 interface FilterSidebarProps {
   className?: string;
@@ -50,14 +49,7 @@ export default function FilterSidebar({
     localisation: "",
   });
   const [open, setOpen] = useState(false);
-  const { cities: fetchedCities } = useGetCities();
-  const { cities, setCities } = useConfigurationStore();
-
-  useEffect(() => {
-    if (!cities && fetchedCities) {
-      setCities(fetchedCities);
-    }
-  }, [cities, fetchedCities, setCities]);
+  const { cities } = useGetCities();
 
   useEffect(() => {
     onFilterChange(filters);

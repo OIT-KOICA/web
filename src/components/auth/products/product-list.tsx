@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { ProductDTO } from "@/types/type";
 import SearchBar from "./search-bar";
 import FilterDropdown from "../filter-dropdown";
 import ProductTable from "./product-table";
@@ -11,10 +10,12 @@ import { useRouter } from "next/navigation";
 import { useGetProductsByUserID } from "@/lib/query/product-query";
 import { useInView } from "react-intersection-observer";
 import { Loader2 } from "lucide-react";
-import useProductStore from "@/lib/stores/product-store";
+import { ProductDTO } from "@/types/typeDTO";
+import useStore from "@/lib/stores/store";
 
 export default function ProductList() {
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { products, setEdit, totalPages } = useStore();
+  const { fetchNextPage, hasNextPage, isFetchingNextPage } =
     useGetProductsByUserID();
   const { ref, inView } = useInView();
   const router = useRouter();
@@ -22,7 +23,7 @@ export default function ProductList() {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
   const [filteredProducts, setFilteredProducts] = useState<ProductDTO[]>([]);
-  const { setEdit } = useProductStore();
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     if (inView && hasNextPage) {
@@ -32,10 +33,7 @@ export default function ProductList() {
 
   // Filtrer les produits en fonction des filtres et du terme de recherche
   useEffect(() => {
-    if (!data) return;
-
-    const allProducts = data.pages.flatMap((page) => page.products);
-    const filtered = allProducts.filter((product) => {
+    const filtered = products.filter((product) => {
       return (
         (categoryFilter === null || product.category === categoryFilter) &&
         (searchTerm === "" ||
@@ -45,7 +43,7 @@ export default function ProductList() {
     });
 
     setFilteredProducts(filtered);
-  }, [data, searchTerm, categoryFilter]);
+  }, [searchTerm, categoryFilter, products]);
 
   return (
     <div className="space-y-4 p-4 sm:p-6">
@@ -79,7 +77,14 @@ export default function ProductList() {
         </div>
       </div>
 
-      <ProductTable products={filteredProducts} />
+      <ProductTable
+        products={filteredProducts}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+        sortOrder="asc"
+        onSortOrderChange={() => {}}
+      />
 
       {hasNextPage && (
         <div ref={ref} className="mt-8 flex justify-center">

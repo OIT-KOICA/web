@@ -11,7 +11,7 @@ interface PhonesProps {
 export default function Phones({ phones, setPhones }: PhonesProps) {
   const [newPhone, setNewPhone] = useState("");
 
-  // ✅ Fonction pour ajouter un numéro de téléphone
+  // Fonction pour ajouter un numéro de téléphone
   const addPhone = () => {
     if (newPhone.trim() !== "") {
       setPhones([...phones, newPhone.trim()]);
@@ -19,7 +19,7 @@ export default function Phones({ phones, setPhones }: PhonesProps) {
     }
   };
 
-  // ✅ Fonction pour supprimer un numéro
+  // Fonction pour supprimer un numéro
   const removePhone = (index: number) => {
     const updatedPhones = phones.filter((_, i) => i !== index);
     setPhones(updatedPhones);

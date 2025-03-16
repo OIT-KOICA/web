@@ -1,5 +1,5 @@
-import { fetchClient } from "../api/fetch-client";
-import { CompanyDTO, NotificationDTO, Offer } from "../../types/type";
+import { CompanyDTO, NotificationDTO, Offer } from "@/types/typeDTO";
+import { fetchClient } from "../fetch-client";
 
 export const getCities = async (): Promise<
   Array<{
@@ -108,7 +108,7 @@ export const createAdd = async (formData: FormData): Promise<Offer> => {
     const response = await fetchClient("/guest/add/create", {
       method: "POST",
       body: formData,
-      requiresAuth: false, // Requête nécessitant une authentification
+      requiresAuth: false,
     });
 
     return response;

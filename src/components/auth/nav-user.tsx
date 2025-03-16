@@ -19,15 +19,19 @@ import {
 } from "@/components/ui/sidebar";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import useUserStore from "@/lib/stores/user-store";
 import React, { useEffect, useState } from "react";
-import { useGetNotifications } from "@/lib/query/configuration-query";
+import {
+  useGetNotifications,
+  useGetProfile,
+} from "@/lib/query/configuration-query";
+import useStore from "@/lib/stores/store";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
   const { data: session } = useSession();
   const router = useRouter();
-  const { user } = useUserStore();
+  const { user } = useGetProfile();
+  const { clearUser } = useStore();
   const { notifications } = useGetNotifications();
 
   const [hasUnread, setHasUnread] = useState(false);
@@ -113,7 +117,12 @@ export function NavUser() {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/" })}>
+            <DropdownMenuItem
+              onClick={() => {
+                clearUser();
+                signOut({ callbackUrl: "/" });
+              }}
+            >
               <LogOut />
               Se déconnecter
             </DropdownMenuItem>

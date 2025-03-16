@@ -17,25 +17,11 @@ export type ProductDTO = {
     description: string;
     price: number;
   }>;
+  priceUnit: "Kg" | "Sac" | "Cuvette" | "Sceau de 5L";
   localisation: string;
   file: string;
   createdAt: string;
   updatedAt: string;
-};
-
-export type ProductRequest = {
-  name: string;
-  code: string;
-  description: string;
-  category: string;
-  unit: string;
-  isDerivedProduct: string;
-  basePrice: string;
-  isPerishable: string;
-  file: File;
-  pricings: Array<string>;
-  localisation: string;
-  quantity: string;
 };
 
 export type Filter = {
@@ -58,18 +44,6 @@ export type Discussion = {
   userphone: string;
   messages: Array<Message>;
   createdAt: string;
-};
-
-export type DiscussionRequest = {
-  code: string;
-  name: string;
-  phone: string;
-};
-
-export type MessageRequest = {
-  id: string;
-  senderType: string;
-  content: string;
 };
 
 export type CompanyDTO = {
@@ -97,6 +71,7 @@ export type UserDTO = {
 export type NotificationDTO = {
   id: string;
   message: string;
+  link: string;
   isRead: boolean;
   createdAt: string;
 };
@@ -114,19 +89,15 @@ export interface ArticleDTO {
   category: string;
   company: string;
   file: string | null;
-  documents: Array<{ id: string; documentType: string }>;
+  documents: Array<{
+    id: string;
+    documentType: string;
+    summary?: string;
+    user: string;
+  }>;
   links: Array<string>;
   createdAt: string;
   updatedAt: string;
-}
-
-export interface ArticleRequest {
-  title: string;
-  description: string;
-  category: string;
-  file: File | null;
-  documents: string | null;
-  links: string | null;
 }
 
 export interface Offer {
@@ -134,7 +105,30 @@ export interface Offer {
   name: string;
   phone: string;
   location: string;
+  title: string;
   description: string;
   categories: string[];
   createdAt: string;
+}
+
+export interface EventDTO {
+  id: string;
+  title: string;
+  slug: string;
+  code: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+  company: string;
+  file: string | null;
+  localisation: string;
+  documents: Array<{
+    id: string;
+    documentType: string;
+    summary?: string;
+    user: string;
+  }>;
+  links: Array<string>;
+  createdAt: string;
+  updatedAt: string;
 }

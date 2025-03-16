@@ -2,12 +2,12 @@
 
 import { Suspense, use, useEffect } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import useProductStore from "@/lib/stores/product-store";
 import ProductHeader from "@/components/auth/products/product-header";
 import ProductInfo from "@/components/auth/products/product-info";
 import PriceVariationsTable from "@/components/auth/products/price-variations-table";
 import DiscussionsTable from "@/components/auth/products/discussions-table";
 import { SidebarInset } from "@/components/ui/sidebar";
+import useStore from "@/lib/stores/store";
 import { useGetDiscussionsByCode } from "@/lib/query/discussion-query";
 
 export default function ProductDetailsPage({
@@ -16,8 +16,7 @@ export default function ProductDetailsPage({
   params: Promise<{ code: string }>;
 }) {
   const { code } = use(params);
-  const product = useProductStore((state) => state.activeProduct);
-  const { setDiscussions } = useProductStore();
+  const { activeProduct: product, setDiscussions } = useStore();
   const { discussions } = useGetDiscussionsByCode({
     code: code,
   });
@@ -38,7 +37,10 @@ export default function ProductDetailsPage({
               <ProductInfo product={product} />
             </Suspense>
             <Suspense fallback={<Skeleton className="h-96 w-full" />}>
-              <PriceVariationsTable variations={product?.pricings} />
+              <PriceVariationsTable
+                variations={product?.pricings}
+                unit={product?.priceUnit}
+              />
             </Suspense>
           </div>
           <Suspense fallback={<Skeleton className="h-96 w-full" />}>

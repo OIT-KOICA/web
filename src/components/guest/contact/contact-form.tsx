@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useState } from "react";
@@ -15,10 +16,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/lib/hooks/use-toast";
 import { contactFormSchema, ContactFormValues } from "@/schemas/contact-schema";
+import { useContact } from "@/lib/query/contact-query";
 
 export default function ContactForm() {
+  const sendMessage = useContact();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
@@ -34,15 +37,24 @@ export default function ContactForm() {
 
   const onSubmit = async (data: ContactFormValues) => {
     setIsSubmitting(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log(data);
-    setIsSubmitting(false);
-    form.reset();
-    toast({
-      title: "Message Sent",
-      description: "Thank you for your message. We will get back to you soon.",
-    });
+
+    try {
+      await sendMessage.mutateAsync(data);
+
+      toast({
+        title: "Message envoyé",
+        description: "Votre message a été envoyé avec succès.",
+      });
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible d'envoyer votre message.",
+        variant: "destructive",
+      });
+    } finally {
+      form.reset();
+      setIsSubmitting(false);
+    }
   };
 
   return (

@@ -7,7 +7,6 @@ export default function NotFound() {
       <h1 className="mb-4 text-4xl font-bold">404 - Page Non Trouvée</h1>
       <p className="mb-8 text-xl text-muted-foreground">
         Oups ! La page que vous recherchez n&apos;existe pas ou a été déplacée.
-        déplacée.
       </p>
       <Button asChild>
         <Link href="/">Retour à l&apos;accueil</Link>

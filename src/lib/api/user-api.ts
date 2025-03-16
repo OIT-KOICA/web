@@ -1,5 +1,5 @@
-import { fetchClient } from "../api/fetch-client";
-import { CompanyDTO, UserDTO } from "../../types/type";
+import { CompanyDTO, UserDTO } from "@/types/typeDTO";
+import { fetchClient } from "../fetch-client";
 
 /**
  * Vérifie si l'utilisateur connecté possède une entreprise ou pas.
@@ -44,7 +44,7 @@ export const createCompany = async (
     const response = await fetchClient("/user/create/company", {
       method: "POST",
       body: formData,
-      requiresAuth: true, // Requête nécessitant une authentification
+      requiresAuth: true,
     });
 
     return response;
@@ -64,7 +64,7 @@ export const editCompany = async (formData: FormData): Promise<CompanyDTO> => {
     const response = await fetchClient("/user/edit/company", {
       method: "PUT",
       body: formData,
-      requiresAuth: true, // Requête nécessitant une authentification
+      requiresAuth: true,
     });
 
     return response;
@@ -88,7 +88,7 @@ export const editProfile = async (data: {
     const response = await fetchClient("/user/update-profile", {
       method: "PUT",
       body: JSON.stringify(data),
-      requiresAuth: true, // Requête nécessitant une authentification
+      requiresAuth: true,
       headers: {
         "Content-Type": "application/json",
       },
@@ -113,7 +113,7 @@ export const editPassword = async (data: {
     const response = await fetchClient("/user/update-password", {
       method: "PUT",
       body: JSON.stringify(data),
-      requiresAuth: true, // Requête nécessitant une authentification
+      requiresAuth: true,
       headers: {
         "Content-Type": "application/json",
       },

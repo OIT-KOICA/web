@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/lib/hooks/use-toast";
 import { savePhoneToCookie } from "@/lib/utils";
 import { format } from "date-fns";
 import { MessageCircle, Send } from "lucide-react";
@@ -15,11 +15,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Discussion } from "@/types/type";
 import {
   useCreateDiscussion,
   useCreateMessage,
 } from "@/lib/query/discussion-query";
+import { Discussion } from "@/types/typeDTO";
 
 export default function ProductDiscussion({
   code,
@@ -42,7 +42,7 @@ export default function ProductDiscussion({
   const [formDataDiscussion, setFormDataDiscussion] = useState({
     name: "",
     phone: "",
-    code: localCode, // code du produit passé en prop
+    code: localCode,
   });
   const [formDataMessage, setFormDataMessage] = useState({
     content: "",
@@ -84,7 +84,7 @@ export default function ProductDiscussion({
   });
 
   /**
-   * ✅ Gestion des changements de formulaire
+   * Gestion des changements de formulaire
    */
   const handleChangeDiscussion = (e: {
     target: { name: string; value: string };
@@ -107,7 +107,7 @@ export default function ProductDiscussion({
   };
 
   /**
-   * ✅ Démarrer une discussion
+   * Démarrer une discussion
    */
   const handleStartChat = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -152,7 +152,7 @@ export default function ProductDiscussion({
   };
 
   /**
-   * ✅ Envoyer un message
+   * Envoyer un message
    */
   const handleCreateMessage = async (e: { preventDefault: () => void }) => {
     e.preventDefault();

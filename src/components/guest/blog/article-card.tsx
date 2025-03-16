@@ -5,16 +5,17 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArticleDTO } from "@/types/type";
-import useArticleStore from "@/lib/stores/article-store";
 import { useRouter } from "next/navigation";
+import { ArticleDTO } from "@/types/typeDTO";
+import useStore from "@/lib/stores/store";
+import Markdown from "react-markdown";
 
 interface Props {
   article: ArticleDTO;
 }
 
 export default function ArticleCard({ article }: Props) {
-  const { setActiveArticle } = useArticleStore();
+  const { setActiveArticle } = useStore();
   const router = useRouter();
 
   return (
@@ -31,9 +32,9 @@ export default function ArticleCard({ article }: Props) {
         <CardContent className="space-y-2 p-4">
           <Badge variant="outline">{article.category}</Badge>
           <h3 className="text-xl font-semibold">{article.title}</h3>
-          <p className="line-clamp-3 text-muted-foreground">
+          <Markdown className="prose dark:prose-invert">
             {article.description}
-          </p>
+          </Markdown>
         </CardContent>
         <CardFooter className="p-4">
           <Button

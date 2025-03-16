@@ -28,16 +28,23 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/lib/hooks/use-toast";
 import {
   useCreateCompany,
   useGetCities,
 } from "@/lib/query/configuration-query";
 import { CompanyFormValues, companySchema } from "@/schemas/company-schema";
 import Image from "next/image";
-import useUserStore from "@/lib/stores/user-store";
 import Phones from "../products/phones";
-import { isFileSizeValid } from "@/lib/utils";
+import {
+  compressDocx,
+  compressFile,
+  compressImage,
+  compressPDF,
+  compressXls,
+  isFileSizeValid,
+} from "@/lib/utils";
+import useStore from "@/lib/stores/store";
 
 const services = [
   { value: "PRODUCTEUR", label: "Producteur" },
@@ -64,8 +71,9 @@ export default function CreateCompanyModal() {
       region: string;
     }[]
   >([]);
+  const [selectedType, setSelectedType] = useState<string | null>(null);
 
-  const userStore = useUserStore.getState();
+  const store = useStore.getState();
 
   const form = useForm<CompanyFormValues>({
     resolver: zodResolver(companySchema),
@@ -109,7 +117,7 @@ export default function CreateCompanyModal() {
         description: "Vous pouvez maintenant accèder à votre tableau de bord",
       });
 
-      await userStore.setStatus();
+      await store.setStatus();
 
       router.push("/dashboard");
     } catch (error) {
@@ -173,6 +181,38 @@ export default function CreateCompanyModal() {
             {/* Téléphones */}
             <Phones control={form.control} />
 
+            {/* Type de service */}
+            <FormField
+              control={form.control}
+              name="serviceType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Type d&apos;entreprise</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={(value) => {
+                        form.setValue("serviceType", value);
+                        setSelectedType(value);
+                        form.setValue("chainValueFunctions", []);
+                      }}
+                      {...field}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selectionnez un type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="COMMERCANT">Commerçant</SelectItem>
+                        <SelectItem value="SUPPORT">
+                          Service d&apos;accompagnement aux entreprises (SAE)
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             {/* Chaînes de valeur */}
             <FormField
               control={form.control}
@@ -181,42 +221,55 @@ export default function CreateCompanyModal() {
                 <FormItem>
                   <FormLabel>Rôles dans la chaîne de valeur</FormLabel>
                   <div className="grid grid-cols-2 gap-4">
-                    {services.map((service, index) => (
-                      <FormField
-                        key={index}
-                        control={form.control}
-                        name="chainValueFunctions"
-                        render={({ field }) => {
-                          return (
-                            <FormItem
-                              key={index}
-                              className="flex flex-row items-start space-x-3 space-y-0"
-                            >
-                              <FormControl>
-                                <Checkbox
-                                  checked={field.value?.includes(service.value)}
-                                  onCheckedChange={(checked) => {
-                                    return checked
-                                      ? field.onChange([
-                                          ...field.value,
-                                          service.value,
-                                        ])
-                                      : field.onChange(
-                                          field.value?.filter(
-                                            (value) => value !== service.value
-                                          )
-                                        );
-                                  }}
-                                />
-                              </FormControl>
-                              <FormLabel className="font-normal">
-                                {service.label}
-                              </FormLabel>
-                            </FormItem>
-                          );
-                        }}
-                      />
-                    ))}
+                    {services.map((service, index) => {
+                      const isDisabled =
+                        selectedType === "SUPPORT" &&
+                        service.value !== "ACTEUR_EXTERNE";
+                      const isHidden =
+                        !selectedType ||
+                        (selectedType === "COMMERCANT" &&
+                          service.value === "ACTEUR_EXTERNE");
+
+                      return !isHidden ? (
+                        <FormField
+                          key={index}
+                          control={form.control}
+                          name="chainValueFunctions"
+                          render={({ field }) => {
+                            return (
+                              <FormItem
+                                key={index}
+                                className="flex flex-row items-start space-x-3 space-y-0"
+                              >
+                                <FormControl>
+                                  <Checkbox
+                                    disabled={isDisabled}
+                                    checked={field.value?.includes(
+                                      service.value
+                                    )}
+                                    onCheckedChange={(checked) => {
+                                      return checked
+                                        ? field.onChange([
+                                            ...field.value,
+                                            service.value,
+                                          ])
+                                        : field.onChange(
+                                            field.value?.filter(
+                                              (value) => value !== service.value
+                                            )
+                                          );
+                                    }}
+                                  />
+                                </FormControl>
+                                <FormLabel className="font-normal">
+                                  {service.label}
+                                </FormLabel>
+                              </FormItem>
+                            );
+                          }}
+                        />
+                      ) : null;
+                    })}
                   </div>
                   <FormMessage />
                 </FormItem>
@@ -256,36 +309,6 @@ export default function CreateCompanyModal() {
               )}
             />
 
-            {/* Type de service */}
-            <FormField
-              control={form.control}
-              name="serviceType"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Type d&apos;entreprise</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={(value) =>
-                        form.setValue("serviceType", value)
-                      }
-                      {...field}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selectionnez un type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="COMMERCANT">Commerçant</SelectItem>
-                        <SelectItem value="SUPPORT">
-                          Service d&apos;accompagnement aux entreprises (SAE)
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             {/* Image du service */}
             <FormField
               control={form.control}
@@ -298,7 +321,7 @@ export default function CreateCompanyModal() {
                     <Input
                       type="file"
                       accept="image/*"
-                      onChange={(e) => {
+                      onChange={async (e) => {
                         const file = e.target.files?.[0];
                         if (file) {
                           if (!isFileSizeValid(file)) {
@@ -309,13 +332,43 @@ export default function CreateCompanyModal() {
                               variant: "destructive",
                             });
                             return;
-                          } else {
-                            form.setValue("file", file);
-                            const reader = new FileReader();
-                            reader.onload = () =>
-                              setPreviewImage(reader.result as string);
-                            reader.readAsDataURL(file);
                           }
+                          let compressedFile = file;
+
+                          if (file.type.includes("image")) {
+                            compressedFile = await compressImage(file);
+                          } else if (file.type === "application/pdf") {
+                            compressedFile = await compressPDF(file);
+                          } else if (
+                            file.type ===
+                              "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+                            file.type === "application/msword"
+                          ) {
+                            compressedFile = await compressDocx(file);
+                          } else if (
+                            file.type === "application/vnd.ms-excel" ||
+                            file.type ===
+                              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                          ) {
+                            compressedFile = await compressXls(file);
+                          } else {
+                            compressedFile = await compressFile(file);
+                          }
+
+                          // Assurer que compressedFile est bien une instance de File
+                          if (!(compressedFile instanceof File)) {
+                            compressedFile = new File(
+                              [compressedFile],
+                              file.name,
+                              { type: file.type }
+                            );
+                          }
+
+                          form.setValue("file", compressedFile);
+                          const reader = new FileReader();
+                          reader.onload = () =>
+                            setPreviewImage(reader.result as string);
+                          reader.readAsDataURL(file);
                         }
                       }}
                     />

@@ -15,6 +15,7 @@ const menuItems = [
   { name: "Accueil", href: "/" },
   { name: "Produits", href: "/products" },
   { name: "Annonces", href: "/adds" },
+  { name: "Évènements", href: "/events" },
   { name: "FAQ", href: "/faq" },
   { name: "A propos", href: "/about" },
   { name: "Contact", href: "/contact" },

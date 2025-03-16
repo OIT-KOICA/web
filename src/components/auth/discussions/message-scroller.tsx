@@ -3,10 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ScrollArea } from "@/components/ui/scroll-area";;
-import useProductStore from "@/lib/stores/product-store";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { format } from "date-fns";
-import { Message } from "@/types/type";
+import { Message } from "@/types/typeDTO";
+import useStore from "@/lib/stores/store";
 
 const MESSAGES_PER_PAGE = 20;
 
@@ -14,7 +14,7 @@ export default function MessageScroller() {
   const { ref, inView } = useInView();
   const [displayedMessages, setDisplayedMessages] = useState<Message[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const discussion = useProductStore((state) => state.activeDiscussion);
+  const { activeDiscussion: discussion } = useStore();
 
   useEffect(() => {
     if (discussion && discussion.messages) {
@@ -48,11 +48,12 @@ export default function MessageScroller() {
 
   return (
     <ScrollArea className="grow" ref={scrollAreaRef}>
-      {discussion && displayedMessages.length < (discussion.messages.length ?? 0) && (
-        <div ref={ref} className="flex justify-center p-2">
-          Charger plus
-        </div>
-      )}
+      {discussion &&
+        displayedMessages.length < (discussion.messages.length ?? 0) && (
+          <div ref={ref} className="flex justify-center p-2">
+            Charger plus
+          </div>
+        )}
       <div className="space-y-4">
         {displayedMessages.map((message) => (
           <div

@@ -3,7 +3,7 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, User, Phone, MapPin, Tag } from "lucide-react";
-import { Offer } from "@/types/type";
+import { Offer } from "@/types/typeDTO";
 
 interface FullScreenOfferProps {
   offer: Offer;
@@ -37,7 +37,7 @@ export default function FullScreenOffer({
 
           {/* Titre */}
           <h2 className="text-gradient mb-4 text-3xl font-bold">
-            J&apos;ai besoin de
+            {offer.title}
           </h2>
           <p className="mb-6 text-lg">{offer.description}</p>
 
@@ -62,7 +62,7 @@ export default function FullScreenOffer({
             <div className="mb-6">
               <h3 className="text-xl font-semibold">Catégories concernées :</h3>
               <div className="mt-2 flex flex-wrap gap-2">
-                {offer.categories.map((category, index) => (
+                {offer.categories.map((category: string, index: number) => (
                   <span
                     key={index}
                     className="flex items-center gap-2 rounded-full bg-primary px-3 py-1 text-sm text-white"

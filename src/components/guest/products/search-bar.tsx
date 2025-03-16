@@ -8,10 +8,7 @@ interface SearchBarProps {
   onTermChange: (searchItems: string) => void;
 }
 
-export default function SearchBar({
-  className,
-  onTermChange,
-}: SearchBarProps) {
+export default function SearchBar({ className, onTermChange }: SearchBarProps) {
   const [query, setQuery] = useState("");
 
   useEffect(() => {

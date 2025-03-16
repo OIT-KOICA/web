@@ -11,15 +11,16 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import useProductStore from "@/lib/stores/product-store";
 import { useRouter } from "next/navigation";
-import { Discussion } from "@/types/type";
+import { useGetDiscussions } from "@/lib/query/discussion-query";
+import useStore from "@/lib/stores/store";
+import { Discussion } from "@/types/typeDTO";
 
 export default function DiscussionsTable({ slug }: { slug?: string }) {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
-  const discussions = useProductStore((state) => state.discussions);
-  const { setActiveDiscussion } = useProductStore();
+  const { discussions } = useGetDiscussions();
+  const { setActiveDiscussion } = useStore();
 
   const totalPages = discussions
     ? Math.ceil(discussions.length / itemsPerPage)
@@ -77,7 +78,7 @@ export default function DiscussionsTable({ slug }: { slug?: string }) {
             Précédent
           </Button>
           <span>
-            Page {currentPage} of {totalPages}
+            Page {currentPage} sur {totalPages}
           </span>
           <Button
             onClick={() =>

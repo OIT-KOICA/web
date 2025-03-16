@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getSession, signOut } from "next-auth/react";
 
 /**
@@ -8,7 +9,6 @@ import { getSession, signOut } from "next-auth/react";
 export async function fetchClient(
   endpoint: string,
   options: RequestInit & { requiresAuth?: boolean } = {}
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<any> {
   const baseUrl = process.env.NEXT_PUBLIC_API_PATH_URL;
 
@@ -36,12 +36,11 @@ export async function fetchClient(
         return;
       }
 
-      // Gestion d'autres erreurs API
       const errorData = await response.json();
       throw new Error(errorData.message || "Une erreur est survenue.");
     }
 
-    return await response.json(); // Retourne la réponse JSON
+    return await response.json();
   } catch (error) {
     console.error("Erreur FetchClient :", error);
     throw error;

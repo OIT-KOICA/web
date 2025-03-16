@@ -5,17 +5,22 @@ import ProductDiscussion from "@/components/guest/products/product-discussion";
 import ProductHeader from "@/components/guest/products/product-header";
 import ProductInfo from "@/components/guest/products/product-info";
 import SkeletonLoader from "@/components/guest/products/skeleton-loader";
-import { getDiscussion } from "@/lib/service/discussion-api";
-import useProductStore from "@/lib/stores/product-store";
-import { Discussion } from "@/types/type";
+import { getDiscussion } from "@/lib/api/discussion-api";
 import { getPhoneFromCookie } from "@/lib/utils";
 import { Suspense, useEffect, useState } from "react";
-import { motion } from 'framer-motion'
+import { motion } from "framer-motion";
+import { Discussion } from "@/types/typeDTO";
+import useStore from "@/lib/stores/store";
 
 export default function ProductDetailPage() {
-  const product = useProductStore((state) => state.activeProduct);
+  const { activeProduct: product } = useStore();
+  const [currentProduct, setCurrentProduct] = useState(product);
   const [discussion, setDiscussion] = useState<Discussion | null>(null);
   const phone = getPhoneFromCookie();
+
+  useEffect(() => {
+    if (product) setCurrentProduct(product)
+  }, [product]);
 
   /**
    * Cherche le numéro de téléphone du client dans les cookies
@@ -37,14 +42,14 @@ export default function ProductDetailPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <ProductHeader product={product} />
+          <ProductHeader product={currentProduct} />
           <div className="mt-8 grid gap-8 md:grid-cols-2">
             <div>
-              <ProductInfo product={product} />
-              <PriceVariationsTable product={product} />
+              <ProductInfo product={currentProduct} />
+              <PriceVariationsTable product={currentProduct} />
             </div>
             <ProductDiscussion
-              code={product?.code}
+              code={currentProduct?.code}
               discussion={discussion}
               setDiscussion={setDiscussion}
             />

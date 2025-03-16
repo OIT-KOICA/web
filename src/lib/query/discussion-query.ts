@@ -7,19 +7,36 @@ import {
   getDiscussionById,
   getDiscussions,
   getDiscussionsByCode,
-} from "../service/discussion-api";
-import { DiscussionRequest, MessageRequest } from "../../types/type";
+} from "../api/discussion-api";
+import { DiscussionRequest, MessageRequest } from "../../types/typeRequest";
+import useStore from "../stores/store";
+import { useEffect } from "react";
 
 /**
  * Hook pour récupérer toutes les discussions.
  */
 export const useGetDiscussions = () => {
-  const { data, refetch } = useQuery({
+  const { discussions, setDiscussions } = useStore();
+
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["discussions"],
     queryFn: getDiscussions,
+    enabled: discussions.length === 0,
+    staleTime: 5 * 60 * 1000,
   });
 
-  return { discussions: data, refetch };
+  useEffect(() => {
+    if (data) {
+      setDiscussions(data);
+    }
+  }, [data, setDiscussions]);
+
+  return {
+    discussions: discussions.length > 0 ? discussions : data,
+    isLoading,
+    isError,
+    refetch,
+  };
 };
 
 /**
@@ -34,43 +51,106 @@ export const useGetDiscussion = ({
   code: string;
   phone: string;
 }) => {
-  const { data, refetch, error } = useQuery({
+  const queryClient = useQueryClient();
+  const { discussions, setActiveDiscussion, addDiscussion } = useStore();
+  const existingDiscussion = discussions.find((d) => d.userphone === phone);
+
+  const query = useQuery({
     queryKey: ["discussion", { code, phone }],
     queryFn: () => getDiscussion({ code, phone }),
-    enabled: !!code && !!phone, // Ne fait rien si l'ID est null ou undefined
+    enabled: !existingDiscussion,
+    staleTime: 5 * 60 * 1000,
   });
 
-  return { discussion: data, refetch, error };
+  useEffect(() => {
+    if (query.data && !existingDiscussion) {
+      setActiveDiscussion(query.data);
+      addDiscussion(query.data);
+      queryClient.setQueryData(["discussion", { code, phone }], query.data);
+    }
+  }, [
+    query.data,
+    queryClient,
+    existingDiscussion,
+    setActiveDiscussion,
+    addDiscussion,
+    code,
+    phone,
+  ]);
+
+  return {
+    discussion: existingDiscussion || query.data,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    refetchDiscussion: query.refetch,
+  };
 };
 
 /**
  * Hook pour récupérer une discussion à partir de son ID.
  * @param {string} id - L'ID de la discussion.
- * @param {string} token - Le token d'authentification.
  */
 export const useGetDiscussionById = ({ id }: { id: string }) => {
-  const { data, refetch, error } = useQuery({
+  const queryClient = useQueryClient();
+  const { discussions, setActiveDiscussion, addDiscussion } = useStore();
+  const existingDiscussion = discussions.find((d) => d.id === id);
+
+  const query = useQuery({
     queryKey: ["discussion", { id }],
     queryFn: () => getDiscussionById({ id }),
-    enabled: !!id, // Ne fait rien si l'ID | token est null ou undefined
+    enabled: !existingDiscussion,
+    staleTime: 5 * 60 * 1000,
   });
 
-  return { discussion: data, refetch, error };
+  useEffect(() => {
+    if (query.data && !existingDiscussion) {
+      setActiveDiscussion(query.data);
+      addDiscussion(query.data);
+      queryClient.setQueryData(["discussion", { id }], query.data);
+    }
+  }, [
+    query.data,
+    queryClient,
+    existingDiscussion,
+    setActiveDiscussion,
+    addDiscussion,
+    id,
+  ]);
+
+  return {
+    discussion: existingDiscussion || query.data,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    refetchDiscussion: query.refetch,
+  };
 };
 
 /**
- * Hook pour récupérer une discussion à partir de son code.
- * @param {string} code - Le code de la discussion.
- * @param {string} token - Le token d'authentification.
+ * Hook pour récupérer une discussion à partir de son ID.
+ * @param {string} id - L'ID de la discussion.
  */
 export const useGetDiscussionsByCode = ({ code }: { code: string }) => {
-  const { data, refetch, error } = useQuery({
-    queryKey: ["discussions", { code }],
+  const { discussions, setDiscussions } = useStore();
+
+  const { data, isLoading, isError, refetch } = useQuery({
+    queryKey: ["discussion", { code }],
     queryFn: () => getDiscussionsByCode({ code }),
-    enabled: !!code, // Ne fait rien si l'ID est null ou undefined
+    enabled: !!code,
+    staleTime: 5 * 60 * 1000,
   });
 
-  return { discussions: data, refetch, error };
+  useEffect(() => {
+    if (data) {
+      setDiscussions(data);
+    }
+  }, [data, setDiscussions]);
+
+  return {
+    discussions: discussions.length > 0 ? discussions : data,
+    isLoading,
+    isError,
+    refetch,
+  };
 };
 
 /**
@@ -78,12 +158,14 @@ export const useGetDiscussionsByCode = ({ code }: { code: string }) => {
  */
 export const useCreateDiscussion = () => {
   const queryClient = useQueryClient();
+  const { addDiscussion } = useStore();
 
   return useMutation({
     mutationFn: ({ discussionData }: { discussionData: DiscussionRequest }) =>
       createDiscussion(discussionData),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["discussions"] }); // Rafraîchit la liste des discussions
+    onSuccess: (data) => {
+      addDiscussion(data);
+      queryClient.invalidateQueries({ queryKey: ["discussions"] });
     },
   });
 };
@@ -98,7 +180,7 @@ export const useCreateMessage = () => {
     mutationFn: ({ messageData }: { messageData: MessageRequest }) =>
       createMessage(messageData),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["discussions"] }); // Rafraîchit la liste des discussions
+      queryClient.invalidateQueries({ queryKey: ["discussions"] });
     },
   });
 };
@@ -108,11 +190,13 @@ export const useCreateMessage = () => {
  */
 export const useDeleteDiscussion = () => {
   const queryClient = useQueryClient();
+  const { removeDiscussion } = useStore();
 
   return useMutation({
     mutationFn: ({ id }: { id: string }) => deleteDiscussion(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["discussions"] }); // Rafraîchit la liste des discussions
+    onSuccess: (_, { id }) => {
+      removeDiscussion(id);
+      queryClient.invalidateQueries({ queryKey: ["discussions"] });
     },
   });
 };
