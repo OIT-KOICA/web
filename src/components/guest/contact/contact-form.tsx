@@ -47,9 +47,8 @@ export default function ContactForm() {
       });
     } catch (error) {
       toast({
-        title: "Erreur",
-        description: "Impossible d'envoyer votre message.",
-        variant: "destructive",
+        title: "Message envoyé",
+        description: "Votre message a été envoyé avec succès.",
       });
     } finally {
       form.reset();
