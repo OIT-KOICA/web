@@ -47,6 +47,7 @@ export type Discussion = {
 };
 
 export type CompanyDTO = {
+  id: string;
   name: string;
   email: string;
   phones: string[];
@@ -106,6 +107,7 @@ export interface Offer {
   phone: string;
   location: string;
   title: string;
+  email: string;
   description: string;
   categories: string[];
   createdAt: string;

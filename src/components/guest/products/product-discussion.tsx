@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/lib/hooks/use-toast";
 import { savePhoneToCookie } from "@/lib/utils";
 import { format } from "date-fns";
-import { MessageCircle, Send } from "lucide-react";
+import { Loader2, MessageCircle, Send } from "lucide-react";
 import { z } from "zod";
 import {
   Card,
@@ -246,8 +246,14 @@ export default function ProductDiscussion({
               disabled={loading}
               className="w-full sm:w-auto"
             >
-              <Send className="mr-1 sm:mr-2" />
-              Envoyer
+              {loading ? (
+                <Loader2 className="mr-2 size-4 animate-spin" />
+              ) : (
+                <>
+                  <Send className="mr-1 sm:mr-2" />
+                  Envoyer
+                </>
+              )}
             </Button>
           </form>
         ) : (
@@ -274,8 +280,14 @@ export default function ProductDiscussion({
               disabled={loading}
               className="w-full sm:w-auto"
             >
-              <Send className="mr-1 sm:mr-2" />
-              Envoyer
+              {loading ? (
+                <Loader2 className="mr-2 size-4 animate-spin" />
+              ) : (
+                <>
+                  <Send className="mr-1 sm:mr-2" />
+                  Envoyer
+                </>
+              )}
             </Button>
           </form>
         )}

@@ -48,7 +48,9 @@ export default function EventCard({ event }: Props) {
           </div>
 
           <Markdown className="prose dark:prose-invert">
-            {event.description}
+            {event.description.length > 100
+              ? `${event.description.slice(0, 100)}...`
+              : event.description}
           </Markdown>
         </CardContent>
         <CardFooter className="p-4">

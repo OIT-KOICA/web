@@ -32,7 +32,7 @@ export const useGetArticlesByUserID = () => {
         ? lastPage.currentPage + 1
         : undefined;
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0,
   });
 
   useEffect(() => {
@@ -63,7 +63,7 @@ export const useGetArticles = () => {
         ? lastPage.currentPage + 1
         : undefined;
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0,
   });
 
   useEffect(() => {
@@ -89,7 +89,7 @@ export const useGetArticle = (slug: string) => {
     queryKey: ["article", slug],
     queryFn: () => getArticle(slug),
     enabled: !!cachedArticle,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0,
   });
 
   useEffect(() => {
@@ -118,6 +118,7 @@ export const useCreateArticle = () => {
       createArticle(articleData),
     onSuccess: (newArticle) => {
       addArticle(newArticle);
+      queryClient.invalidateQueries({ queryKey: ["user-articles"] });
       queryClient.invalidateQueries({ queryKey: ["articles"] });
     },
   });
@@ -140,6 +141,7 @@ export const useUpdateArticle = () => {
     }) => updateArticle(slug, articleData),
     onSuccess: (updatedArticle) => {
       setArticle(updatedArticle.slug, updatedArticle);
+      queryClient.invalidateQueries({ queryKey: ["user-articles"] });
       queryClient.invalidateQueries({ queryKey: ["articles"] });
     },
   });
@@ -156,6 +158,7 @@ export const useDeleteArticle = () => {
     mutationFn: ({ slug }: { slug: string }) => deleteArticle(slug),
     onSuccess: (_, { slug }) => {
       removeArticle(slug);
+      queryClient.invalidateQueries({ queryKey: ["user-articles"] });
       queryClient.invalidateQueries({ queryKey: ["articles"] });
     },
   });

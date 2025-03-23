@@ -16,6 +16,7 @@ import { checkUser } from "../api/user-api";
 interface StoreState {
   isNewUser: boolean | null;
   company: CompanyDTO | null;
+  companies: Array<CompanyDTO>;
   user: UserDTO | null;
   products: Array<ProductDTO>;
   activeProduct: ProductDTO | null;
@@ -33,9 +34,11 @@ interface StoreState {
   edit: boolean;
   searchTerm: string;
   totalPages: number;
+  refreshCompany: boolean;
   setUserStatus: () => Promise<void>;
   setStatus: () => Promise<void>;
   setCompany: (company: CompanyDTO) => void;
+  setCompanies: (companies: CompanyDTO[]) => void;
   setUser: (activeUser: UserDTO) => void;
   clearUser: () => void;
   clearCompany: () => void;
@@ -66,6 +69,8 @@ interface StoreState {
   setAdds: (adds: Array<Offer>) => void;
   addAdds: (newAdds: Array<Offer>) => void;
   addAdd: (add: Offer) => void;
+  setAdd: (slug: string, newData: Partial<ArticleDTO>) => void;
+  removeAdd: (slug: string) => void;
   setActiveAdd: (add: Offer) => void;
   setCities: (
     cities: Array<{ id: string; name: string; region: string }>
@@ -75,6 +80,8 @@ interface StoreState {
   setSearchTerm: (term: string) => void;
   clearFilters: () => void;
   setTotalPages: (total: number) => void;
+  clearCompanies: () => void;
+  setRefreshCompany: (value: boolean) => void;
 }
 
 const useStore = create<StoreState>()(
@@ -82,6 +89,7 @@ const useStore = create<StoreState>()(
     (set) => ({
       isNewUser: null,
       company: null,
+      companies: [],
       user: null,
       products: [],
       activeProduct: null,
@@ -99,6 +107,7 @@ const useStore = create<StoreState>()(
       edit: false,
       searchTerm: "",
       totalPages: 0,
+      refreshCompany: false,
 
       setUserStatus: async () => {
         try {
@@ -115,6 +124,8 @@ const useStore = create<StoreState>()(
       },
       setStatus: async () => set({ isNewUser: false }),
       setCompany: (company: CompanyDTO) => set(() => ({ company })),
+      setCompanies: (companies: Array<CompanyDTO>) =>
+        set(() => ({ companies })),
       setUser: (activeUser: UserDTO) => set(() => ({ user: activeUser })),
       clearUser: () => set({ user: null }),
       clearCompany: () => set({ company: null }),
@@ -223,6 +234,14 @@ const useStore = create<StoreState>()(
         set((state) => ({
           adds: [...state.adds.filter((a) => a.id != add.id), add],
         })),
+      setAdd: (id: string, newData: Partial<Offer>) =>
+        set((state) => ({
+          adds: state.adds.map((a) => (a.id === id ? { ...a, ...newData } : a)),
+        })),
+      removeAdd: (id: string) =>
+        set((state) => ({
+          adds: state.adds.filter((a) => a.id !== id),
+        })),
       setActiveAdd: (add: Offer) => set(() => ({ activeAdd: add })),
       setCities: (
         cities: Array<{ id: string; name: string; region: string }>
@@ -234,6 +253,8 @@ const useStore = create<StoreState>()(
       clearFilters: () =>
         set({ searchTerm: "", activeCategory: "Toutes les catégories" }),
       setTotalPages: (total: number) => set(() => ({ totalPages: total })),
+      clearCompanies: () => set(() => ({ companies: [], activeCompany: null })),
+      setRefreshCompany: (value: boolean) => set({ refreshCompany: value }),
     }),
     { name: "store" }
   )

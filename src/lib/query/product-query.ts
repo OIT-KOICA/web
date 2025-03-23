@@ -33,7 +33,7 @@ export const useGetProductsByUserID = () => {
         ? lastPage.currentPage + 1
         : undefined;
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0,
   });
 
   useEffect(() => {
@@ -64,7 +64,7 @@ export const useGetProducts = () => {
         ? lastPage.currentPage + 1
         : undefined;
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0,
   });
 
   useEffect(() => {
@@ -91,7 +91,7 @@ export const useGetProduct = (slug: string) => {
     queryKey: ["product", slug],
     queryFn: () => getProduct(slug),
     enabled: !!cachedProduct,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0,
   });
 
   useEffect(() => {
@@ -120,6 +120,7 @@ export const useCreateProduct = () => {
       createProduct(productData),
     onSuccess: (newProduct) => {
       addProduct(newProduct);
+      queryClient.invalidateQueries({ queryKey: ["user-products"] });
       queryClient.invalidateQueries({ queryKey: ["products"] });
     },
   });
@@ -142,6 +143,7 @@ export const useUpdateProduct = () => {
     }) => updateProduct(slug, productData),
     onSuccess: (updatedProduct) => {
       setProduct(updatedProduct.slug, updatedProduct);
+      queryClient.invalidateQueries({ queryKey: ["user-products"] });
       queryClient.invalidateQueries({ queryKey: ["products"] });
     },
   });
@@ -158,6 +160,7 @@ export const useDeleteProduct = () => {
     mutationFn: ({ slug }: { slug: string }) => deleteProduct(slug),
     onSuccess: (_, { slug }) => {
       removeProduct(slug);
+      queryClient.invalidateQueries({ queryKey: ["user-products"] });
       queryClient.invalidateQueries({ queryKey: ["products"] });
     },
   });

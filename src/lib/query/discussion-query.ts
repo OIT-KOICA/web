@@ -22,7 +22,7 @@ export const useGetDiscussions = () => {
     queryKey: ["discussions"],
     queryFn: getDiscussions,
     enabled: discussions.length === 0,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0,
   });
 
   useEffect(() => {
@@ -59,7 +59,7 @@ export const useGetDiscussion = ({
     queryKey: ["discussion", { code, phone }],
     queryFn: () => getDiscussion({ code, phone }),
     enabled: !existingDiscussion,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0,
   });
 
   useEffect(() => {
@@ -99,7 +99,7 @@ export const useGetDiscussionById = ({ id }: { id: string }) => {
     queryKey: ["discussion", { id }],
     queryFn: () => getDiscussionById({ id }),
     enabled: !existingDiscussion,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0,
   });
 
   useEffect(() => {
@@ -136,7 +136,7 @@ export const useGetDiscussionsByCode = ({ code }: { code: string }) => {
     queryKey: ["discussion", { code }],
     queryFn: () => getDiscussionsByCode({ code }),
     enabled: !!code,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0,
   });
 
   useEffect(() => {

@@ -56,7 +56,9 @@ export default function OffersCarousel({ className }: OffersCarouselProps) {
                         {offer.title}
                       </h3>
                       <p className="mb-4 text-sm text-muted-foreground">
-                        {offer.description}
+                        {offer.description.length > 100
+                          ? `${offer.description.slice(0, 100)}...`
+                          : offer.description}
                       </p>
                       <div className="space-y-2">
                         <div className="flex items-center">

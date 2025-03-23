@@ -28,7 +28,7 @@ const productCards = [
       "Publier des annonces pour trouver des produits ou des services spécifiques adaptés à vos besoins.",
     icon: Megaphone,
     cta: "Publier une annonce",
-    href: "/adds",
+    href: "/dashboard/adds",
   },
   {
     title: "Besoin d'aide ?",
@@ -63,7 +63,7 @@ const articleCards = [
       "Publier des annonces pour trouver des produits ou des services spécifiques adaptés à vos besoins.",
     icon: Megaphone,
     cta: "Publier une annonce",
-    href: "/adds",
+    href: "/dashboard/adds",
   },
   {
     title: "Besoin d'aide ?",

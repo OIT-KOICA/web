@@ -1,6 +1,6 @@
 "use client";
 
-import { BadgeCheck, Bell, ChevronsUpDown, LogOut } from "lucide-react";
+import { BadgeCheck, Bell, ChevronsUpDown, Home, LogOut } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -117,15 +117,21 @@ export function NavUser() {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => {
-                clearUser();
-                signOut({ callbackUrl: "/" });
-              }}
-            >
-              <LogOut />
-              Se déconnecter
-            </DropdownMenuItem>
+            <DropdownMenuGroup>
+              <DropdownMenuItem onClick={() => router.push("/")}>
+                <Home />
+                Retour à l&apos;accueil
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  clearUser();
+                  signOut({ callbackUrl: "/" });
+                }}
+              >
+                <LogOut />
+                Se déconnecter
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

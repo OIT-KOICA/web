@@ -32,7 +32,7 @@ export const useGetEventsByUserID = () => {
         ? lastPage.currentPage + 1
         : undefined;
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0,
   });
 
   useEffect(() => {
@@ -63,7 +63,7 @@ export const useGetEvents = () => {
         ? lastPage.currentPage + 1
         : undefined;
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0,
   });
 
   useEffect(() => {
@@ -89,7 +89,7 @@ export const useGetEvent = (slug: string) => {
     queryKey: ["event", slug],
     queryFn: () => getEvent(slug),
     enabled: !!cachedEvent,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0,
   });
 
   useEffect(() => {
@@ -118,6 +118,7 @@ export const useCreateEvent = () => {
       createEvent(eventData),
     onSuccess: (newEvent) => {
       addEvent(newEvent);
+      queryClient.invalidateQueries({ queryKey: ["user-events"] });
       queryClient.invalidateQueries({ queryKey: ["events"] });
     },
   });
@@ -135,6 +136,7 @@ export const useUpdateEvent = () => {
       updateEvent(slug, eventData),
     onSuccess: (updatedEvent) => {
       setEvent(updatedEvent.slug, updatedEvent);
+      queryClient.invalidateQueries({ queryKey: ["user-events"] });
       queryClient.invalidateQueries({ queryKey: ["events"] });
     },
   });
@@ -151,6 +153,7 @@ export const useDeleteEvent = () => {
     mutationFn: ({ slug }: { slug: string }) => deleteEvent(slug),
     onSuccess: (_, { slug }) => {
       removeEvent(slug);
+      queryClient.invalidateQueries({ queryKey: ["user-events"] });
       queryClient.invalidateQueries({ queryKey: ["events"] });
     },
   });

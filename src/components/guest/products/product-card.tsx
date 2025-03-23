@@ -60,7 +60,9 @@ export default function ProductCard({ product }: ProductCardProps) {
           Quantité en stock: {product.quantity} {product.unit}
         </p>
         <Markdown className="prose dark:prose-invert mb-2">
-          {product.description}
+          {product.description.length > 100
+            ? `${product.description.slice(0, 100)}...`
+            : product.description}
         </Markdown>
         <div className="mt-2 flex items-center space-x-2">
           <Avatar className="size-8">

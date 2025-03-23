@@ -33,7 +33,9 @@ export default function ArticleCard({ article }: Props) {
           <Badge variant="outline">{article.category}</Badge>
           <h3 className="text-xl font-semibold">{article.title}</h3>
           <Markdown className="prose dark:prose-invert">
-            {article.description}
+            {article.description.length > 100
+              ? `${article.description.slice(0, 100)}...`
+              : article.description}
           </Markdown>
         </CardContent>
         <CardFooter className="p-4">

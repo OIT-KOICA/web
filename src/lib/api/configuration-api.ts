@@ -76,6 +76,34 @@ export const getCompany = async (): Promise<CompanyDTO> => {
   }
 };
 
+export const getUserCompanies = async (): Promise<Array<CompanyDTO>> => {
+  try {
+    const data = await fetchClient(`/user/companies`, {
+      requiresAuth: true,
+    });
+    return data;
+  } catch (error) {
+    console.error("Erreur lors de la récupération des compagnies :", error);
+    throw error;
+  }
+};
+
+export const switchActiveCompany = async (
+  companyId: string
+): Promise<CompanyDTO> => {
+  try {
+    const response = await fetchClient(`/user/switch-company/${companyId}`, {
+      method: "PUT",
+      requiresAuth: true,
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Erreur lors de la création de l'annonce :", error);
+    throw error;
+  }
+};
+
 /**
  * Récupère une liste paginée d'annonces.
  * @param {number} page - Numéro de la page actuelle.
@@ -114,6 +142,79 @@ export const createAdd = async (formData: FormData): Promise<Offer> => {
     return response;
   } catch (error) {
     console.error("Erreur lors de la création de l'annonce :", error);
+    throw error;
+  }
+};
+
+export const createAuthAdd = async (
+  addData: FormData
+): Promise<Offer> => {
+  try {
+    const response = await fetchClient("/add/create", {
+      method: "POST",
+      body: addData,
+      requiresAuth: true,
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Echec lors de la création de l'annonce :", error);
+    throw error;
+  }
+};
+
+export const updateAdd = async (
+  id: string,
+  addData: FormData
+): Promise<Offer> => {
+  try {
+    const response = await fetchClient(`/add/edit/${id}`, {
+      method: "PUT",
+      body: addData,
+      requiresAuth: true,
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Echec lors de la modification de l'annonce :", error);
+    throw error;
+  }
+};
+
+export const deleteAdd = async (id: string): Promise<string> => {
+  try {
+    const response = await fetchClient(`/add/delete/${id}`, {
+      method: "DELETE",
+      requiresAuth: true,
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Echec lors de la suppression de l'annonce :", error);
+    throw error;
+  }
+};
+
+export const getAddsByUser = async (
+  page: number = 0,
+  pageSize: number = 10
+) => {
+  try {
+    const response = await fetchClient(
+      `/add/user-adds?page=${page}&size=${pageSize}`,
+      {
+        requiresAuth: true,
+      }
+    );
+
+    return {
+      adds: response.adds || [],
+      totalPages: response.totalPages || 0,
+      totalItems: response.totalItems || 0,
+      currentPage: response.currentPage || 1,
+    };
+  } catch (error) {
+    console.error("Erreur lors de la récupération des annonces :", error);
     throw error;
   }
 };

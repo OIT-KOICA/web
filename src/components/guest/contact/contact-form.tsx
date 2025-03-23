@@ -19,6 +19,7 @@ import {
 import { useToast } from "@/lib/hooks/use-toast";
 import { contactFormSchema, ContactFormValues } from "@/schemas/contact-schema";
 import { useContact } from "@/lib/query/contact-query";
+import { Loader2 } from "lucide-react";
 
 export default function ContactForm() {
   const sendMessage = useContact();
@@ -121,7 +122,11 @@ export default function ContactForm() {
             )}
           />
           <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Envoyer..." : "Envoyer le message"}
+            {isSubmitting ? (
+              <Loader2 className="mr-2 size-4 animate-spin" />
+            ) : (
+              "Envoyer le message"
+            )}
           </Button>
         </form>
       </Form>

@@ -1,16 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Form,
   FormControl,
@@ -19,38 +14,52 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useCreateAdd, useGetProfile } from "@/lib/query/configuration-query";
-import Select from "react-select";
-import { AnnouncementForm, announcementSchema } from "@/schemas/add-schema";
-import { useState } from "react";
+import { useToast } from "@/lib/hooks/use-toast";
 import { Loader2 } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import useStore from "@/lib/stores/store";
+import {
+  useCreateAuthAdd,
+  useGetProfile,
+  useUpdateAdd,
+} from "@/lib/query/configuration-query";
+import { AnnouncementForm, announcementSchema } from "@/schemas/add-schema";
+import { Textarea } from "@/components/ui/textarea";
+import Select from "react-select";
 
-interface AnnouncementModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-export default function AnnouncementModal({
-  isOpen,
-  onClose,
-}: AnnouncementModalProps) {
+export default function AddCreationForm() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  // const [isGenerating, setIsGenerating] = useState(false);
+  const router = useRouter();
+  const { toast } = useToast();
+  const createAdd = useCreateAuthAdd();
+  const updateAdd = useUpdateAdd();
+  const { activeAdd: add, edit } = useStore();
   const { user } = useGetProfile();
 
   const form = useForm<AnnouncementForm>({
     resolver: zodResolver(announcementSchema),
-    defaultValues: {
-      name: user ? user.username : "",
-      phone: "",
-      location: "",
-      title: "",
-      email: user ? user.email : "",
-      description: "",
-      categories: [],
-    },
+    defaultValues:
+      edit && add
+        ? {
+            name: add.name,
+            phone: add.phone,
+            location: add.location,
+            title: add.title,
+            email: add.email,
+            description: add.description,
+            categories: add.categories,
+          }
+        : {
+            name: user?.username,
+            phone: "",
+            location: "",
+            title: "",
+            email: user?.email,
+            description: "",
+            categories: [],
+          },
   });
-
-  const createAdd = useCreateAdd();
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const onSubmit = async (data: AnnouncementForm) => {
     setIsSubmitting(true);
@@ -64,20 +73,41 @@ export default function AnnouncementModal({
     formData.append("description", data.description);
     formData.append("categories", JSON.stringify(data.categories));
 
-    await createAdd.mutateAsync({ data: formData });
-    form.reset();
-    setIsSubmitting(false);
-    onClose();
+    try {
+      if (edit && add) {
+        await updateAdd.mutateAsync({
+          id: add.id,
+          addData: formData,
+        });
+      } else {
+        await createAdd.mutateAsync({ addData: formData });
+      }
+
+      toast({
+        title: edit && add ? "Annonce modifiée" : "Annonce créée",
+        description: "L'opération a été un succès",
+      });
+      router.push("/dashboard/adds");
+    } catch (error) {
+      console.error("Erreur création annonce", error);
+      toast({
+        title: "Erreur",
+        description: "Échec de l'opération",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg md:max-w-2xl lg:max-w-3xl">
-        <DialogHeader>
-          <DialogTitle>Poster une annonce</DialogTitle>
-        </DialogHeader>
+    <Card>
+      <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-6 py-4"
+          >
             <FormField
               control={form.control}
               name="name"
@@ -85,12 +115,7 @@ export default function AnnouncementModal({
                 <FormItem>
                   <FormLabel>Votre nom</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Votre nom"
-                      readOnly={!!user}
-                      className={user ? "cursor-not-allowed bg-muted" : ""}
-                      {...field}
-                    />
+                    <Input placeholder="Votre nom" {...field} readOnly className="cursor-not-allowed bg-muted" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -119,12 +144,7 @@ export default function AnnouncementModal({
                 <FormItem>
                   <FormLabel>Adresse mail</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Ex: johndoe@gmail.com"
-                      readOnly={!!user}
-                      className={user ? "cursor-not-allowed bg-muted" : ""}
-                      {...field}
-                    />
+                    <Input placeholder="Ex: johndoe@gmail.com" {...field} readOnly className="cursor-not-allowed bg-muted" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -200,13 +220,14 @@ export default function AnnouncementModal({
                 </FormItem>
               )}
             />
+
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting && <Loader2 className="mr-2 size-4 animate-spin" />}
-              Soumettre votre annonce
+              {edit && add ? "Modifier l'article" : "Créer l'article"}
             </Button>
           </form>
         </Form>
-      </DialogContent>
-    </Dialog>
+      </CardContent>
+    </Card>
   );
 }

@@ -1,15 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -20,22 +14,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/lib/hooks/use-toast";
-import {
-  useCreateCompany,
-  useGetCities,
-} from "@/lib/query/configuration-query";
-import { CompanyFormValues, companySchema } from "@/schemas/company-schema";
+import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
-import Phones from "../products/phones";
 import {
   compressDocx,
   compressFile,
@@ -45,7 +26,19 @@ import {
   isFileSizeValid,
 } from "@/lib/utils";
 import useStore from "@/lib/stores/store";
+import Phones from "../products/phones";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useCreateCompany } from "@/lib/query/configuration-query";
+import { CompanyFormValues, companySchema } from "@/schemas/company-schema";
 import { Loader2 } from "lucide-react";
+import CompanyLocationSelect from "./company-location-select";
 
 const services = [
   { value: "PRODUCTEUR", label: "Producteur" },
@@ -56,22 +49,12 @@ const services = [
   { value: "ACTEUR_EXTERNE", label: "Acteur Externe" },
 ];
 
-export default function CreateCompanyModal() {
+export default function CompanyForm() {
   const router = useRouter();
   const { toast } = useToast();
-
-  const { cities } = useGetCities();
   const createCompany = useCreateCompany();
-
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [myCities, setMyCities] = useState<
-    {
-      id: string;
-      name: string;
-      region: string;
-    }[]
-  >([]);
   const [selectedType, setSelectedType] = useState<string | null>(null);
 
   const store = useStore.getState();
@@ -145,18 +128,14 @@ export default function CreateCompanyModal() {
     }
   };
 
-  useEffect(() => {
-    if (cities) setMyCities(cities);
-  }, [cities, myCities]);
-
   return (
-    <Dialog open={true}>
-      <DialogContent className="max-h-[90vh] w-full max-w-md overflow-y-auto p-4 sm:max-w-[600px] sm:p-6">
-        <DialogHeader>
-          <DialogTitle>Créer votre entreprise</DialogTitle>
-        </DialogHeader>
+    <Card>
+      <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-6 py-4"
+          >
             {/* Nom de l'entreprise */}
             <FormField
               control={form.control}
@@ -296,25 +275,10 @@ export default function CreateCompanyModal() {
                 <FormItem>
                   <FormLabel>Zone de localisation</FormLabel>
                   <FormControl>
-                    <Select
-                      onValueChange={(value) =>
-                        form.setValue("localisation", value)
-                      }
-                      {...field}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selectionnez une zone de localisation" />
-                      </SelectTrigger>
-
-                      <SelectContent>
-                        {cities &&
-                          cities.map((city) => (
-                            <SelectItem key={city.id} value={city.name}>
-                              {city.name}
-                            </SelectItem>
-                          ))}
-                      </SelectContent>
-                    </Select>
+                    <CompanyLocationSelect
+                      onValueChange={field.onChange}
+                      value={field.value}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -412,7 +376,7 @@ export default function CreateCompanyModal() {
             </Button>
           </form>
         </Form>
-      </DialogContent>
-    </Dialog>
+      </CardContent>
+    </Card>
   );
 }

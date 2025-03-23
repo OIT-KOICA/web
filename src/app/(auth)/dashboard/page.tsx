@@ -15,8 +15,9 @@ import CreateCompanyModal from "@/components/auth/company/create-company-modal";
 import useStore from "@/lib/stores/store";
 
 export default function DashboardPage() {
-  const { isNewUser, setUserStatus } = useStore();
+  const { isNewUser, setUserStatus, companies } = useStore();
   const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const fetchStatus = async () => {
@@ -26,6 +27,14 @@ export default function DashboardPage() {
 
     fetchStatus();
   }, [setUserStatus]);
+
+  useEffect(() => {
+    if (isNewUser === null) return;
+
+    if (isNewUser || companies.length === 0) {
+      setShowModal(true);
+    } else setShowModal(false);
+  }, [isNewUser, companies]);
 
   if (loading) {
     return <div>Chargement...</div>;
@@ -48,7 +57,7 @@ export default function DashboardPage() {
       </header>
 
       <div className="container mx-auto px-4 py-8">
-        {isNewUser ? (
+        {showModal ? (
           <CreateCompanyModal />
         ) : (
           <>

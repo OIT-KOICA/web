@@ -15,6 +15,7 @@ import { useCreateMessage } from "@/lib/query/discussion-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useStore from "@/lib/stores/store";
+import { Loader2 } from "lucide-react";
 
 const messageSchema = z.object({
   content: z.string().min(1, "Le message est requis"),
@@ -78,6 +79,7 @@ export default function MessageInput() {
           )}
         />
         <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting && <Loader2 className="mr-2 size-4 animate-spin" />}
           Envoyer le message
         </Button>
       </form>

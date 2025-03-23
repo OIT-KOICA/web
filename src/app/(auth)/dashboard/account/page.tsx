@@ -34,8 +34,14 @@ import {
 } from "@/components/ui/select";
 import Phones from "@/components/auth/account/phones";
 import { Checkbox } from "@/components/ui/checkbox";
-import { compressFile, compressImage, compressPDF, isFileSizeValid } from "@/lib/utils";
+import {
+  compressFile,
+  compressImage,
+  compressPDF,
+  isFileSizeValid,
+} from "@/lib/utils";
 import { CompanyDTO, UserDTO } from "@/types/typeDTO";
+import { Loader2 } from "lucide-react";
 
 const services = [
   { value: "PRODUCTEUR", label: "Producteur" },
@@ -62,6 +68,7 @@ export default function AccountPage() {
     roles: user?.roles ?? [],
   });
   const [password, setPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // 🔥 Récupération des informations de la compagnie
   const updateCompany = useEditCompany();
@@ -69,6 +76,7 @@ export default function AccountPage() {
   const changePassword = useEditPassword();
 
   const [companyData, setCompanyData] = useState<CompanyDTO>({
+    id: company?.id ?? "",
     name: company?.name ?? "",
     email: company?.email ?? "",
     phones: company?.phones ?? [],
@@ -94,6 +102,7 @@ export default function AccountPage() {
   useEffect(() => {
     if (company) {
       setCompanyData({
+        id: company.id ?? "",
         name: company.name ?? "",
         email: company.email ?? "",
         phones: company.phones ?? [],
@@ -123,6 +132,7 @@ export default function AccountPage() {
 
   // Fonction pour enregistrer les modifications utilisateur
   const handleSaveProfile = async () => {
+    setIsSubmitting(true);
     try {
       await updateProfile.mutateAsync({
         data: {
@@ -142,11 +152,14 @@ export default function AccountPage() {
         description: "Impossible de mettre à jour le profil.",
         variant: "destructive",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   // Fonction pour modifier le mot de passe de l'utilisateur
   const handleChangePassword = async () => {
+    setIsSubmitting(true);
     try {
       await changePassword.mutateAsync({
         data: {
@@ -164,11 +177,14 @@ export default function AccountPage() {
         description: "Impossible de mettre à jour le mot de passe.",
         variant: "destructive",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   // Fonction pour enregistrer les modifications de la compagnie
   const handleSaveCompany = async () => {
+    setIsSubmitting(true);
     const formData = new FormData();
 
     formData.append("name", companyData.name);
@@ -196,6 +212,8 @@ export default function AccountPage() {
         description: "Impossible de mettre à jour l'entreprise.",
         variant: "destructive",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -269,7 +287,12 @@ export default function AccountPage() {
                     }
                   />
                 </div>
-                <Button onClick={handleSaveProfile}>Enregistrer</Button>
+                <Button onClick={handleSaveProfile} disabled={isSubmitting}>
+                  {isSubmitting && (
+                    <Loader2 className="mr-2 size-4 animate-spin" />
+                  )}
+                  Enregistrer
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -291,7 +314,10 @@ export default function AccountPage() {
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
-                <Button onClick={handleChangePassword}>
+                <Button onClick={handleChangePassword} disabled={isSubmitting}>
+                  {isSubmitting && (
+                    <Loader2 className="mr-2 size-4 animate-spin" />
+                  )}
                   Modifier le mot de passe
                 </Button>
               </div>
@@ -350,7 +376,7 @@ export default function AccountPage() {
                             }
                           );
                         }
-                        
+
                         setCompanyData({
                           ...companyData,
                           avatar: compressedFile.name,
@@ -486,7 +512,12 @@ export default function AccountPage() {
                     })}
                   </div>
                 </div>
-                <Button onClick={handleSaveCompany}>Enregistrer</Button>
+                <Button onClick={handleSaveCompany} disabled={isSubmitting}>
+                  {isSubmitting && (
+                    <Loader2 className="mr-2 size-4 animate-spin" />
+                  )}
+                  Enregistrer
+                </Button>
               </div>
             </CardContent>
           </Card>
